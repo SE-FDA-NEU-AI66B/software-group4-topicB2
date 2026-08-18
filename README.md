@@ -7,7 +7,7 @@ One-paragraph description of what your team is building goes here.
 | Name | GitHub username | Role |
 | --- | --- | --- |
 | Le Sy Huy | lesyhuy2k6-gif | Member |
-
+| Khuat Dinh Trung | khuatnhatminhcfpro-cmyk | Leader |
 ## Setup
 
 ```bash
