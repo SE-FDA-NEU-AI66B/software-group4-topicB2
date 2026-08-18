@@ -8,6 +8,7 @@ One-paragraph description of what your team is building goes here.
 | --- | --- | --- |
 | Le Sy Huy | lesyhuy2k6-gif | Member |
 | Khuat Dinh Trung | khuatnhatminhcfpro-cmyk | Leader |
+| Duong Duc Anh | tlduongducanh281-jpg | Member |
 ## Setup
 
 ```bash
