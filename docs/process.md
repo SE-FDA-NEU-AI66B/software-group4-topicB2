@@ -1,46 +1,54 @@
 # Section 1 — Chosen Process and Its Position on the Spectrum
 
-### (a) The Model
+## (a) The Model
 
-Our team will use an **Agile-centered Hybrid Process with Plan-driven Milestone Gates** for the Survey & Results Analysis Platform. Development is organized into **two-week sprints**. At the beginning of each sprint, **Khuất Đình Trung**, Project Coordinator and Requirements Lead, reviews the backlog, prioritizes requirements, and assigns tasks. **Dương Đức Anh**, Backend and Database Developer, implements the database, APIs, server-side functions, authentication, and data processing. **Lê Sỹ Huy**, Frontend and Testing/Integration Developer, implements the user interface, integration, and functional testing. During the sprint, members develop their assigned features and coordinate dependencies. Completed work is submitted through a Pull Request and reviewed by another member before merging. At sprint end, the team demonstrates the increment, records feedback, and updates the backlog. Each cycle produces a tested working increment.
+Our team will use a **Hybrid Agile Process with Plan-driven Milestone Gates** for the Survey & Results Analysis Platform. The development process follows a two-week sprint cycle combined with fixed course milestone checkpoints.
 
-### (b) Position on the Plan-driven ↔ Agile Spectrum
+Each cycle starts with sprint planning. **Khuất Đình Trung**, Project Coordinator and Requirements Lead, reviews the backlog, prioritizes requirements, and assigns tasks based on the sprint goal. During the implementation phase, **Dương Đức Anh**, Backend and Database Developer, develops database structures, APIs, server-side functions, authentication, and data processing features. **Lê Sỹ Huy**, Frontend and Testing/Integration Developer, develops the user interface, integrates system components, and performs functional testing. Throughout the sprint, team members coordinate dependencies and resolve technical issues.
 
-Our process is positioned **toward the Agile side while retaining plan-driven milestone gates**. Agile activities occur every two weeks through planning, development, testing, review, demonstration, feedback, and re-prioritization. Plan-driven decisions include the main project scope, major features, high-level architecture, four course milestones, final demo date, and required deliverables. These constraints remain fixed, while backlog priorities, UI/UX, form behavior, visualization, bug fixes, and feedback improvements can be re-opened each sprint. This structure provides flexibility while maintaining the academic schedule.
+Completed features are submitted through Pull Requests and reviewed by another team member before being merged into the main branch. At the end of each sprint, the team demonstrates the completed increment, collects available feedback, updates the backlog, and plans improvements for the next cycle. Each cycle produces a tested working increment together with updated source code, test results, and documented changes.
+
+## (b) Position on the Plan-driven ↔ Agile Spectrum
+
+Our process is positioned **toward the Agile side of the spectrum while maintaining plan-driven milestone gates**. Agile practices are applied through two-week sprints, continuous implementation, testing, code review, demonstrations, and backlog re-prioritization.
+
+However, several decisions remain plan-driven throughout the semester. These include the overall project scope, major system features, high-level architecture, four fixed course milestones, final demo date, and required submission deliverables. These elements are frozen to ensure the project follows academic requirements. In contrast, sprint-level decisions such as UI improvements, visualization methods, validation rules, bug fixes, and feature priorities can be reconsidered after each sprint based on testing results and feedback. This hybrid approach provides flexibility while maintaining control over important deadlines.
 
 # Section 2 — The Five Diagnostic Questions
 
-### 1. Are your requirements stable or volatile?
+## 1. Are your requirements stable or volatile?
 
-Our requirements are **volatile** because needs can change through testing and feedback. The platform includes a dynamic form builder, response collection, statistical analysis, real-time visualization, and role-based functions. For example, question types, validation rules, or result displays may change after testing. Two-week sprints allow these changes to be incorporated into later cycles.
+Our requirements are relatively **volatile** because the Survey & Results Analysis Platform contains multiple interactive features that may require adjustment after development and testing. Features such as the survey creation process, question types, validation rules, data analysis functions, and result visualization may change after usability evaluation. Therefore, a sprint-based process allows the team to adapt requirements without disrupting the entire project plan.
 
-### 2. Does the project carry safety or legal impact?
+## 2. Does the project carry safety or legal impact?
 
-Our project has **no significant safety or legal impact** because it is an academic survey and data analysis platform and does not control safety-critical systems. Therefore, strict safety-level documentation and change control are unnecessary. Because the system handles accounts and survey responses, the team will implement authentication, authorization, access control, and data protection.
+Our project has **limited safety and legal impact** because it is an academic platform and does not control safety-critical systems or financial/legal operations. Therefore, strict safety documentation and formal change control are not required. However, because the system manages user accounts and survey responses, the team will still apply authentication, authorization, and appropriate data protection practices.
 
-### 3. Is your team large and distributed, or small and co-located?
+## 3. Is your team large and distributed, or small and co-located?
 
-Our team is **small and co-located, with three members: Khuất Đình Trung, Dương Đức Anh, and Lê Sỹ Huy**. This reduces communication cost and allows members to discuss requirements, coordinate dependencies, review code, and solve problems quickly. This structure supports short Agile cycles without large-team communication overhead.
+Our team is **small and co-located, consisting of three members: Khuất Đình Trung, Dương Đức Anh, and Lê Sỹ Huy**. This reduces communication overhead because members can discuss requirements, coordinate implementation, review code, and solve technical problems quickly. A lightweight Agile process is suitable because the team does not require complex communication structures.
 
-### 4. Can your customer engage continuously, or only at fixed checkpoints?
+## 4. Can your customer engage continuously, or only at fixed checkpoints?
 
-The instructor acts as an **active customer and can provide direct weekly feedback**. The team may also collect user feedback during testing. Feedback can be used to refine requirements and re-prioritize the backlog in later sprints. This supports Agile iteration.
+The main customer for this course is the instructor, who provides evaluation mainly through fixed milestones and project reviews. The team can also collect feedback from potential users during testing activities. Therefore, requirements cannot be changed continuously based on customer input, but sprint reviews allow the team to incorporate available feedback into future development cycles.
 
-### 5. What do organizational and course constraints allow?
+## 5. What do organizational culture and contract constraints allow?
 
-The course requires **four fixed milestones and a final demo date**, creating plan-driven structural boundaries. The team must meet these. Within these boundaries, two-week sprints are used to develop, test, review, and improve working increments. The repository will be accessible to the instructor before submission.
+The course structure creates plan-driven boundaries through **four fixed milestones and a final demo date**. The team must complete required deliverables according to this schedule. Within these constraints, the team is allowed to use Agile sprint cycles for development, testing, review, and improvement. The repository will be made accessible to the instructor before submission according to the course requirements.
 
 # Section 3 — Critical Thinking: Risks of the Opposite Choice
 
-If our team used a **fully plan-driven process**, the biggest risk would be **late discovery of requirement and usability problems**. For example, the team might freeze the survey builder or result visualization early and discover later that users find it difficult to use. Since frontend, backend, database, and testing work may depend on the original design, late changes would cause rework and threaten milestones. The first symptom would be many change requests and rework appearing close to a milestone.
+Because our process is Agile-oriented, the opposite choice would be a fully plan-driven process. The biggest risk would be **late discovery of requirement and usability problems**. If the team fixed all requirements, interface designs, and technical decisions at the beginning, problems in features such as survey creation, data visualization, or user interaction might only appear near the final stages. Correcting these problems would require significant rework because backend, frontend, and database components may already depend on the original design. The first symptom would be a sudden increase in change requests and unfinished rework close to milestone deadlines.
 
 # Section 4 — Process Rules Our Team Commits To
 
-1. Every change to `main` must go through a Pull Request reviewed and approved by at least one other team member.
-2. Each sprint lasts two weeks; the backlog must be reviewed and re-prioritized at the start of every sprint.
-3. Any requirement change after a sprint starts must be recorded in `docs/changelog.md` with its reason.
-4. Every completed feature must pass functional and integration testing before merging into `main`.
-5. A working software increment must be demonstrated at each of the four fixed course milestones.
+1. Every change to the `main` branch must be submitted through a Pull Request and reviewed by at least one other team member before merging.
 
+2. Each sprint lasts two weeks, and the backlog must be reviewed and re-prioritized at the beginning of every sprint.
 
+3. Any requirement change after a sprint starts must be recorded in `docs/changelog.md` with the reason and expected impact.
+
+4. Every completed feature must pass functional testing and integration testing before being merged into the `main` branch.
+
+5. A working software increment must be demonstrated and reviewed at each of the four fixed course milestones.
 
