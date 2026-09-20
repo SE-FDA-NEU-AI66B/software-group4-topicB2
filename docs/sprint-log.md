@@ -11,22 +11,22 @@ Complete the Milestone 1 requirements by defining the product vision, personas, 
 | Issue | Owner | Closed? |
 |---|---|---|
 | #68 Refine backlog for Sprint 1 | @khuatnhatminhcfpro-cmyk (PO) | Yes |
-| #70 Sprint 1 wrap-up | @lesyhuy2k6-gif (SM) | Yes |
+| #70 Sprint 1 wrap-up | @lesyhuy2k6-gif (SM) | In progress |
 
 ### Committed
 
 | Issue | Story Points | Owner |
 |---|---|---|
-| #61 Product Vision & Personas | 3 | @khuatnhatminhcfpro-cmyk |
-| #62 Scenarios | 3 | @tlduongducanh281-jpg |
-| #63 User Stories & Acceptance Criteria | 5 | @khuatnhatminhcfpro-cmyk |
-| #64 Business Rules | 3 | @lesyhuy2k6-gif |
-| #65 Screens & Flow Diagram | 3 | @khuatnhatminhcfpro-cmyk |
-| #66 README & Sprint Log | 2 | @lesyhuy2k6-gif |
-| #67 Create and Refine GitHub Story Issues | 4 | @khuatnhatminhcfpro-cmyk |
-| #68 Refine backlog for Sprint 1 | 2 | @khuatnhatminhcfpro-cmyk |
-| #69 Review requirements and prepare M1 submission | 2 | @tlduongducanh281-jpg |
-| #70 Sprint 1 wrap-up | 2 | @lesyhuy2k6-gif |
+| #14 US01 User Login and Authentication | 3 | @khuatnhatminhcfpro-cmyk |
+| #18 US02 View Available Surveys | 5 | @khuatnhatminhcfpro-cmyk |
+| #22 US03 Complete Course Evaluation | 3 | @khuatnhatminhcfpro-cmyk |
+| #50 US04 Review Submitted Feedback | 3 | @tlduongducanh281-jpg |
+| #26 US05 Group Feedback by Topic | 3 | @lesyhuy2k6-gif |
+| #34 US06 Highlight Common Issues | 3 | @lesyhuy2k6-gif |
+| #30 US07 View Feedback Statistics | 3 | @lesyhuy2k6-gif |
+| #38 US08 Create Course Evaluation | 3 | @khuatnhatminhcfpro-cmyk |
+| #42 US09 Manage Evaluation Deadline | 3 | @khuatnhatminhcfpro-cmyk |
+| #46 US10 Send Deadline Reminder | 3 | @tlduongducanh281-jpg |
 
 *Total committed: 32 points*
 
