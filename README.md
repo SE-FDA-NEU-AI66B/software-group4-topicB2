@@ -15,7 +15,7 @@ improving education quality.
 
 ## Project Board
 
-[EduSurvey Sprint Board](PASTE_PROJECT_BOARD_LINK_HERE)
+[EduSurvey Sprint Board](https://github.com/orgs/SE-FDA-NEU-AI66B/projects/4/views/1)
 
 ## Definition of Done
 
@@ -30,6 +30,5 @@ A task is considered Done when:
 
 ## Setup
 
-```bash
-git clone <this-repo-url>
-cd <repo-name>
+git clone https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2.git
+cd software-group4-topicB2
