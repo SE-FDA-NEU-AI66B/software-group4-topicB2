@@ -65,41 +65,39 @@ Lecturer who creates surveys and reviews student feedback.
 
 # 3. Scenarios
 
-## Scenario 1: Student completes course evaluation
+## Scenario 1: Student completes a course evaluation before the deadline
 
-**Persona:** Student
+**Persona:** Minh – Third-year AI student
 
-**Goal:**  
-Submit course feedback to share opinions about the learning experience.
-
-**Steps:**
-
-1. The student logs into the EduSurvey system using their account.
-2. The student checks the list of assigned course evaluations.
-3. The student selects a course evaluation that needs to be completed.
-4. The student reviews the evaluation questions provided by the system.
-5. The student provides ratings and comments based on their learning experience.
-6. The student submits the completed evaluation.
-7. The system stores the feedback and confirms successful submission.
-
-
----
-
-## Scenario 2: Lecturer reviews student feedback
-
-**Persona:** Lecturer
-
-**Goal:**  
-Review student feedback to understand course quality and improve teaching activities.
+**Goal:** Complete a course evaluation quickly before the deadline and provide useful feedback about the learning experience.
 
 **Steps:**
 
-1. The lecturer logs into the EduSurvey system.
-2. The lecturer accesses feedback related to their courses.
-3. The lecturer reviews submitted student evaluations.
-4. The lecturer examines evaluation scores and student comments.
-5. The lecturer identifies common feedback trends from students.
-6. The lecturer uses collected feedback to improve future teaching activities.
+1. Minh receives a reminder that a course evaluation is due within the next 24 hours.
+2. He checks the evaluations that he still needs to complete and sees the deadline for each one.
+3. He chooses the evaluation for one of his current courses.
+4. He reads a short set of focused questions about the course content, teaching quality, and overall learning experience.
+5. He provides ratings and adds a short comment about the parts of the course that were helpful and the areas that could be improved.
+6. Before submitting, he notices that one required question has not been answered and completes the missing response.
+7. He submits the evaluation and receives confirmation that his feedback has been recorded successfully.
+8. The completed evaluation is marked as finished so that Minh knows he does not need to complete it again.
+
+## Scenario 2: Lecturer reviews and prioritizes student feedback
+
+**Persona:** Anh – University Lecturer
+
+**Goal:** Understand the most important issues raised by students and use summarized feedback to improve the course.
+
+**Steps:**
+
+1. Anh reviews the latest feedback collected for one of his courses after the evaluation period has closed.
+2. He sees an overview showing how many students submitted evaluations and the overall rating results.
+3. He examines feedback that has been automatically grouped into common topics such as course content, teaching delivery, workload, and assessment.
+4. He compares the number of comments in each topic to identify which issues are mentioned most frequently.
+5. He notices that workload is one of the most frequently mentioned concerns and reviews the related student comments for more detail.
+6. He checks the summary statistics to compare ratings across different areas of the course.
+7. He identifies the main issues that need attention and records the areas he plans to improve for the next teaching period.
+8. He finishes the review with a clear understanding of the most common student concerns without having to manually read every response individually.
 
 ---
 
@@ -107,216 +105,233 @@ Review student feedback to understand course quality and improve teaching activi
 
 | ID | User Story | Priority | Story Points |
 |---|---|---|---|
-| US01 | As a registered user, I want to log into EduSurvey securely so that I can access system functions. | P1 | 3 |
-| US02 | As a student, I want to view available surveys so that I know which courses I need to evaluate. | P1 | 3 |
-| US03 | As a student, I want to complete course evaluations so that I can provide feedback about courses and lecturers. | P1 | 5 |
-| US04 | As a student, I want to review submitted feedback so that I can track my evaluation history. | P2 | 3 |
-| US05 | As a lecturer, I want to manage surveys so that I can collect student feedback effectively. | P1 | 5 |
-| US06 | As a lecturer, I want to manage survey questions so that I can customize evaluation content. | P2 | 3 |
-| US07 | As a lecturer, I want to view evaluation results so that I can understand student opinions. | P1 | 5 |
-| US08 | As an administrator, I want to analyze survey statistics so that I can evaluate overall feedback results. | P2 | 3 |
-| US09 | As an administrator, I want to manage users and roles so that I can control access permissions. | P2 | 3 |
-| US10 | As an administrator, I want to export evaluation reports so that I can save and share survey results. | P2 | 3 |
+| US01 | As a registered user, I want to log into EduSurvey securely so that I can access the functions available to my role. | P0 | 3 |
+| US02 | As a student, I want to view my available course evaluations and their deadlines so that I know which surveys I still need to complete before they close. | P0 | 3 |
+| US03 | As a student, I want to complete and submit a course evaluation so that I can provide feedback about the course and lecturer. | P0 | 5 |
+| US04 | As a lecturer, I want to review submitted student feedback for my courses so that I can identify common concerns and improve my teaching. | P0 | 5 |
+| US05 | As a lecturer, I want student feedback to be grouped by topic so that I can quickly identify recurring areas of concern. | P1 | 5 |
+| US06 | As a lecturer, I want the system to highlight the most frequently mentioned issues in student feedback so that I can focus on the areas that need the most attention. | P1 | 5 |
+| US07 | As a lecturer, I want to view summary statistics for student evaluations so that I can understand overall course performance without reading every response individually. | P1 | 5 |
+| US08 | As an administrator, I want to create a course evaluation with a title, deadline, and questions so that students can provide structured feedback for a course. | P1 | 5 |
+| US09 | As an administrator, I want to set and update evaluation deadlines so that students know when each course evaluation is available and when it closes. | P1 | 3 |
+| US10 | As a student, I want to receive a reminder before a course evaluation deadline so that I do not forget to complete the survey on time. | P1 | 3 |
+
 
 
 ## US01 - User Login and Authentication
 
 **Acceptance Criteria**
 
-- Given a registered user enters valid email and password, When the user submits the login form, Then the system authenticates the user and redirects them to the homepage within 3 seconds.
+* **Given** a registered user enters a valid email address and password, **When** the user submits the login request, **Then** the system authenticates the account and grants access within **3 seconds**.
 
-- Given a user enters incorrect login information, When the user submits the login form, Then the system rejects the login request and displays an error message.
+* **Given** a user enters an incorrect email address or password, **When** the user attempts to log in, **Then** the system rejects the request and displays the exact message **"Invalid email or password."**
 
-- Given a user successfully logs in, When the system identifies the account role, Then the system provides access based on one of 3 roles: Student, Lecturer, or Administrator.
+* **Given** a user successfully logs in, **When** the system identifies the account role, **Then** the user is assigned exactly **1 of 3 supported roles: Student, Lecturer, or Administrator**, and can access only the functions permitted for that role.
 
 
 ## US02 - View Available Surveys
 
 **Acceptance Criteria**
 
-- Given a student is logged into EduSurvey, When the student opens the survey list page, Then the system displays all surveys assigned to that student.
+* **Given** a student has exactly **3 active course evaluations** assigned, **When** the student views the available surveys, **Then** the system displays exactly **3 active surveys**.
 
-- Given a student views a survey item, When survey information is loaded, Then the system displays exactly 4 fields: survey title, course name, lecturer name, and deadline.
+* **Given** a survey is available to the student, **When** its information is displayed, **Then** the system shows exactly **5 details**: survey title, course name, lecturer name, deadline, and status.
 
-- Given a student has completed a survey, When the student views the survey list, Then the system shows the survey status as "Completed".
+* **Given** an unfinished survey has less than **24 hours** remaining before its deadline, **When** the student views the survey list, **Then** the system displays the exact status **"Due soon"** for that survey.
 
+* **Given** the student has already submitted an evaluation, **When** the student views the survey list, **Then** that survey displays the exact status **"Completed"** and cannot be submitted again.
 
 ## US03 - Complete Course Evaluation
 
 **Acceptance Criteria**
 
-- Given a student selects an available survey, When the student opens the evaluation page, Then the system displays all questions belonging to that survey.
+* **Given** a student selects an active course evaluation, **When** the evaluation is opened, **Then** the system displays all questions assigned to that evaluation, including all required questions.
 
-- Given a student answers all required questions, When the student submits the evaluation, Then the system saves 1 completed response successfully and updates the survey status.
+* **Given** an evaluation contains exactly **5 required questions** and the student has answered all **5**, **When** the student submits the evaluation, **Then** the system stores exactly **1 completed response** and changes the survey status to **"Completed"**.
 
-- Given a student leaves required questions unanswered, When the student submits the evaluation, Then the system prevents submission and highlights missing answers.
+* **Given** an evaluation contains **5 required questions** but the student answers only **4**, **When** the student attempts to submit, **Then** the system rejects the submission and displays the exact message **"Please answer all required questions before submitting."**
+
+* **Given** the student has already submitted the evaluation once, **When** the student attempts to submit the same evaluation again, **Then** the system rejects the second submission and displays the exact message **"You have already completed this evaluation."**
+
 
 
 ## US04 - Review Submitted Feedback
 
 **Acceptance Criteria**
 
-- Given a student has submitted an evaluation, When the student opens feedback history, Then the system displays previously submitted feedback.
+* **Given** a course evaluation has received student responses, **When** the lecturer reviews the feedback, **Then** the system displays the submitted ratings and comments for that course.
 
-- Given a student views submitted feedback, When the information is loaded, Then the system displays at least 3 details: course name, submission date, and completion status.
+* **Given** a course has received exactly **20 completed evaluations**, **When** the lecturer views the feedback summary, **Then** the system displays the response count as exactly **20**.
 
-- Given a student has not submitted any evaluation, When the student opens feedback history, Then the system displays a message indicating no submitted feedback exists.
-
-
-## US05 - Manage Surveys
-
-**Acceptance Criteria**
-
-- Given a lecturer is logged into the system, When the lecturer opens the survey management page, Then the system displays all surveys created by that lecturer.
-
-- Given a lecturer creates a new survey, When valid survey information is submitted, Then the system creates 1 new survey successfully.
-
-- Given a lecturer updates an existing survey, When the lecturer saves changes, Then the system updates the survey information successfully.
+* **Given** a lecturer attempts to review feedback for a course they do not teach, **When** the request is made, **Then** the system denies access and displays the exact message **"You do not have permission to view this course feedback."**
 
 
-## US06 - Manage Survey Questions
+## US05 - Group Feedback by Topic
 
 **Acceptance Criteria**
 
-- Given a lecturer has created a survey, When the lecturer opens the question management page, Then the system displays all questions belonging to that survey.
+* **Given** a course has received written student feedback, **When** the lecturer reviews the feedback analysis, **Then** the system groups related comments into meaningful topics.
 
-- Given a lecturer wants to add a new question, When valid question information is submitted, Then the system creates 1 new survey question successfully.
+* **Given** the feedback contains comments related to exactly **4 topics: course content, teaching delivery, workload, and assessment**, **When** the analysis is generated, **Then** the system displays exactly **4 topic groups**.
 
-- Given a lecturer edits or deletes an existing question, When the lecturer confirms the action, Then the system updates the question list successfully.
-
-
-## US07 - View Evaluation Results
-
-**Acceptance Criteria**
-
-- Given evaluation responses exist in the system, When a lecturer opens the result page, Then the system displays evaluation results for the selected survey.
-
-- Given a survey has received responses, When the result page loads, Then the system displays at least 2 statistics: average score and total number of responses.
-
-- Given no responses exist for a survey, When the lecturer views the result page, Then the system displays a message indicating that no data is available.
+* **Given** a feedback comment cannot be confidently assigned to an existing topic, **When** the system processes the comment, **Then** it places the comment in the exact category **"Other"** instead of discarding it.
 
 
-## US08 - Analyze Survey Statistics
+## US06 - Highlight Common Issues
 
 **Acceptance Criteria**
 
-- Given survey response data exists, When the administrator opens the statistics page, Then the system displays calculated survey statistics.
+* **Given** student feedback has been grouped into topics, **When** the lecturer views the feedback analysis, **Then** the system ranks the topics by how frequently they are mentioned.
 
-- Given the administrator selects a survey, When statistics are generated, Then the system displays 3 basic metrics: average rating, total responses, and completion rate.
+* **Given** workload is mentioned in **12 comments**, assessment in **8 comments**, and course content in **5 comments**, **When** the system displays the issue summary, **Then** workload appears as the most frequently mentioned issue with a count of **12**.
 
-- Given insufficient data exists, When the administrator requests statistics, Then the system displays a message indicating unavailable data.
-
-
-## US09 - Manage Users and Roles
-
-**Acceptance Criteria**
-
-- Given an administrator is logged into the system, When the administrator opens the user management page, Then the system displays a list of registered users.
-
-- Given an administrator changes a user's role, When the update is saved, Then the system assigns one of 3 supported roles: Student, Lecturer, or Administrator.
-
-- Given the user list is displayed, When the administrator views a user record, Then the system shows at least 3 details: name, email, and role.
+* **Given** two topics have the same number of mentions, **When** the system ranks the issues, **Then** both topics display the same frequency count rather than incorrectly assigning one a higher count.
 
 
-## US10 - Export Evaluation Reports
+
+## US07 - View Feedback Statistics
 
 **Acceptance Criteria**
 
-- Given evaluation results exist in the system, When an administrator selects export, Then the system generates 1 report file containing survey results.
+* **Given** a course evaluation has completed responses, **When** the lecturer views the statistical summary, **Then** the system displays the total number of responses and the average rating for each rating-based question.
 
-- Given an administrator chooses a report format, When the export process is completed, Then the system provides the generated report successfully.
+* **Given** a rating question receives the values **4, 5, 3, 4, and 4**, **When** the system calculates the average, **Then** it displays the average rating as exactly **4.0 out of 5.0**.
 
-- Given no evaluation data exists, When the administrator requests an export, Then the system displays a message indicating that no data is available.
+* **Given** a course evaluation has received **0 responses**, **When** the lecturer views the statistical summary, **Then** the system displays the exact message **"No responses available for this evaluation."**
 
----
+## US08 - Create Course Evaluation
+
+**Acceptance Criteria**
+
+* **Given** an administrator provides a course, evaluation title, deadline, and at least one question, **When** the evaluation is created, **Then** the system saves it and makes it available for the assigned course.
+
+* **Given** an administrator creates an evaluation with exactly **5 questions**, **When** the evaluation is saved successfully, **Then** the system stores and displays exactly **5 questions** for that evaluation.
+
+* **Given** an administrator attempts to create an evaluation without a deadline, **When** the creation request is submitted, **Then** the system rejects the request and displays the exact message **"A deadline is required."**
+
+
+## US09 - Manage Evaluation Deadline
+
+**Acceptance Criteria**
+
+* **Given** an administrator sets a valid future deadline for an evaluation, **When** the deadline is saved, **Then** the updated deadline is displayed to students assigned to that evaluation.
+
+* **Given** an evaluation deadline is set to **23:59 on 30 September 2026**, **When** the current time passes **23:59 on 30 September 2026**, **Then** the evaluation status changes to **"Closed"** and students can no longer submit responses.
+
+* **Given** an administrator attempts to set a deadline earlier than the current date and time, **When** the update is submitted, **Then** the system rejects the change and displays the exact message **"Deadline must be in the future."**
+
+
+
+## US10 - Send Deadline Reminder
+
+**Acceptance Criteria**
+
+* **Given** a student has an unfinished evaluation with an upcoming deadline, **When** the deadline is approaching, **Then** the system sends a reminder to the student.
+
+* **Given** an unfinished evaluation has exactly **24 hours** remaining before its deadline, **When** the reminder condition is reached, **Then** the system sends exactly **1 reminder** containing the course name and deadline.
+
+* **Given** a student has already completed an evaluation, **When** the reminder process runs, **Then** the system does not send a reminder for that completed evaluation.
+
 
 # 5. Business Rules
 
-## BR1: One evaluation submission per student
+### BR1 – One Submission per Evaluation
 
-A student can submit each evaluation only once.
+**Rule:** A student may submit each course evaluation only once.
 
-Example:
-
-Student A submits Course Evaluation 001.  
-A second submission for Course Evaluation 001 is rejected.
+**Worked example:** If Minh submits the evaluation for course AI301 at **14:30 on 20 September 2026**, a second submission attempt for the same evaluation at **14:35** is rejected and the original submission remains unchanged.
 
 
-## BR2: Survey deadline management
 
-Every survey must have a defined deadline.
+### BR2 – Evaluation Deadline Enforcement
 
-Example:
+**Rule:** Students may submit an evaluation only before its configured deadline. Once the deadline has passed, the evaluation must be closed automatically and no new responses may be accepted.
 
-A survey created on 01/09/2026 has a deadline on 15/09/2026.
-
-
-## BR3: Required questions must be completed
-
-Students must answer all required questions before submitting.
-
-Example:
-
-A survey contains 5 required questions.  
-If the student answers only 4 questions, submission is rejected.
-
-
-## BR4: Role-based access control
-
-Users can only access functions according to their roles.
-
-Example:
-
-Student accounts cannot create surveys.  
-Lecturer accounts cannot manage system users.
-
-
-## BR5: Survey ownership
-
-Lecturers can only modify surveys created by their own accounts.
-
-Example:
-
-Lecturer A cannot edit or delete surveys created by Lecturer B.
-
-
-## BR6: Feedback access restriction
-
-Evaluation results are only available to authorized users.
-
-Example:
-
-Only lecturers responsible for the course and administrators can view evaluation results.
+**Worked example:** If the AI301 evaluation deadline is **23:59 on 30 September 2026**, a submission at **23:58** is accepted, while a submission at **00:01 on 1 October 2026** is rejected because the evaluation is closed.
 
 ---
 
-# 6. Screens and Flow
+### BR3 – Required Questions Must Be Completed
 
-## Screens
+**Rule:** A student must answer all questions marked as required before an evaluation can be submitted.
 
-| Route | Purpose | Access | Priority |
-|---|---|---|---|
-| /login | User authentication | G | P0 |
-| /surveys | View available surveys assigned to students | U | P0 |
-| /survey/:id | Complete course evaluation | U | P0 |
-| /manage-surveys | Lecturer manages surveys and questions | U | P1 |
-| /results | View evaluation results and statistics | U | P1 |
+**Worked example:** If an evaluation contains **5 required questions** and Minh answers only **4**, the submission is rejected. After he answers all **5 questions**, the evaluation can be submitted successfully.
+
+---
+
+### BR4 – Role-Based Access Control
+
+**Rule:** Each authenticated account must have exactly one system role, and users may access only the functions permitted for that role.
+
+**Worked example:** EduSurvey supports **3 roles: Student, Lecturer, and Administrator**. A Student may complete evaluations but cannot create them; a Lecturer may review feedback for their courses but cannot create administrator-managed evaluations; an Administrator may create and manage evaluations.
+
+---
+
+### BR5 – Rating Scale
+
+**Rule:** All rating-based evaluation questions must use a fixed scale from **1 to 5**, where 1 is the lowest rating and 5 is the highest rating.
+
+**Worked example:** If five students give a question the ratings **4, 5, 3, 4, and 4**, the valid average displayed by the system is **4.0 out of 5.0**. A rating of **6** is invalid and must not be accepted.
+
+---
+
+### BR6 – Deadline Reminder Rule
+
+**Rule:** The system sends one deadline reminder for an unfinished evaluation exactly **24 hours before the deadline**. No reminder is sent if the evaluation has already been completed.
+
+**Worked example:** If an evaluation closes at **18:00 on 25 September 2026**, a student who has not completed it receives exactly **1 reminder at 18:00 on 24 September 2026**. A student who submitted the evaluation at **15:00 on 24 September 2026** receives no reminder.
 
 
-## System Flow
+## 6. Screens and Flow
 
+| Route                    | Purpose                                                                     | Access | Priority |
+| ------------------------ | --------------------------------------------------------------------------- | ------ | -------- |
+| `/`                      | Landing page and user login                                                 | G      | P0       |
+| `/surveys`               | View available course evaluations, deadlines, and completion status         | U      | P0       |
+| `/surveys/:id`           | Complete and submit a selected course evaluation                            | U      | P0       |
+| `/lecturer/feedback`     | View courses with collected student feedback                                | U      | P0       |
+| `/lecturer/feedback/:id` | Review grouped feedback, common issues, and summary statistics for a course | U      | P1       |
+| `/admin/evaluations`     | Create, edit, and manage course evaluations and deadlines                   | A      | P1       |
+
+**Access legend**
+
+* **G** – Guest
+* **U** – Authenticated user. Access to Student or Lecturer functions depends on the user's assigned role.
+* **A** – Administrator
+
+### System Flow
+
+```text
+                             ┌─────────────┐
+                             │      /      │
+                             │ Login page  │
+                             └──────┬──────┘
+                                    │
+                               successful login
+                                    │
+                 ┌──────────────────┼───────────────────┐
+                 │                  │                   │
+              Student           Lecturer             Admin
+                 │                  │                   │
+                 ▼                  ▼                   ▼
+        ┌────────────────┐  ┌───────────────────┐  ┌─────────────────────┐
+        │    /surveys    │  │/lecturer/feedback│  │ /admin/evaluations  │
+        └───────┬────────┘  └─────────┬─────────┘  └──────────┬──────────┘
+                │                     │                       │
+        choose evaluation       choose course          create / update
+                │                     │                  evaluation
+                ▼                     ▼                       │
+       ┌─────────────────┐   ┌──────────────────────┐         │
+       │  /surveys/:id   │   │/lecturer/feedback/:id│         │
+       └───────┬─────────┘   └──────────────────────┘         │
+               │                                               │
+          submit survey                                        │
+               │                                               │
+               ▼                                               │
+        ┌────────────────┐                                     │
+        │    /surveys    │◀────────────────────────────────────┘
+        │   Completed    │
+        └────────────────┘
 ```
-Login
-   ↓
-Lecturer creates and manages surveys
-   ↓
-Students view available surveys
-   ↓
-Students complete course evaluation
-   ↓
-Submit feedback
-   ↓
-Lecturers and administrators view evaluation results
-   ↓
-Export evaluation reports
-```
+
+The flow begins at the login page. After authentication, users are directed to functions permitted for their assigned role. Students can view and complete evaluations, lecturers can review feedback and statistics for their courses, and administrators can create and manage course evaluations.
