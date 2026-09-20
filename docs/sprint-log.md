@@ -26,9 +26,9 @@ Complete the Milestone 1 requirements by defining the product vision, personas, 
 | #67 Create and Refine GitHub Story Issues | 4 | @khuatnhatminhcfpro-cmyk |
 | #68 Refine backlog for Sprint 1 | 2 | @khuatnhatminhcfpro-cmyk |
 | #69 Review requirements and prepare M1 submission | 2 | @tlduongducanh281-jpg |
-| #70 Sprint 1 wrap-up | 2 | @lesyhuy2k6-gif, @tlduongducanh281-jpg  |
+| #70 Sprint 1 wrap-up | 2 | @lesyhuy2k6-gif |
 
-*Total committed: 32 points*
+**Total committed: 32 points**
 
 ### Result
 
@@ -45,7 +45,7 @@ Complete the Milestone 1 requirements by defining the product vision, personas, 
 | #69 | 2 | Done | |
 | #70 | 2 | Done | |
 
-*Completed: 32 points. Velocity this sprint: 32*
+**Completed: 32 points. Velocity this sprint: 32**
 
 ### Sprint Review
 
@@ -54,10 +54,10 @@ Complete the Milestone 1 requirements by defining the product vision, personas, 
   - The refined GitHub backlog with aligned stories, tasks, priorities, and estimates.
 
 - Feedback received:
-  - The team confirmed that requirements were clear, testable, and aligned with the project scope.
+  - The team confirmed that the requirements were clear, testable, and aligned with the project scope.
 
 - Backlog changes as a result:
-  - Reviewed and refined GitHub issues.
+  - Reviewed and refined GitHub Issues.
   - Removed inconsistent or duplicated task requirements.
   - Updated relationships between stories and supporting tasks.
 
@@ -67,7 +67,7 @@ Complete the Milestone 1 requirements by defining the product vision, personas, 
 |---|---|---|
 | Keep requirements and tasks clearly documented in GitHub. | Avoid leaving documentation updates until the end of the sprint. | Start reviewing backlog consistency earlier during the sprint. |
 
-*One concrete action for next sprint (with an owner):*
+**One concrete action for next sprint (with an owner):**
 
 Review task progress weekly and update the GitHub Project Board regularly — Owner: @lesyhuy2k6-gif
 
