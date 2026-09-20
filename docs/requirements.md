@@ -2,7 +2,7 @@
 
 ## 1. Product Vision
 
-EduSurvey is a course evaluation management platform designed for students, lecturers, and university administrators. The system helps educational institutions collect, manage, and analyze student feedback efficiently, reducing the limitations of traditional paper-based surveys and manual data processing.
+EduSurvey is an online course evaluation platform for students, lecturers, and university administrators that centralizes the collection, management, and analysis of student feedback, replacing time-consuming paper-based surveys and manual data processing with a more efficient and accessible digital system.
 
 ---
 
