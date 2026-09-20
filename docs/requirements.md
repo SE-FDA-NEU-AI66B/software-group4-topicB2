@@ -50,35 +50,36 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 
 **Persona:** Minh – Third-year AI student
 
-**Goal:** Complete a course evaluation quickly before the deadline and provide useful feedback about the learning experience.
+**Goal:** Finish a course evaluation efficiently before the deadline while providing meaningful feedback on his learning experience.
 
 **Steps:**
 
-1. Minh receives a reminder that a course evaluation is due within the next 24 hours.
-2. He checks the evaluations that he still needs to complete and sees the deadline for each one.
-3. He chooses the evaluation for one of his current courses.
-4. He reads a short set of focused questions about the course content, teaching quality, and overall learning experience.
-5. He provides ratings and adds a short comment about the parts of the course that were helpful and the areas that could be improved.
-6. Before submitting, he notices that one required question has not been answered and completes the missing response.
-7. He submits the evaluation and receives confirmation that his feedback has been recorded successfully.
-8. The completed evaluation is marked as finished so that Minh knows he does not need to complete it again.
+1. Minh receives a reminder informing him that a course evaluation must be completed within the next 24 hours.
+2. He checks the evaluations that are still pending and reviews the deadline for each one.
+3. He selects the evaluation for one of the courses he is currently taking.
+4. He goes through a set of concise questions covering the course content, teaching quality, and overall learning experience.
+5. He gives ratings and writes a brief comment describing what he found useful and what could be improved.
+6. Before submitting his responses, he realizes that one required question is still unanswered and provides the missing response.
+7. He submits the evaluation and receives a confirmation that his feedback has been successfully recorded.
+8. The evaluation is then shown as completed, letting Minh know that no further action is required for that evaluation.
 
 ## Scenario 2: Lecturer reviews and prioritizes student feedback
 
 **Persona:** Anh – University Lecturer
 
-**Goal:** Understand the most important issues raised by students and use summarized feedback to improve the course.
+**Goal:** Identify the key issues raised by students and use summarized feedback to determine areas for course improvement.
 
 **Steps:**
 
-1. Anh reviews the latest feedback collected for one of his courses after the evaluation period has closed.
-2. He sees an overview showing how many students submitted evaluations and the overall rating results.
-3. He examines feedback that has been automatically grouped into common topics such as course content, teaching delivery, workload, and assessment.
-4. He compares the number of comments in each topic to identify which issues are mentioned most frequently.
-5. He notices that workload is one of the most frequently mentioned concerns and reviews the related student comments for more detail.
-6. He checks the summary statistics to compare ratings across different areas of the course.
-7. He identifies the main issues that need attention and records the areas he plans to improve for the next teaching period.
-8. He finishes the review with a clear understanding of the most common student concerns without having to manually read every response individually.
+1. After the evaluation period ends, Anh reviews the latest feedback collected for one of his courses.
+2. He checks an overview of the feedback, including the number of students who submitted evaluations and the overall rating results.
+3. He reviews the feedback that has been automatically organized into common topics, such as course content, teaching delivery, workload, and assessment.
+4. He compares how frequently each topic is mentioned to determine which issues are raised most often.
+5. He finds that workload is among the most frequently mentioned concerns and examines the related student comments in more detail.
+6. He reviews the summary statistics to compare student ratings across different aspects of the course.
+7. Based on the feedback, he identifies the main issues that require attention and notes the areas he intends to improve in the next teaching period.
+8. He completes the review with a clear understanding of the most common student concerns without needing to manually examine every individual response.
+
 
 ---
 
