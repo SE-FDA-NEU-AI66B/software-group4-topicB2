@@ -280,39 +280,9 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 * **U** – Authenticated user. Access to Student or Lecturer functions depends on the user's assigned role.
 * **A** – Administrator
 
+
 ### System Flow
 
-```text
-                             ┌─────────────┐
-                             │      /      │
-                             │ Login page  │
-                             └──────┬──────┘
-                                    │
-                               successful login
-                                    │
-                 ┌──────────────────┼───────────────────┐
-                 │                  │                   │
-              Student           Lecturer             Admin
-                 │                  │                   │
-                 ▼                  ▼                   ▼
-        ┌────────────────┐  ┌───────────────────┐  ┌─────────────────────┐
-        │    /surveys    │  │/lecturer/feedback│  │ /admin/evaluations  │
-        └───────┬────────┘  └─────────┬─────────┘  └──────────┬──────────┘
-                │                     │                       │
-        choose evaluation       choose course          create / update
-                │                     │                  evaluation
-                ▼                     ▼                       │
-       ┌─────────────────┐   ┌──────────────────────┐         │
-       │  /surveys/:id   │   │/lecturer/feedback/:id│         │
-       └───────┬─────────┘   └──────────────────────┘         │
-               │                                               │
-          submit survey                                        │
-               │                                               │
-               ▼                                               │
-        ┌────────────────┐                                     │
-        │    /surveys    │◀────────────────────────────────────┘
-        │   Completed    │
-        └────────────────┘
-```
+![EduSurvey System Flow](images/system-flow.png)
 
 The flow begins at the login page. After authentication, users are directed to functions permitted for their assigned role. Students can view and complete evaluations, lecturers can review feedback and statistics for their courses, and administrators can create and manage course evaluations.
