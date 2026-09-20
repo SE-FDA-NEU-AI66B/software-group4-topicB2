@@ -26,7 +26,7 @@ Complete the Milestone 1 requirements by defining the product vision, personas, 
 | #67 Create and Refine GitHub Story Issues | 4 | @khuatnhatminhcfpro-cmyk |
 | #68 Refine backlog for Sprint 1 | 2 | @khuatnhatminhcfpro-cmyk |
 | #69 Review requirements and prepare M1 submission | 2 | @tlduongducanh281-jpg |
-| #70 Sprint 1 wrap-up | 2 | @lesyhuy2k6-gif |
+| #70 Sprint 1 wrap-up | 2 | @lesyhuy2k6-gif, @tlduongducanh281-jpg  |
 
 *Total committed: 32 points*
 
