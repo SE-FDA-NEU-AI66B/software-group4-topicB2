@@ -8,60 +8,41 @@ EduSurvey is a course evaluation management platform designed for students, lect
 
 # 2. Personas
 
-## Persona 1: Student
+### Persona 1 – Student
 
-**Role:**  
-University student who participates in course evaluations.
+**Name:** Minh – Third-year AI student
 
-**Goals:**
-- Complete course evaluations easily and conveniently.
-- Provide feedback about courses and lecturers.
-- Track submitted evaluations.
+**Role:** A third-year university student studying Artificial Intelligence who completes course evaluation surveys during the semester.
 
-**Blockers:**
-- Traditional feedback methods are time-consuming.
-- Students may forget evaluation deadlines.
-- Students have limited visibility of their previous feedback.
+**Goal:** Minh wants to complete course evaluations quickly and efficiently, with clear reminders before the submission deadline.
 
-**Quote:**
+**Blocked by:** Minh often forgets survey deadlines and finds long surveys tiring and time-consuming, especially when the questions are repetitive or not focused on the most important aspects of the course.
 
-> "I want a simple way to evaluate my courses without spending too much time."
+**In his words:** *"I often forget the deadline, and the surveys are too long. I want reminders and questions that are short and focused."*
 
-**Interview Note:**
-- Interviewee: A third-year university student.
-- Date: September 2026.
-- Topic discussed: Difficulties when completing course evaluations.
-- Key finding: Students prefer an online system that is easy to access and track.
+**Technical skill:** Comfortable using smartphones, laptops, and web applications. Minh expects the survey system to be simple, responsive, and easy to use on mobile devices.
+
+**Interview note:** Interviewed an anonymous third-year Artificial Intelligence student on **18 September 2026**. The student identified forgotten deadlines and overly long surveys as the main problems, and preferred deadline reminders and shorter, more focused survey questions.
 
 
 ---
 
-## Persona 2: Lecturer
+### Persona 2 – Lecturer
 
-**Role:**  
-Lecturer who creates surveys and reviews student feedback.
+**Name:** Anh – University Lecturer
 
-**Goals:**
-- Create course evaluation surveys.
-- Receive feedback from students.
-- Understand student opinions to improve teaching quality.
+**Role:** A university lecturer who reviews student course evaluations to understand teaching effectiveness and identify areas for improvement.
 
-**Blockers:**
-- Manual feedback collection requires significant effort.
-- Difficult to summarize large amounts of feedback.
-- Limited tools for analyzing evaluation results.
+**Goal:** Anh wants to understand student feedback quickly, identify the most common issues, and use clear statistics to decide which aspects of the course should be improved.
 
-**Quote:**
+**Blocked by:** Student feedback is often too general, making it difficult to determine which problems are the most important. When there are many responses, manually reading and comparing individual comments also makes it difficult to identify recurring themes.
 
-> "I need a convenient way to understand student feedback and improve my courses."
+**In his words:** *"The feedback is often too general, so it is difficult to know which issues are actually important. I want the system to group feedback by topic, highlight the most common issues, and show useful statistics."*
 
-**Interview Note:**
-- Interviewee: A university lecturer.
-- Date: September 2026.
-- Topic discussed: Challenges in collecting and reviewing student evaluations.
-- Key finding: Lecturers need centralized feedback management and simple reports.
+**Technical skill:** Comfortable using university systems, web applications, and basic data dashboards. Anh prefers information to be summarized clearly rather than manually reviewing a large number of individual responses.
 
----
+**Interview note:** Interviewed a university lecturer on **18 September 2026**. The lecturer identified overly general feedback and difficulty prioritizing issues as the main problems. The lecturer preferred a system that automatically groups feedback by topic, highlights frequently mentioned issues, and provides summary statistics.
+
 
 # 3. Scenarios
 
