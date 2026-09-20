@@ -218,50 +218,49 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 
 ### BR1 – One Submission per Evaluation
 
-**Rule:** A student may submit each course evaluation only once.
+**Rule:** A student may submit each course evaluation only once. Once the evaluation has been successfully submitted, the system must not allow the same student to submit the same evaluation again. Any subsequent submission attempt must be rejected, and the original submission must remain unchanged.
 
-**Worked example:** If Minh submits the evaluation for course AI301 at **14:30 on 20 September 2026**, a second submission attempt for the same evaluation at **14:35** is rejected and the original submission remains unchanged.
+**Worked Example:** If Minh submits the evaluation for course AI301 at **14:30 on 20 September 2026**, a second submission attempt for the same evaluation at **14:35** is rejected, and the original submission remains unchanged.
 
-
+---
 
 ### BR2 – Evaluation Deadline Enforcement
 
-**Rule:** Students may submit an evaluation only before its configured deadline. Once the deadline has passed, the evaluation must be closed automatically and no new responses may be accepted.
+**Rule:** Students may submit an evaluation only before its configured deadline. The system must automatically close the evaluation once the deadline has passed, and no new responses may be accepted after the evaluation is closed.
 
-**Worked example:** If the AI301 evaluation deadline is **23:59 on 30 September 2026**, a submission at **23:58** is accepted, while a submission at **00:01 on 1 October 2026** is rejected because the evaluation is closed.
+**Worked Example:** If the AI301 evaluation deadline is **23:59 on 30 September 2026**, a submission at **23:58** is accepted, while a submission at **00:01 on 1 October 2026** is rejected because the evaluation is closed.
 
 ---
 
 ### BR3 – Required Questions Must Be Completed
 
-**Rule:** A student must answer all questions marked as required before an evaluation can be submitted.
+**Rule:** A student must answer all questions marked as required before an evaluation can be submitted. The system must prevent submission when one or more required questions remain unanswered.
 
-**Worked example:** If an evaluation contains **5 required questions** and Minh answers only **4**, the submission is rejected. After he answers all **5 questions**, the evaluation can be submitted successfully.
+**Worked Example:** If an evaluation contains **5 required questions** and Minh answers only **4**, the submission is rejected. After he answers all **5 questions**, the evaluation can be submitted successfully.
 
 ---
 
 ### BR4 – Role-Based Access Control
 
-**Rule:** Each authenticated account must have exactly one system role, and users may access only the functions permitted for that role.
+**Rule:** Each authenticated account must have exactly one system role, and users may access only the functions permitted for that role. The system must restrict access to functions that are not available to the user's assigned role.
 
-**Worked example:** EduSurvey supports **3 roles: Student, Lecturer, and Administrator**. A Student may complete evaluations but cannot create them; a Lecturer may review feedback for their courses but cannot create administrator-managed evaluations; an Administrator may create and manage evaluations.
+**Worked Example:** EduSurvey supports **3 roles: Student, Lecturer, and Administrator**. A Student may complete evaluations but cannot create them; a Lecturer may review feedback for their courses but cannot create administrator-managed evaluations; an Administrator may create and manage evaluations.
 
 ---
 
 ### BR5 – Rating Scale
 
-**Rule:** All rating-based evaluation questions must use a fixed scale from **1 to 5**, where 1 is the lowest rating and 5 is the highest rating.
+**Rule:** All rating-based evaluation questions must use a fixed scale from **1 to 5**, where 1 is the lowest rating and 5 is the highest rating. The system must not accept rating values outside this defined range.
 
-**Worked example:** If five students give a question the ratings **4, 5, 3, 4, and 4**, the valid average displayed by the system is **4.0 out of 5.0**. A rating of **6** is invalid and must not be accepted.
+**Worked Example:** If five students give a question the ratings **4, 5, 3, 4, and 4**, the valid average displayed by the system is **4.0 out of 5.0**. A rating of **6** is invalid and must not be accepted.
 
 ---
 
 ### BR6 – Deadline Reminder Rule
 
-**Rule:** The system sends one deadline reminder for an unfinished evaluation exactly **24 hours before the deadline**. No reminder is sent if the evaluation has already been completed.
+**Rule:** The system sends one deadline reminder for an unfinished evaluation exactly **24 hours before the deadline**. The reminder must be sent only when the evaluation is still unfinished, and no reminder is sent if the evaluation has already been completed.
 
-**Worked example:** If an evaluation closes at **18:00 on 25 September 2026**, a student who has not completed it receives exactly **1 reminder at 18:00 on 24 September 2026**. A student who submitted the evaluation at **15:00 on 24 September 2026** receives no reminder.
-
+**Worked Example:** If an evaluation closes at **18:00 on 25 September 2026**, a student who has not completed it receives exactly **1 reminder at 18:00 on 24 September 2026**. A student who submitted the evaluation at **15:00 on 24 September 2026** receives no reminder.
 
 ## 6. Screens and Flow
 
