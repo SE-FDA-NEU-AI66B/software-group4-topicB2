@@ -1,0 +1,36 @@
+@startuml
+
+title EduSurvey - Complete Survey
+
+actor Student
+participant "EduSurvey" as System
+database "Database" as DB
+
+Student -> System: Sign in
+System -> DB: Verify student account
+DB --> System: Account verified
+System --> Student: Display available surveys
+
+Student -> System: Select survey
+System -> DB: Get survey questions
+DB --> System: Return survey questions
+System --> Student: Display survey
+
+Student -> System: Submit answers
+System -> System: Validate answers
+
+alt Answers are valid
+    System -> DB: Save survey response
+    DB --> System: Response saved
+    System --> Student: Show submission confirmation
+
+else Answers are invalid or incomplete
+    System --> Student: Show validation error
+    Student -> System: Correct answers
+    Student -> System: Submit answers again
+    System -> DB: Save survey response
+    DB --> System: Response saved
+    System --> Student: Show submission confirmation
+end
+
+@enduml
