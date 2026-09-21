@@ -1,0 +1,40 @@
+@startuml
+
+title EduSurvey - Create and Publish Survey
+
+actor Lecturer
+participant "EduSurvey" as System
+database "Database" as DB
+
+Lecturer -> System: Sign in
+System -> DB: Verify lecturer account
+DB --> System: Account verified
+System --> Lecturer: Display lecturer dashboard
+
+Lecturer -> System: Create new survey
+System --> Lecturer: Display survey form
+
+Lecturer -> System: Enter survey details
+Lecturer -> System: Submit survey
+
+System -> System: Validate survey
+
+alt Survey is valid
+    System -> DB: Save survey
+    DB --> System: Survey saved
+    System --> Lecturer: Show survey created
+
+    Lecturer -> System: Publish survey
+    System -> DB: Update survey status to Published
+    DB --> System: Status updated
+    System --> Lecturer: Show publication confirmation
+
+else Survey is invalid
+    System --> Lecturer: Show validation errors
+    Lecturer -> System: Correct survey details
+    Lecturer -> System: Submit survey again
+    System -> DB: Save survey
+    DB --> System: Survey saved
+end
+
+@enduml
