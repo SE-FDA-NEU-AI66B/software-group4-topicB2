@@ -1,4 +1,52 @@
 @startuml
-title EduSurvey Use Case Diagram
+left to right direction
+
+title EduSurvey - Use Case Diagram
+
+actor "Student" as Student
+actor "Lecturer" as Lecturer
+actor "Administrator" as Admin
+
+rectangle "EduSurvey System" {
+
+    usecase "Sign In" as UC1
+
+    usecase "View Available Surveys" as UC2
+    usecase "Complete Survey" as UC3
+    usecase "Submit Survey Response" as UC4
+    usecase "View Submission Confirmation" as UC5
+
+    usecase "Create Survey" as UC6
+    usecase "Edit Survey" as UC7
+    usecase "Publish Survey" as UC8
+    usecase "View Survey Responses" as UC9
+    usecase "View Survey Results" as UC10
+
+    usecase "Manage Users" as UC11
+    usecase "Manage Surveys" as UC12
+}
+
+Student --> UC1
+Student --> UC2
+Student --> UC3
+Student --> UC4
+Student --> UC5
+
+Lecturer --> UC1
+Lecturer --> UC6
+Lecturer --> UC7
+Lecturer --> UC8
+Lecturer --> UC9
+Lecturer --> UC10
+
+Admin --> UC1
+Admin --> UC11
+Admin --> UC12
+
+UC3 ..> UC2 : <<include>>
+UC4 ..> UC3 : <<include>>
+UC5 ..> UC4 : <<include>>
+
+UC8 ..> UC6 : <<include>>
 
 @enduml
