@@ -37,7 +37,53 @@ This architecture supports the Milestone 2 walking skeleton by providing a compl
 
 ![EduSurvey Architecture](images/architecture.png)
 ## 2. Data Model
+EduSurvey uses a relational data model to manage users, courses, course assignments, evaluations, questions, student responses, and individual answers.
 
+The database consists of eight main tables:
+
+- USERS – stores Student, Lecturer, and Administrator accounts.
+- COURSES – stores course information.
+- COURSE_ENROLLMENTS – associates Students with the courses in which they are enrolled.
+- COURSE_LECTURERS – associates Lecturers with their assigned courses.
+- EVALUATIONS – stores course evaluations created by authorized users.
+- QUESTIONS – stores questions belonging to an evaluation.
+- RESPONSES – records a Student's submission for an evaluation.
+- RESPONSE_ANSWERS – stores individual answers to evaluation questions.
+
+### 2.1 Entity Relationships
+
+- One USER can have many COURSE_ENROLLMENTS.
+- One COURSE can have many COURSE_ENROLLMENTS.
+- One USER acting as a Lecturer can have many COURSE_LECTURERS assignments.
+- One COURSE can have many Lecturer assignments.
+- One COURSE can contain many EVALUATIONS.
+- One USER can create many EVALUATIONS.
+- One EVALUATION can contain many QUESTIONS.
+- One Student USER can submit many RESPONSES.
+- One EVALUATION can receive many RESPONSES.
+- One RESPONSE can contain many RESPONSE_ANSWERS.
+- One QUESTION can be referenced by many RESPONSE_ANSWERS.
+
+### 2.2 Business Rules and Constraints
+
+The following database constraints support the EduSurvey requirements and business rules:
+
+- USERS.email must be unique.
+- COURSES.course_code must be unique.
+- (student_id, course_id) in COURSE_ENROLLMENTS must be unique to prevent duplicate course enrolments.
+- (lecturer_id, course_id) in COURSE_LECTURERS must be unique to prevent duplicate Lecturer assignments.
+- (evaluation_id, student_id) in RESPONSES must be unique so that a Student can submit only one response for each evaluation.
+- (response_id, question_id) in RESPONSE_ANSWERS must be unique so that a response contains only one answer for each question.
+- USERS.role is restricted to student, lecturer, or administrator.
+- EVALUATIONS.status is restricted to valid states such as draft, open, and closed.
+- QUESTIONS.question_type is restricted to supported types such as rating and text.
+- RESPONSE_ANSWERS.rating_value, when provided, must be between 1 and 5.
+- A Lecturer may create and manage evaluations only for courses to which they are assigned through COURSE_LECTURERS.
+- A Student may access evaluations only for courses in which they are enrolled through COURSE_ENROLLMENTS.
+
+### 2.3 ER Diagram
+
+![EduSurvey ER Diagram](images/erd.png)
 ## 3. API Design
 EduSurvey provides REST-style API endpoints for authentication, course evaluations, student submissions, and lecturer feedback. The API supports the core P0 user stories defined in the requirements.
 
