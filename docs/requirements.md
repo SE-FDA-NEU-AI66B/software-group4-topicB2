@@ -199,6 +199,173 @@ The platform follows a role-based access model so that each user can access only
 
 ---
 
+## US01 - User Login and Authentication
+
+### Acceptance Criteria
+
+- **Given** a registered user enters a valid email address and password, **When** the user submits the login request, **Then** the system authenticates the account and grants access within **3 seconds** under normal operating conditions.
+
+- **Given** a user enters an incorrect email address or password, **When** the user attempts to log in, **Then** the system rejects the request and displays the exact message **"Invalid email or password."**
+
+- **Given** a user successfully logs in, **When** the system identifies the account role, **Then** the user is assigned exactly **1 of 3 supported roles: Student, Lecturer, or Administrator**, and can access only the functions permitted for that role.
+
+---
+
+## US02 - View Available Course Evaluations
+
+### Acceptance Criteria
+
+- **Given** a student has exactly **3 active course evaluations** assigned, **When** the student views the available evaluations, **Then** the system displays exactly **3 active evaluations**.
+
+- **Given** an evaluation is available to the student, **When** its information is displayed, **Then** the system shows exactly **5 details: evaluation title, course name, lecturer name, deadline, and status**.
+
+- **Given** an unfinished evaluation has less than **24 hours** remaining before its deadline, **When** the student views the evaluation list, **Then** the system displays the exact status **"Due Soon"** for that evaluation.
+
+- **Given** the student has already submitted an evaluation, **When** the student views the evaluation list, **Then** that evaluation displays the exact status **"Completed"** and cannot be submitted again.
+
+---
+
+## US03 - Complete and Submit Course Evaluation
+
+### Acceptance Criteria
+
+- **Given** a student selects an active course evaluation, **When** the evaluation is opened, **Then** the system displays all questions assigned to that evaluation, including all required questions.
+
+- **Given** an evaluation contains exactly **5 required questions** and the student has answered all **5**, **When** the student submits the evaluation, **Then** the system stores exactly **1 completed response**, changes the evaluation status to **"Completed"**, and displays the submission confirmation within **3 seconds** under normal operating conditions.
+
+- **Given** an evaluation contains **5 required questions** but the student answers only **4**, **When** the student attempts to submit, **Then** the system rejects the submission and displays the exact message **"Please answer all required questions before submitting."**
+
+- **Given** the student has already submitted the evaluation once, **When** the student attempts to submit the same evaluation again, **Then** the system rejects the second submission and displays the exact message **"You have already completed this evaluation."**
+
+---
+
+## US04 - Review Submitted Student Feedback
+
+### Acceptance Criteria
+
+- **Given** a course evaluation has received student responses, **When** the lecturer reviews the feedback for an assigned course, **Then** the system displays the submitted ratings and comments for that course.
+
+- **Given** a course has received exactly **20 completed evaluations**, **When** the lecturer views the feedback summary, **Then** the system displays the response count as exactly **20**.
+
+- **Given** a lecturer attempts to review feedback for a course they do not teach, **When** the request is made, **Then** the system denies access and displays the exact message **"You do not have permission to view this course feedback."**
+
+- **Given** feedback results are available for an assigned course, **When** the lecturer opens the feedback results, **Then** the system displays the available feedback and response information within **3 seconds** under normal operating conditions.
+
+---
+
+## US05 - Group Student Feedback by Topic
+
+### Acceptance Criteria
+
+- **Given** a course has received written student feedback, **When** the lecturer reviews the feedback analysis, **Then** the system groups related comments into meaningful topics.
+
+- **Given** the feedback contains comments related to exactly **4 topics: course content, teaching delivery, workload, and assessment**, **When** the analysis is generated, **Then** the system displays exactly **4 topic groups**.
+
+- **Given** a feedback comment cannot be confidently assigned to an existing topic, **When** the system processes the comment, **Then** it places the comment in the exact category **"Other"** instead of discarding it.
+
+---
+
+## US06 - Highlight Common Issues
+
+### Acceptance Criteria
+
+- **Given** student feedback has been grouped into topics, **When** the lecturer views the feedback analysis, **Then** the system ranks the topics by how frequently they are mentioned.
+
+- **Given** workload is mentioned in **12 comments**, assessment in **8 comments**, and course content in **5 comments**, **When** the system displays the issue summary, **Then** workload appears as the most frequently mentioned issue with a count of **12**.
+
+- **Given** two topics have the same number of mentions, **When** the system ranks the issues, **Then** both topics display the same frequency count rather than incorrectly assigning one a higher count.
+
+---
+
+## US07 - View Feedback Statistics
+
+### Acceptance Criteria
+
+- **Given** a course evaluation has completed responses, **When** the lecturer views the statistical summary, **Then** the system displays the total number of responses and the average rating for each rating-based question.
+
+- **Given** a rating question receives the values **4, 5, 3, 4, and 4**, **When** the system calculates the average, **Then** it displays the average rating as exactly **4.0 out of 5.0**.
+
+- **Given** a course evaluation has received **0 responses**, **When** the lecturer views the statistical summary, **Then** the system displays the exact message **"No responses available for this evaluation."**
+
+- **Given** statistics are available for an assigned course, **When** the lecturer opens the statistical summary, **Then** the system displays the available statistics within **3 seconds** under normal operating conditions.
+
+---
+
+## US08 - Create Course Evaluation
+
+### Acceptance Criteria
+
+- **Given** an administrator provides a course, evaluation title, deadline, and at least one question, **When** the evaluation is created, **Then** the system saves it and makes it available for the assigned course.
+
+- **Given** an administrator creates an evaluation with exactly **5 questions**, **When** the evaluation is saved successfully, **Then** the system stores and displays exactly **5 questions** for that evaluation.
+
+- **Given** an administrator attempts to create an evaluation without a deadline, **When** the creation request is submitted, **Then** the system rejects the request and displays the exact message **"A deadline is required."**
+
+---
+
+## US09 - Manage Evaluation Deadline
+
+### Acceptance Criteria
+
+- **Given** an administrator sets a valid future deadline for an evaluation, **When** the deadline is saved, **Then** the updated deadline is displayed to students assigned to that evaluation.
+
+- **Given** an evaluation deadline is set to **23:59 on 30 September 2026**, **When** the current time passes **23:59 on 30 September 2026**, **Then** the evaluation status changes to **"Closed"** and students can no longer submit responses.
+
+- **Given** an administrator attempts to set a deadline earlier than the current date and time, **When** the update is submitted, **Then** the system rejects the change and displays the exact message **"Deadline must be in the future."**
+
+---
+
+## US10 - Send Deadline Reminder
+
+### Acceptance Criteria
+
+- **Given** a student has an unfinished evaluation with an upcoming deadline, **When** the deadline is approaching, **Then** the system sends a reminder to the student.
+
+- **Given** an unfinished evaluation has exactly **24 hours** remaining before its deadline, **When** the reminder condition is reached, **Then** the system sends exactly **1 reminder** containing the course name and deadline.
+
+- **Given** a student has already completed an evaluation, **When** the reminder process runs, **Then** the system does not send a reminder for that completed evaluation.
+
+---
+
+## US11 - User Sign Out
+
+### Acceptance Criteria
+
+- **Given** an authenticated user is currently signed in, **When** the user selects the sign-out function, **Then** the system ends the current authenticated session and redirects the user to the login page within **3 seconds** under normal operating conditions.
+
+- **Given** a user has successfully signed out, **When** the user attempts to access an authenticated page using the previous session, **Then** the system denies access and redirects the user to the login page.
+
+- **Given** a user has signed out successfully, **When** the user attempts to access Student, Lecturer, or Administrator functions without signing in again, **Then** the system does not grant access to those functions.
+
+---
+
+## US12 - Administrator System Management
+
+### Acceptance Criteria
+
+- **Given** an authenticated user has the Administrator role, **When** the user opens the administrator management area, **Then** the system grants access to administrator management functions.
+
+- **Given** an authenticated user has the Student or Lecturer role, **When** the user attempts to access the administrator management area, **Then** the system denies access and displays the exact message **"You do not have permission to access this area."**
+
+- **Given** an administrator updates a user's assigned role, **When** the change is saved successfully, **Then** the system stores the new role and applies the corresponding access permissions.
+
+- **Given** an administrator updates a valid system setting, **When** the setting is saved successfully, **Then** the system stores the updated setting and applies it to the relevant system functions.
+
+---
+
+## US13 - Lecturer Creates Course Evaluation
+
+### Acceptance Criteria
+
+- **Given** a lecturer is assigned to a course, **When** the lecturer provides an evaluation title, deadline, and at least one question for that course, **Then** the system saves the evaluation and associates it with the lecturer's assigned course.
+
+- **Given** a lecturer creates an evaluation with exactly **5 questions**, **When** the evaluation is saved successfully, **Then** the system stores and displays exactly **5 questions** for that evaluation.
+
+- **Given** a lecturer attempts to create an evaluation for a course they are not assigned to, **When** the creation request is submitted, **Then** the system rejects the request and displays the exact message **"You do not have permission to create an evaluation for this course."**
+
+- **Given** a lecturer provides a valid evaluation configuration, **When** the lecturer saves the evaluation, **Then** the system confirms the creation within **3 seconds** under normal operating conditions.
+---
+
 # 5. Business Rules
 
 ## BR1 – One Submission per Evaluation
