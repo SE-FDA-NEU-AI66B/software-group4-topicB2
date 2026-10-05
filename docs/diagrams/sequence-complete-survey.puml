@@ -1,36 +1,67 @@
 @startuml
 
-title EduSurvey - Complete Survey
+title EduSurvey - Complete and Submit Course Evaluation
 
 actor Student
 participant "EduSurvey" as System
 database "Database" as DB
 
 Student -> System: Sign in
-System -> DB: Verify student account
-DB --> System: Account verified
-System --> Student: Display available surveys
+System -> DB: Verify credentials and Student role
+DB --> System: Authentication result
 
-Student -> System: Select survey
-System -> DB: Get survey questions
-DB --> System: Return survey questions
-System --> Student: Display survey
+alt Authentication successful
+    System -> DB: Get assigned evaluations\nand response status
+    DB --> System: Available evaluations
+    System --> Student: Display evaluations,\ndeadlines and completion status
 
-Student -> System: Submit answers
-System -> System: Validate answers
+    Student -> System: Select evaluation
+    System -> DB: Check enrollment, deadline,\nand submission status
+    DB --> System: Access status
 
-alt Answers are valid
-    System -> DB: Save survey response
-    DB --> System: Response saved
-    System --> Student: Show submission confirmation
+    alt Evaluation available
+        System -> DB: Get evaluation questions
+        DB --> System: Evaluation questions
+        System --> Student: Display evaluation form
 
-else Answers are invalid or incomplete
-    System --> Student: Show validation error
-    Student -> System: Correct answers
-    Student -> System: Submit answers again
-    System -> DB: Save survey response
-    DB --> System: Response saved
-    System --> Student: Show submission confirmation
+        Student -> System: Submit answers
+        System -> System: Validate required answers
+
+        alt Answers valid
+            System -> DB: Save response and answers
+            DB --> System: Submission saved
+            System --> Student: Show confirmation\nStatus = Completed\n(Response within 3 seconds)
+
+        else Answers invalid or incomplete
+            System --> Student: Show validation errors
+            Student -> System: Correct answers
+            Student -> System: Resubmit answers
+            System -> System: Validate answers
+
+            alt Corrected answers valid
+                System -> DB: Save response and answers
+                DB --> System: Submission saved
+                System --> Student: Show confirmation\nStatus = Completed\n(Response within 3 seconds)
+            else Still invalid
+                System --> Student: Show validation errors
+            end
+        end
+
+    else Deadline passed
+        System --> Student: Evaluation closed\nSubmission not allowed
+
+    else Already submitted
+        System --> Student: Evaluation already completed\nDuplicate submission not allowed
+
+    else Student not enrolled / not assigned
+        System --> Student: Access denied
+    end
+
+else Authentication failed
+    System --> Student: Show sign-in error
 end
+
+Student -> System: Sign out
+System --> Student: End session and return to login
 
 @enduml
