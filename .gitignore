@@ -11,6 +11,8 @@ credentials.json
 *.sqlite3
 *.db
 *.sql
+# Keep database schema in version control
+!src/schema.sql
 *.dump
 
 # Python
@@ -35,3 +37,5 @@ npm-debug.log*
 .idea/
 .DS_Store
 Thumbs.db
+# Local SQLite database
+data/*.db
