@@ -151,7 +151,41 @@ When the route is requested:
 4. The template dynamically renders the course evaluations in the browser.
 
 The displayed data is retrieved from the SQLite database and is not stored as a hard-coded array in the page.
+### Implementation
 
+The Flask application provides the following route:
+
+```text
+GET /evaluations
+```
+
+When the route is requested:
+
+1. Flask opens a connection to the local SQLite database at `data/edusurvey.db`.
+2. The application queries the `evaluations` and `courses` tables.
+3. The query results are passed to the Jinja template.
+4. The template dynamically renders the course evaluations in the browser.
+
+The displayed data is retrieved from the SQLite database and is not stored as a hard-coded array in the page.
+
+### Database Query
+
+The `/evaluations` route retrieves evaluation data directly from the SQLite database using the following query:
+
+```sql
+SELECT
+    e.id,
+    e.title,
+    e.deadline,
+    e.status,
+    c.course_code,
+    c.course_name
+FROM evaluations AS e
+JOIN courses AS c ON c.id = e.course_id
+ORDER BY e.deadline, e.id;
+```
+
+The query joins the `evaluations` and `courses` tables using `course_id` and returns the evaluation information displayed on the `/evaluations` page.
 ### Database Initialization
 
 The database can be initialized using:
@@ -177,6 +211,8 @@ Expected result:
 ```
 
 ### Running the Walking Skeleton
+
+![EduSurvey Walking Skeleton](images/walking-skeleton.png)
 
 Start the application with:
 
