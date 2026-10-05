@@ -80,6 +80,69 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 7. Based on the feedback, he identifies the main issues that require attention and notes the areas he intends to improve in the next teaching period.
 8. He completes the review with a clear understanding of the most common student concerns without needing to manually examine every individual response.
 
+## Scenario 3: Lecturer creates an evaluation for an assigned course
+
+**Persona:** Anh – University Lecturer
+
+**Goal:** Create a structured course evaluation for a course assigned to him.
+
+**Steps:**
+
+1. Anh signs in using his Lecturer account.
+2. The system identifies his role as Lecturer.
+3. Anh opens the evaluation creation function.
+4. He selects a course assigned to him.
+5. He enters the evaluation title, deadline, and questions.
+6. He submits the evaluation for creation.
+7. The system validates the evaluation details.
+8. The system verifies that Anh is assigned to the selected course.
+9. The system saves the evaluation.
+10. The evaluation becomes available for the assigned course according to its configured schedule.
+11. Anh can monitor the evaluation after it has been created.
+12. Anh signs out when he finishes.
+
+---
+
+## Scenario 4: Lecturer reviews and prioritizes student feedback
+
+**Persona:** Anh – University Lecturer
+
+**Goal:** Understand student feedback and identify the most important issues for course improvement.
+
+**Steps:**
+
+1. After students submit evaluations, Anh signs in to EduSurvey.
+2. He opens the results for one of his assigned courses.
+3. He reviews the response count and response rate.
+4. He views the average ratings for evaluation questions.
+5. He reviews feedback grouped into topics such as course content, teaching delivery, workload, and assessment.
+6. He reviews the most frequently mentioned issues.
+7. He examines relevant student comments.
+8. He compares statistics across evaluation questions.
+9. He identifies the main areas requiring improvement.
+10. Anh signs out after completing the review.
+
+---
+
+## Scenario 5: Administrator manages evaluations and system access
+
+**Persona:** Lan – University Administrator
+
+**Goal:** Manage evaluations, users, roles, and system settings.
+
+**Steps:**
+
+1. Lan signs in using her Administrator account.
+2. The system identifies her role as Administrator.
+3. Lan opens the administrator management area.
+4. She creates or manages a course evaluation.
+5. She configures the evaluation deadline and questions.
+6. She manages user accounts and assigned roles.
+7. She updates relevant system settings when necessary.
+8. The system validates and saves the changes.
+9. The updated configuration is applied to the relevant system functions.
+10. Lan signs out.
+11. The system ends her authenticated session and prevents further administrator access until she signs in again.
 
 ---
 
