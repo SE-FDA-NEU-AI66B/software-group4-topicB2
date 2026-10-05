@@ -116,6 +116,90 @@ EduSurvey provides REST-style API endpoints for authentication, course evaluatio
 Under normal operating conditions, key user interactions including sign in, evaluation submission, and feedback/statistics retrieval should return a system response within **3 seconds**, consistent with the Milestone 1 requirements.
 ## 4. Walking Skeleton
 
+
+EduSurvey includes a minimal end-to-end walking skeleton to demonstrate that the main application layers are connected and working together.
+
+### Implemented Flow
+
+The walking skeleton uses the following flow:
+
+```text
+Browser
+   ↓ HTTP GET /evaluations
+Flask Route
+   ↓ SQL Query
+SQLite Database
+   ↓ Evaluation + Course Data
+Flask / Jinja Template
+   ↓ Rendered HTML
+Browser
+```
+
+### Implementation
+
+The Flask application provides the following route:
+
+```text
+GET /evaluations
+```
+
+When the route is requested:
+
+1. Flask opens a connection to the local SQLite database at `data/edusurvey.db`.
+2. The application queries the `evaluations` and `courses` tables.
+3. The query results are passed to the Jinja template.
+4. The template dynamically renders the course evaluations in the browser.
+
+The displayed data is retrieved from the SQLite database and is not stored as a hard-coded array in the page.
+
+### Database Initialization
+
+The database can be initialized using:
+
+```bash
+python3 src/init_db.py
+```
+
+The initialization script creates the EduSurvey database schema and inserts seed data.
+
+The default seed data contains **10 course evaluations**.
+
+The number of seeded evaluations can be verified with:
+
+```bash
+sqlite3 data/edusurvey.db "SELECT COUNT(*) FROM evaluations;"
+```
+
+Expected result:
+
+```text
+10
+```
+
+### Running the Walking Skeleton
+
+Start the application with:
+
+```bash
+python3 src/app.py
+```
+
+Then open:
+
+```text
+http://127.0.0.1:5000/evaluations
+```
+
+### Expected Result
+
+The page displays course evaluations retrieved from SQLite, including:
+
+- Course code and course name
+- Evaluation title
+- Deadline
+- Evaluation status
+
+This demonstrates a complete end-to-end path from the user interface to the backend, through the persistent database, and back to the rendered page.
 ## 5. Design Decisions
 ### ADR 1 – Database Storage
 
