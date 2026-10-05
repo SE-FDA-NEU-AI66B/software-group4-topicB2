@@ -1,40 +1,69 @@
 @startuml
 
-title EduSurvey - Create and Publish Survey
+title EduSurvey - Lecturer Create and Publish Course Evaluation
 
 actor Lecturer
 participant "EduSurvey" as System
 database "Database" as DB
 
 Lecturer -> System: Sign in
-System -> DB: Verify lecturer account
-DB --> System: Account verified
-System --> Lecturer: Display lecturer dashboard
+System -> DB: Verify credentials and Lecturer role
+DB --> System: Authentication result
 
-Lecturer -> System: Create new survey
-System --> Lecturer: Display survey form
+alt Authentication successful
+    System -> DB: Get courses assigned to Lecturer
+    DB --> System: Assigned courses
+    System --> Lecturer: Display lecturer dashboard\nand assigned courses
 
-Lecturer -> System: Enter survey details
-Lecturer -> System: Submit survey
+    Lecturer -> System: Select assigned course
+    Lecturer -> System: Create new evaluation
 
-System -> System: Validate survey
+    System -> DB: Verify Lecturer is assigned\nto selected course
+    DB --> System: Course assignment result
 
-alt Survey is valid
-    System -> DB: Save survey
-    DB --> System: Survey saved
-    System --> Lecturer: Show survey created
+    alt Lecturer assigned to course
+        System --> Lecturer: Display evaluation form
 
-    Lecturer -> System: Publish survey
-    System -> DB: Update survey status to Published
-    DB --> System: Status updated
-    System --> Lecturer: Show publication confirmation
+        Lecturer -> System: Enter title, questions,\nand deadline
+        Lecturer -> System: Submit evaluation
 
-else Survey is invalid
-    System --> Lecturer: Show validation errors
-    Lecturer -> System: Correct survey details
-    Lecturer -> System: Submit survey again
-    System -> DB: Save survey
-    DB --> System: Survey saved
+        System -> System: Validate evaluation details
+
+        alt Evaluation is valid
+            System -> DB: Save evaluation as Draft
+            DB --> System: Evaluation saved
+            System --> Lecturer: Show evaluation created\n(Response within 3 seconds)
+
+            Lecturer -> System: Publish evaluation
+            System -> DB: Update evaluation status to Open
+            DB --> System: Status updated
+            System --> Lecturer: Show publication confirmation
+
+        else Evaluation is invalid
+            System --> Lecturer: Show validation errors
+            Lecturer -> System: Correct evaluation details
+            Lecturer -> System: Resubmit evaluation
+
+            System -> System: Validate corrected details
+
+            alt Corrected evaluation is valid
+                System -> DB: Save evaluation as Draft
+                DB --> System: Evaluation saved
+                System --> Lecturer: Show evaluation created\n(Response within 3 seconds)
+            else Still invalid
+                System --> Lecturer: Show validation errors
+            end
+        end
+
+    else Lecturer not assigned to course
+        System --> Lecturer: Access denied
+    end
+
+else Authentication failed
+    System --> Lecturer: Show sign-in error
 end
+
+Lecturer -> System: Sign out
+System --> Lecturer: End session and return to login
 
 @enduml

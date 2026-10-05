@@ -1,47 +1,81 @@
 @startuml
 left to right direction
 
+title EduSurvey - Use Case Diagram
+
 actor Student
 actor Lecturer
 actor Administrator
 
 rectangle "EduSurvey System" {
 
+    ' Common
     usecase "Sign In" as UC1
+    usecase "Sign Out" as UC2
 
-    usecase "View Available Surveys" as UC2
-    usecase "Complete Survey" as UC3
-    usecase "Submit Survey Response" as UC4
-    usecase "View Submission Confirmation" as UC5
+    ' Student
+    usecase "View Available Evaluations\nand Deadlines" as UC3
+    usecase "Complete Evaluation" as UC4
+    usecase "Submit Evaluation Response" as UC5
+    usecase "View Submission\nConfirmation" as UC6
+    usecase "Receive Evaluation\nReminder" as UC7
 
-    usecase "View Survey Responses" as UC6
-    usecase "View Survey Results" as UC7
-    usecase "Create Survey" as UC8
-    usecase "Edit Survey" as UC9
-    usecase "Publish Survey" as UC10
+    ' Lecturer
+    usecase "Create Evaluation for\nAssigned Course" as UC8
+    usecase "Review Feedback" as UC9
+    usecase "Group Feedback\nby Topic" as UC10
+    usecase "Highlight Common Issues" as UC11
+    usecase "View Feedback Statistics" as UC12
 
-    usecase "Manage Users" as UC11
-    usecase "Manage Surveys" as UC12
+    ' Administrator
+    usecase "Create Course Evaluation" as UC13
+    usecase "Manage Evaluation\nDeadlines" as UC14
+    usecase "Manage Users" as UC15
+    usecase "Manage Roles" as UC16
+    usecase "Manage Evaluations" as UC17
+    usecase "Manage System Settings" as UC18
 }
 
-' Student
+' Common authentication
 Student --> UC1
 Student --> UC2
+
+Lecturer --> UC1
+Lecturer --> UC2
+
+Administrator --> UC1
+Administrator --> UC2
+
+' Student use cases
 Student --> UC3
 Student --> UC4
 Student --> UC5
+Student --> UC6
+Student --> UC7
 
-' Lecturer
-Lecturer --> UC1
-Lecturer --> UC6
-Lecturer --> UC7
+' Student relationships
+UC4 ..> UC3 : <<include>>
+UC5 ..> UC4 : <<include>>
+UC6 ..> UC5 : <<extend>>
+
+' Lecturer use cases
 Lecturer --> UC8
 Lecturer --> UC9
 Lecturer --> UC10
+Lecturer --> UC11
+Lecturer --> UC12
 
-' Administrator
-Administrator --> UC1
-Administrator --> UC11
-Administrator --> UC12
+' Feedback analysis relationships
+UC10 ..> UC9 : <<extend>>
+UC11 ..> UC9 : <<extend>>
+UC12 ..> UC9 : <<extend>>
+
+' Administrator use cases
+Administrator --> UC13
+Administrator --> UC14
+Administrator --> UC15
+Administrator --> UC16
+Administrator --> UC17
+Administrator --> UC18
 
 @enduml
