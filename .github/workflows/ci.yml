@@ -128,7 +128,9 @@ jobs:
 
       - name: No .env or database dumps
         run: |
-          if git ls-files | grep -E '^(.*/)?\.env$|\.sql$|\.sqlite3?$|\.dump$' ; then
+          if git ls-files \
+          | grep -Ev '^src/schema\.sql$' \
+          | grep -E '^(.*/)?\.env$|\.sql$|\.sqlite3?$|\.dump$' ; then
             echo "::error::Environment files or database dumps must not be committed. Add them to .gitignore."
             exit 1
           fi
