@@ -4,6 +4,8 @@
 
 EduSurvey is an online course evaluation platform for students, lecturers, and university administrators that centralizes the collection, management, and analysis of student feedback, replacing time-consuming paper-based surveys and manual data processing with a more efficient and accessible digital system.
 
+The system provides role-based access for Students, Lecturers, and Administrators. Students can complete course evaluations, Lecturers can review and analyze feedback, and Administrators can create and manage evaluations as well as configure system settings and user access.
+
 ---
 
 # 2. Personas
@@ -24,7 +26,6 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 
 **Interview note:** Interviewed an anonymous third-year Artificial Intelligence student on **18 September 2026**. The student identified forgotten deadlines and overly long surveys as the main problems, and preferred deadline reminders and shorter, more focused survey questions.
 
-
 ---
 
 ### Persona 2 – Lecturer
@@ -43,10 +44,46 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 
 **Interview note:** Interviewed a university lecturer on **18 September 2026**. The lecturer identified overly general feedback and difficulty prioritizing issues as the main problems. The lecturer preferred a system that automatically groups feedback by topic, highlights frequently mentioned issues, and provides summary statistics.
 
+---
+
+### Persona 3 – Administrator
+
+**Name:** Lan – University Administrator
+
+**Role:** A university administrator responsible for managing EduSurvey evaluations, user access, and system configuration.
+
+**Goal:** Lan wants to manage course evaluations, deadlines, user roles, and system settings from one place so that the evaluation process operates correctly.
+
+**Blocked by:** Without centralized administration functions, it is difficult to control which users can access the system and to keep evaluation configuration consistent.
+
+**In her words:** *"I need to manage evaluations, user access, and important system settings from one place."*
+
+**Technical skill:** Comfortable using university management systems, web applications, and administrative dashboards.
+
+---
 
 # 3. Scenarios
 
-## Scenario 1: Student completes a course evaluation before the deadline
+## Scenario 1: User signs in and accesses permitted functions
+
+**Persona:** Minh – Third-year AI student
+
+**Goal:** Sign in securely and access the functions available to his role.
+
+**Steps:**
+
+1. Minh opens EduSurvey.
+2. He enters his registered email address and password.
+3. The system validates his credentials.
+4. The system identifies his assigned role as Student.
+5. The system grants access to Student functions.
+6. Minh can view and complete his available course evaluations.
+7. Minh signs out when he finishes using the system.
+8. The system ends his authenticated session and prevents access to authenticated pages until he signs in again.
+
+---
+
+## Scenario 2: Student completes a course evaluation before the deadline
 
 **Persona:** Minh – Third-year AI student
 
@@ -63,7 +100,9 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 7. He submits the evaluation and receives a confirmation that his feedback has been successfully recorded.
 8. The evaluation is then shown as completed, letting Minh know that no further action is required for that evaluation.
 
-## Scenario 2: Lecturer reviews and prioritizes student feedback
+---
+
+## Scenario 3: Lecturer reviews and prioritizes student feedback
 
 **Persona:** Anh – University Lecturer
 
@@ -71,15 +110,35 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 
 **Steps:**
 
-1. After the evaluation period ends, Anh reviews the latest feedback collected for one of his courses.
-2. He checks an overview of the feedback, including the number of students who submitted evaluations and the overall rating results.
-3. He reviews the feedback that has been automatically organized into common topics, such as course content, teaching delivery, workload, and assessment.
-4. He compares how frequently each topic is mentioned to determine which issues are raised most often.
-5. He finds that workload is among the most frequently mentioned concerns and examines the related student comments in more detail.
-6. He reviews the summary statistics to compare student ratings across different aspects of the course.
-7. Based on the feedback, he identifies the main issues that require attention and notes the areas he intends to improve in the next teaching period.
-8. He completes the review with a clear understanding of the most common student concerns without needing to manually examine every individual response.
+1. After the evaluation period ends, Anh signs in to EduSurvey.
+2. He reviews the latest feedback collected for one of his courses.
+3. He checks an overview of the feedback, including the number of students who submitted evaluations and the overall rating results.
+4. He reviews the feedback that has been automatically organized into common topics, such as course content, teaching delivery, workload, and assessment.
+5. He compares how frequently each topic is mentioned to determine which issues are raised most often.
+6. He finds that workload is among the most frequently mentioned concerns and examines the related student comments in more detail.
+7. He reviews the summary statistics to compare student ratings across different aspects of the course.
+8. Based on the feedback, he identifies the main issues that require attention and notes the areas he intends to improve in the next teaching period.
+9. He signs out after completing the review.
 
+---
+
+## Scenario 4: Administrator manages evaluations and system access
+
+**Persona:** Lan – University Administrator
+
+**Goal:** Manage course evaluations, users, roles, and system settings.
+
+**Steps:**
+
+1. Lan signs in using her administrator account.
+2. The system identifies her role as Administrator.
+3. Lan accesses the administrator management area.
+4. She creates or edits a course evaluation and configures its deadline and questions.
+5. She manages user access and verifies that users have the appropriate system roles.
+6. She updates relevant system settings when necessary.
+7. The system saves the changes and applies them to the relevant functions.
+8. Lan signs out after completing the administration tasks.
+9. The system ends her authenticated session and prevents further administrator access until she signs in again.
 
 ---
 
@@ -97,8 +156,10 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 | US08 | As an administrator, I want to create a course evaluation with a title, deadline, and questions so that students can provide structured feedback for a course. | P1 | 5 |
 | US09 | As an administrator, I want to set and update evaluation deadlines so that students know when each course evaluation is available and when it closes. | P1 | 3 |
 | US10 | As a student, I want to receive a reminder before a course evaluation deadline so that I do not forget to complete the survey on time. | P1 | 3 |
+| US11 | As an authenticated user, I want to sign out of EduSurvey so that my account and authorized functions are no longer accessible on the current session. | P0 | 2 |
+| US12 | As an administrator, I want to manage users, roles, evaluations, and system settings so that I can control how EduSurvey operates. | P1 | 5 |
 
-
+---
 
 ## US01 - User Login and Authentication
 
@@ -110,6 +171,7 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 
 * **Given** a user successfully logs in, **When** the system identifies the account role, **Then** the user is assigned exactly **1 of 3 supported roles: Student, Lecturer, or Administrator**, and can access only the functions permitted for that role.
 
+---
 
 ## US02 - View Available Surveys
 
@@ -123,6 +185,8 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 
 * **Given** the student has already submitted an evaluation, **When** the student views the survey list, **Then** that survey displays the exact status **"Completed"** and cannot be submitted again.
 
+---
+
 ## US03 - Complete Course Evaluation
 
 **Acceptance Criteria**
@@ -135,7 +199,7 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 
 * **Given** the student has already submitted the evaluation once, **When** the student attempts to submit the same evaluation again, **Then** the system rejects the second submission and displays the exact message **"You have already completed this evaluation."**
 
-
+---
 
 ## US04 - Review Submitted Feedback
 
@@ -147,6 +211,7 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 
 * **Given** a lecturer attempts to review feedback for a course they do not teach, **When** the request is made, **Then** the system denies access and displays the exact message **"You do not have permission to view this course feedback."**
 
+---
 
 ## US05 - Group Feedback by Topic
 
@@ -158,6 +223,7 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 
 * **Given** a feedback comment cannot be confidently assigned to an existing topic, **When** the system processes the comment, **Then** it places the comment in the exact category **"Other"** instead of discarding it.
 
+---
 
 ## US06 - Highlight Common Issues
 
@@ -169,7 +235,7 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 
 * **Given** two topics have the same number of mentions, **When** the system ranks the issues, **Then** both topics display the same frequency count rather than incorrectly assigning one a higher count.
 
-
+---
 
 ## US07 - View Feedback Statistics
 
@@ -181,6 +247,8 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 
 * **Given** a course evaluation has received **0 responses**, **When** the lecturer views the statistical summary, **Then** the system displays the exact message **"No responses available for this evaluation."**
 
+---
+
 ## US08 - Create Course Evaluation
 
 **Acceptance Criteria**
@@ -191,6 +259,7 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 
 * **Given** an administrator attempts to create an evaluation without a deadline, **When** the creation request is submitted, **Then** the system rejects the request and displays the exact message **"A deadline is required."**
 
+---
 
 ## US09 - Manage Evaluation Deadline
 
@@ -202,7 +271,7 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 
 * **Given** an administrator attempts to set a deadline earlier than the current date and time, **When** the update is submitted, **Then** the system rejects the change and displays the exact message **"Deadline must be in the future."**
 
-
+---
 
 ## US10 - Send Deadline Reminder
 
@@ -214,6 +283,33 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 
 * **Given** a student has already completed an evaluation, **When** the reminder process runs, **Then** the system does not send a reminder for that completed evaluation.
 
+---
+
+## US11 - User Sign Out
+
+**Acceptance Criteria**
+
+* **Given** an authenticated user is currently signed in, **When** the user selects the sign-out function, **Then** the system ends the current authenticated session and redirects the user to the login page within **3 seconds**.
+
+* **Given** a user has successfully signed out, **When** the user attempts to access an authenticated page using the previous session, **Then** the system denies access and redirects the user to the login page.
+
+* **Given** a user has signed out successfully, **When** the user attempts to access Student, Lecturer, or Administrator functions without signing in again, **Then** the system does not grant access to those functions.
+
+---
+
+## US12 - Administrator System Management
+
+**Acceptance Criteria**
+
+* **Given** an authenticated user has the Administrator role, **When** the user opens the administrator management area, **Then** the system grants access to administrator management functions.
+
+* **Given** an authenticated user has the Student or Lecturer role, **When** the user attempts to access the administrator management area, **Then** the system denies access and displays the exact message **"You do not have permission to access this area."**
+
+* **Given** an administrator updates a user's assigned role, **When** the change is saved successfully, **Then** the system stores the new role and applies the corresponding access permissions.
+
+* **Given** an administrator updates a valid system setting, **When** the setting is saved successfully, **Then** the system stores the updated setting and applies it to the relevant system functions.
+
+---
 
 # 5. Business Rules
 
@@ -245,7 +341,7 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 
 **Rule:** Each authenticated account must have exactly one system role, and users may access only the functions permitted for that role. The system must restrict access to functions that are not available to the user's assigned role.
 
-**Worked Example:** EduSurvey supports **3 roles: Student, Lecturer, and Administrator**. A Student may complete evaluations but cannot create them; a Lecturer may review feedback for their courses but cannot create administrator-managed evaluations; an Administrator may create and manage evaluations.
+**Worked Example:** EduSurvey supports **3 roles: Student, Lecturer, and Administrator**. A Student may complete evaluations but cannot create them; a Lecturer may review feedback for their courses but cannot create administrator-managed evaluations; an Administrator may create and manage evaluations and system settings.
 
 ---
 
@@ -263,26 +359,51 @@ EduSurvey is an online course evaluation platform for students, lecturers, and u
 
 **Worked Example:** If an evaluation closes at **18:00 on 25 September 2026**, a student who has not completed it receives exactly **1 reminder at 18:00 on 24 September 2026**. A student who submitted the evaluation at **15:00 on 24 September 2026** receives no reminder.
 
-## 6. Screens and Flow
+---
 
-| Route                    | Purpose                                                                     | Access | Priority |
-| ------------------------ | --------------------------------------------------------------------------- | ------ | -------- |
-| `/`                      | Landing page and user login                                                 | G      | P0       |
-| `/surveys`               | View available course evaluations, deadlines, and completion status         | U      | P0       |
-| `/surveys/:id`           | Complete and submit a selected course evaluation                            | U      | P0       |
-| `/lecturer/feedback`     | View courses with collected student feedback                                | U      | P0       |
-| `/lecturer/feedback/:id` | Review grouped feedback, common issues, and summary statistics for a course | U      | P1       |
-| `/admin/evaluations`     | Create, edit, and manage course evaluations and deadlines                   | A      | P1       |
+### BR7 – Authentication and Session Security
 
-**Access legend**
+**Rule:** Users must be authenticated before accessing protected Student, Lecturer, or Administrator functions. After a user signs out, the authenticated session must be terminated and protected functions must no longer be accessible until the user signs in again.
+
+**Worked Example:** If Minh signs out at **15:00**, attempting to reopen `/surveys` using the previous authenticated session must be rejected and the system must require Minh to sign in again.
+
+---
+
+### BR8 – Administrator Access
+
+**Rule:** Only users with the Administrator role may access administrator management functions. Students and Lecturers must not be allowed to access system management functions.
+
+**Worked Example:** If a Lecturer attempts to open `/admin/system`, the system denies access. An Administrator can access the page and manage permitted system settings and user roles.
+
+---
+
+# 6. Screens and Flow
+
+| Route | Purpose | Access | Priority |
+|---|---|---|---|
+| `/` | Landing page and user login | G | P0 |
+| `/logout` | Sign out and terminate the current authenticated session | U | P0 |
+| `/surveys` | View available course evaluations, deadlines, and completion status | Student | P0 |
+| `/surveys/:id` | Complete and submit a selected course evaluation | Student | P0 |
+| `/lecturer/feedback` | View courses with collected student feedback | Lecturer | P0 |
+| `/lecturer/feedback/:id` | Review grouped feedback, common issues, and summary statistics for a course | Lecturer | P1 |
+| `/admin/evaluations` | Create, edit, and manage course evaluations and deadlines | Administrator | P1 |
+| `/admin/users` | Manage users and their assigned system roles | Administrator | P1 |
+| `/admin/system` | Manage permitted system settings and configuration | Administrator | P1 |
+
+### Access legend
 
 * **G** – Guest
-* **U** – Authenticated user. Access to Student or Lecturer functions depends on the user's assigned role.
-* **A** – Administrator
-
+* **Student** – Authenticated user with Student role
+* **Lecturer** – Authenticated user with Lecturer role
+* **Administrator** – Authenticated user with Administrator role
 
 ### System Flow
 
 ![EduSurvey System Flow](images/system-flow.png)
 
-The flow begins at the login page. After authentication, users are directed to functions permitted for their assigned role. Students can view and complete evaluations, lecturers can review feedback and statistics for their courses, and administrators can create and manage course evaluations.
+The flow begins at the login page. A user enters valid credentials and the system authenticates the account within 3 seconds. The system then identifies the user's assigned role and grants access only to functions permitted for that role.
+
+Students can view and complete evaluations, lecturers can review feedback and statistics for their courses, and administrators can create and manage evaluations, users, roles, and permitted system settings.
+
+When a user signs out, the system terminates the authenticated session and redirects the user to the login page. Protected functions cannot be accessed again until the user signs in successfully.
