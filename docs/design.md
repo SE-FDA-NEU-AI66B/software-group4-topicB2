@@ -117,5 +117,71 @@ Under normal operating conditions, key user interactions including sign in, eval
 ## 4. Walking Skeleton
 
 ## 5. Design Decisions
+### ADR 1 – Database Storage
+
+**Decision:** Use SQLite as the database for EduSurvey.
+
+**Options considered:**
+- SQLite
+- PostgreSQL
+- File-based storage such as JSON or CSV files
+
+**Chosen option:** SQLite
+
+**Why it was chosen:**
+SQLite is lightweight, easy to configure, and does not require a separate database server. It is suitable for the current EduSurvey walking skeleton and supports the relational data model required for users, courses, evaluations, questions, responses, and answers. SQLite also allows the team to develop and test the application with a real persistent database while keeping the setup simple.
+
+**What would make the team change the decision:**
+The team would consider PostgreSQL if EduSurvey needs to support a significantly larger number of concurrent users, more complex database operations, or a production deployment requiring stronger database scalability and multi-user concurrency.
+### ADR 2 – Application Architecture
+
+**Decision:** Use a Flask-based layered monolithic architecture instead of a separate frontend/backend architecture.
+
+**Options considered:**
+- Flask layered monolith
+- Separate frontend and backend applications
+- A more complex multi-service architecture
+
+**Chosen option:** Flask layered monolith
+
+**Why it was chosen:**
+A Flask monolith keeps the application simple and allows the team to develop the walking skeleton quickly. The layered structure still separates the web layer, application service layer, and database operations, making the system easier to test and maintain. It is sufficient for the current EduSurvey requirements and milestone scope.
+
+**What would make the team change the decision:**
+The team would consider a separate frontend/backend architecture if the system required independent frontend development, multiple client applications, larger-scale deployment, or significantly more complex integration requirements.
 
 ## 6. What Changed Since M1
+The requirements were updated after M1 feedback and Sprint Review to clarify system responsibilities, user roles, and measurable system behavior.
+
+### Change 1 – Lecturer Can Create Evaluations
+
+In M1, evaluation creation was assigned to the Administrator. Based on feedback, the requirements were expanded so that Lecturers can create course evaluations for courses assigned to them.
+
+This change introduced:
+- Persona and scenario updates for the Lecturer.
+- New user story US13 – Lecturer Creates Course Evaluation.
+- New acceptance criteria for lecturer-created evaluations.
+- A new `/lecturer/evaluations` screen.
+- A new API operation allowing Lecturers to create evaluations.
+- A business rule restricting Lecturers to their assigned courses.
+
+### Change 2 – Administrator Responsibilities Were Expanded and Separated
+
+The Administrator role was clarified and separated from Lecturer responsibilities. Administrators are responsible for system-level management, including evaluations, users, roles, and system settings, while Lecturers manage evaluations and feedback for their assigned courses.
+
+This change introduced:
+- A new Administrator persona.
+- A new Administrator management scenario.
+- New user story US12 for administrator system management.
+- Separate administrator screens for evaluations, users, and system settings.
+- Role-based access restrictions for Administrator functions.
+
+### Change 3 – Sign-Out Was Explicitly Defined
+
+Sign-out was added as an explicit requirement for authenticated users. User story US11 defines the sign-out behavior, including ending the authenticated session and preventing access to protected functions after sign-out.
+
+### Change 4 – Response-Time Requirements Became Measurable
+
+The requirements were updated to define a measurable response-time target. Key interactive actions such as sign in, evaluation submission, feedback/statistics retrieval, saving evaluation configuration, and sign out should complete within 3 seconds under normal operating conditions.
+
+Long-running background operations such as scheduled reminders and large-scale feedback analysis may be processed asynchronously.
