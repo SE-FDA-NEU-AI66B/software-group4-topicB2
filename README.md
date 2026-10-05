@@ -7,12 +7,13 @@ improving education quality.
 
 ## Team
 
-| Name | GitHub username | Role |
-| --- | --- | --- |
+## Team
+
+| Name | GitHub | Role |
+|---|---|---|
 | Le Sy Huy | lesyhuy2k6-gif | Scrum Master (Sprint 1) |
 | Khuat Dinh Trung | khuatnhatminhcfpro-cmyk | Product Owner (PO) |
-| Duong Duc Anh | tlduongducanh281-jpg | Member |
-
+| Duong Duc Anh | tlduongducanh281-jpg | Scrum Master (Sprint 2) |
 ## Project Board
 
 [EduSurvey Sprint Board](https://github.com/orgs/SE-FDA-NEU-AI66B/projects/4/views/1)
