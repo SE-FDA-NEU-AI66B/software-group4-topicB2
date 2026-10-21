@@ -189,10 +189,19 @@ Stop the application currently using port 5000, then run EduSurvey again.
 
 ## 9. Fresh-Machine Verification
 
-This setup guide should be tested by a team member other than the author.
+Complete this section after a team member other than the author has tested the setup from a clean environment.
 
-- **Tested by:** [Team member name]
-- **Operating system:** [OS and version]
-- **Test date:** [YYYY-MM-DD]
-- **Setup duration:** [XX minutes]
-- **Result:** Pass / Fail
+- **Tested by:** Pending verification
+- **Operating system:** Pending verification
+- **Test date:** Pending verification
+- **Setup duration:** Pending verification
+- **Result:** Pending verification
+
+Verification checklist:
+
+- [ ] Dependencies install successfully from `requirements.txt`.
+- [ ] Database initialization succeeds on a clean environment.
+- [ ] All required tables are created.
+- [ ] Seed data and database constraints are verified.
+- [ ] The Flask application starts successfully.
+- [ ] The `/evaluations` page displays evaluation data from SQLite.
