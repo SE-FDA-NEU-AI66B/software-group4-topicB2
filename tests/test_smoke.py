@@ -175,3 +175,50 @@ def test_duplicate_submission(api_client):
 
     assert response.status_code == 409
     assert response.json["error"]["code"] == "DUPLICATE_SUBMISSION"
+
+
+def test_submission_invalid_evaluation(api_client):
+    login_as_student(api_client)
+
+    response = api_client.post(
+        "/api/submissions",
+        json={
+            "evaluation_id": 9999,
+            "answers": {"1": {"rating_value": 5}},
+        },
+    )
+
+    assert response.status_code == 404
+    assert response.json["error"]["code"] == "EVALUATION_NOT_FOUND"
+
+
+def test_submission_closed_evaluation(api_client):
+    login_as_student(api_client)
+
+    database = api_client.application.config["TEST_DATABASE"]
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            "UPDATE evaluations SET status = 'closed' WHERE id = 1"
+        )
+
+    response = api_client.post(
+        "/api/submissions",
+        json=valid_payload(),
+    )
+
+    assert response.status_code == 400
+    assert response.json["error"]["code"] == "EVALUATION_CLOSED"
+
+
+def test_submission_errors_have_user_facing_guidance(api_client):
+    response = api_client.post(
+        "/api/submissions",
+        json=valid_payload(),
+    )
+
+    assert response.status_code == 401
+    error = response.json["error"]
+
+    assert error["code"] == "UNAUTHORIZED"
+    assert error["message"]
+    assert error["action"]
