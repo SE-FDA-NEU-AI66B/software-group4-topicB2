@@ -106,3 +106,13 @@ CREATE TABLE response_answers (
         OR text_value IS NOT NULL
     )
 );
+
+CREATE TABLE deadline_reminders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    evaluation_id INTEGER NOT NULL UNIQUE,
+    sent_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (evaluation_id)
+        REFERENCES evaluations(id)
+        ON DELETE CASCADE
+);
