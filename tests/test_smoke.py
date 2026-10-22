@@ -1,4 +1,3 @@
-
 import sqlite3
 import sys
 from pathlib import Path
@@ -22,6 +21,7 @@ def api_client(tmp_path, monkeypatch):
             schema_path.read_text(encoding="utf-8")
         )
 
+        # Student account used by submission tests.
         connection.execute(
             """
             INSERT INTO users (email, password_hash, full_name, role)
@@ -30,12 +30,34 @@ def api_client(tmp_path, monkeypatch):
             ("student@test.com", "test-hash", "Test Student", "student"),
         )
 
+        # Lecturer account used by evaluation-creation tests.
+        connection.execute(
+            """
+            INSERT INTO users (email, password_hash, full_name, role)
+            VALUES (?, ?, ?, ?)
+            """,
+            (
+                "lecturer@test.com",
+                "test-hash",
+                "Test Lecturer",
+                "lecturer",
+            ),
+        )
+
         connection.execute(
             """
             INSERT INTO courses (course_code, course_name)
             VALUES (?, ?)
             """,
             ("TEST101", "Test Course"),
+        )
+
+        # Assign lecturer id 2 to course id 1.
+        connection.execute(
+            """
+            INSERT INTO course_lecturers (lecturer_id, course_id)
+            VALUES (2, 1)
+            """
         )
 
         connection.execute(
@@ -118,6 +140,11 @@ def api_client(tmp_path, monkeypatch):
 def login_as_student(client):
     with client.session_transaction() as session:
         session["user_id"] = 1
+
+
+def login_as_lecturer(client):
+    with client.session_transaction() as session:
+        session["user_id"] = 2
 
 
 def valid_payload():
@@ -388,6 +415,7 @@ def test_grouped_feedback_excludes_other_evaluations(api_client):
 
     assert "This belongs to another evaluation." not in all_comments
 
+
 def test_feedback_topic_ranking_order_and_ties(api_client):
     database = api_client.application.config["TEST_DATABASE"]
 
@@ -444,6 +472,7 @@ def test_feedback_topic_ranking_order_and_ties(api_client):
     # Competition ranking skips rank 3 after the tie.
     assert teaching["count"] == 1
     assert teaching["rank"] == 4
+
 
 def test_feedback_topic_ranking_returns_all_topics(api_client):
     response = api_client.get(
@@ -555,7 +584,9 @@ def test_feedback_topic_ranking_excludes_other_evaluations(api_client):
     assert assessment["count"] == 0
 
 
-def test_evaluation_statistics_calculates_response_count_and_averages(api_client):
+def test_evaluation_statistics_calculates_response_count_and_averages(
+    api_client,
+):
     database = api_client.application.config["TEST_DATABASE"]
 
     with sqlite3.connect(database) as connection:
@@ -640,3 +671,70 @@ def test_evaluation_statistics_invalid_evaluation(api_client):
 
     assert response.status_code == 404
     assert response.get_json()["error"]["code"] == "EVALUATION_NOT_FOUND"
+
+
+def test_create_evaluation_success(api_client):
+    # A lecturer must be logged in to create an evaluation.
+    login_as_lecturer(api_client)
+
+    response = api_client.post(
+        "/api/evaluations",
+        json={
+            "course_id": 1,
+            "title": "New Evaluation",
+            "deadline": "2099-01-01T00:00:00",
+            "questions": [
+                {
+                    "question_text": "Rate the course",
+                    "question_type": "rating",
+                    "is_required": True,
+                },
+                {
+                    "question_text": "Any suggestions?",
+                    "question_type": "text",
+                    "is_required": False,
+                },
+            ],
+        },
+    )
+
+    assert response.status_code == 201
+    data = response.get_json()
+    assert data["questions_created"] == 2
+
+    database = api_client.application.config["TEST_DATABASE"]
+    with sqlite3.connect(database) as connection:
+        evaluation = connection.execute(
+            "SELECT title, status FROM evaluations WHERE id = ?",
+            (data["evaluation_id"],),
+        ).fetchone()
+        questions = connection.execute(
+            "SELECT question_type FROM questions WHERE evaluation_id = ?",
+            (data["evaluation_id"],),
+        ).fetchall()
+
+    assert evaluation == ("New Evaluation", "draft")
+    assert [question[0] for question in questions] == ["rating", "text"]
+
+
+def test_create_evaluation_requires_deadline(api_client):
+    # The endpoint should validate the required deadline before creating data.
+    # This request omits the deadline, so it should return a 400 validation error.
+    login_as_student(api_client)
+
+    response = api_client.post(
+        "/api/evaluations",
+        json={
+            "course_id": 1,
+            "title": "Evaluation without deadline",
+            "questions": [
+                {
+                    "question_text": "Rate the course",
+                    "question_type": "rating",
+                }
+            ],
+        },
+    )
+
+    assert response.status_code == 400
+    assert response.get_json()["error"]["code"] == "MISSING_DEADLINE"
