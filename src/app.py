@@ -233,5 +233,86 @@ def create_submission():
         "message": "Validation passed. Submission processing is not implemented yet."
     }), 200
 
+
+@app.route(
+    "/api/evaluations/<int:evaluation_id>/feedback/topics/ranking",
+    methods=["GET"],
+)
+def rank_feedback_topics(evaluation_id):
+    """Rank feedback topics by comment frequency."""
+    with get_db_connection() as connection:
+        evaluation = connection.execute(
+            "SELECT id FROM evaluations WHERE id = ?",
+            (evaluation_id,),
+        ).fetchone()
+
+        if evaluation is None:
+            return api_error(
+                404,
+                "EVALUATION_NOT_FOUND",
+                "The evaluation does not exist.",
+                "Select an existing evaluation and try again.",
+            )
+
+        rows = connection.execute(
+            """
+            SELECT ra.text_value
+            FROM response_answers AS ra
+            JOIN responses AS r ON r.id = ra.response_id
+            JOIN questions AS q ON q.id = ra.question_id
+            WHERE r.evaluation_id = ?
+              AND q.evaluation_id = r.evaluation_id
+              AND r.status = 'submitted'
+              AND q.question_type = 'text'
+              AND ra.text_value IS NOT NULL
+              AND TRIM(ra.text_value) != ''
+            ORDER BY r.id, q.question_order
+            """,
+            (evaluation_id,),
+        ).fetchall()
+
+    topic_names = [
+        "Course Content",
+        "Teaching Delivery",
+        "Workload",
+        "Assessment",
+        "Other",
+    ]
+
+    counts = {topic: 0 for topic in topic_names}
+
+    for row in rows:
+        topic = classify_feedback(row["text_value"].strip())
+        counts[topic] += 1
+
+    ranked_topics = sorted(
+        topic_names,
+        key=lambda topic: (-counts[topic], topic),
+    )
+
+    topics = []
+    previous_count = None
+    current_rank = 0
+
+    for position, topic in enumerate(ranked_topics, start=1):
+        count = counts[topic]
+
+        if count != previous_count:
+            current_rank = position
+
+        topics.append({
+            "topic": topic,
+            "count": count,
+            "rank": current_rank,
+        })
+
+        previous_count = count
+
+    return jsonify({
+        "evaluation_id": evaluation_id,
+        "topics": topics,
+    }), 200
+
+
 if __name__ == "__main__":
     app.run(debug=True)
