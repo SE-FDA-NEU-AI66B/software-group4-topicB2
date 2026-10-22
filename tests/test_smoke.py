@@ -13,12 +13,14 @@ from src.app import app
 
 @pytest.fixture
 def api_client(tmp_path, monkeypatch):
-    # Use a separate temporary database for API tests.
+    # Create an isolated database for each test.
     database = tmp_path / "test_edusurvey.db"
     schema_path = ROOT_DIR / "src" / "schema.sql"
 
     with sqlite3.connect(database) as connection:
-        connection.executescript(schema_path.read_text(encoding="utf-8"))
+        connection.executescript(
+            schema_path.read_text(encoding="utf-8")
+        )
 
         connection.execute(
             """
@@ -45,6 +47,7 @@ def api_client(tmp_path, monkeypatch):
             ("2099-01-01 00:00:00",),
         )
 
+        # Add a rating question.
         connection.execute(
             """
             INSERT INTO questions
@@ -54,16 +57,62 @@ def api_client(tmp_path, monkeypatch):
             """
         )
 
+        # Add a text question for written feedback.
+        connection.execute(
+            """
+            INSERT INTO questions
+                (evaluation_id, question_text, question_type,
+                 is_required, question_order)
+            VALUES (1, 'What did you think of the course content?',
+                    'text', 0, 2)
+            """
+        )
+
+        # Add a submitted response for the feedback API.
+        # Use student ID 1 for this fixture response.
+        connection.execute(
+            """
+            INSERT INTO responses
+                (evaluation_id, student_id, submitted_at, status)
+            VALUES (1, 1, CURRENT_TIMESTAMP, 'submitted')
+            """
+        )
+
+        response_id = connection.execute(
+            """
+            SELECT id FROM responses
+            WHERE evaluation_id = 1 AND student_id = 1
+            """
+        ).fetchone()[0]
+
+        text_question_id = connection.execute(
+            """
+            SELECT id FROM questions
+            WHERE evaluation_id = 1 AND question_type = 'text'
+            """
+        ).fetchone()[0]
+
+        connection.execute(
+            """
+            INSERT INTO response_answers
+                (response_id, question_id, text_value)
+            VALUES (?, ?, ?)
+            """,
+            (
+                response_id,
+                text_question_id,
+                "The course content was very useful.",
+            ),
+        )
+
     # Redirect the application to the temporary database.
     monkeypatch.setattr("src.app.DATABASE", database)
     app.config["TEST_DATABASE"] = str(database)
-
     app.config.update(TESTING=True)
-    client = app.test_client()
 
+    client = app.test_client()
     yield client
 
-    # Restore testing configuration.
     app.config.update(TESTING=False)
 
 
@@ -77,9 +126,10 @@ def valid_payload():
         "user_id": 1,
         "evaluation_id": 1,
         "answers": {
-            "1": {"rating_value": 5}
+            "1": {"rating_value": 5},
         },
     }
+
 
 def test_home_route():
     response = app.test_client().get("/")
@@ -106,7 +156,6 @@ def test_submission_requires_login(api_client):
     assert response.json["error"]["code"] == "UNAUTHORIZED"
 
 
-
 def test_submission_missing_required_answers(api_client):
     login_as_student(api_client)
 
@@ -119,18 +168,12 @@ def test_submission_missing_required_answers(api_client):
     )
 
     assert response.status_code == 400
-    assert (
-        response.json["error"]["code"]
-        == "MISSING_REQUIRED_ANSWERS"
-    )
-
+    assert response.json["error"]["code"] == "MISSING_REQUIRED_ANSWERS"
 
 
 def test_submission_expired_deadline(api_client):
     login_as_student(api_client)
-        
 
-    # The test database path is configured by the fixture below.
     database = api_client.application.config["TEST_DATABASE"]
     with sqlite3.connect(database) as connection:
         connection.execute(
@@ -147,31 +190,15 @@ def test_submission_expired_deadline(api_client):
     assert response.json["error"]["code"] == "DEADLINE_EXPIRED"
 
 
-
 def test_duplicate_submission(api_client):
     login_as_student(api_client)
 
-    database = api_client.application.config["TEST_DATABASE"]
-    with sqlite3.connect(database) as connection:
-        connection.execute(
-            """
-            INSERT INTO responses
-                (evaluation_id, student_id, submitted_at, status)
-            VALUES (1, 1, CURRENT_TIMESTAMP, 'submitted')
-            """
-        )
-
+    # The fixture already contains a submitted response for student 1
+    # and evaluation 1, so no additional INSERT is needed.
     response = api_client.post(
         "/api/submissions",
         json=valid_payload(),
     )
-
-    assert response.status_code == 409
-    assert (
-        response.json["error"]["code"]
-        == "DUPLICATE_SUBMISSION"
-    )
-
 
     assert response.status_code == 409
     assert response.json["error"]["code"] == "DUPLICATE_SUBMISSION"
@@ -222,3 +249,107 @@ def test_submission_errors_have_user_facing_guidance(api_client):
     assert error["code"] == "UNAUTHORIZED"
     assert error["message"]
     assert error["action"]
+
+
+def test_grouped_feedback_response_structure(api_client):
+    response = api_client.get("/api/evaluations/1/feedback/topics")
+
+    assert response.status_code == 200
+    data = response.get_json()
+
+    assert data["evaluation_id"] == 1
+    assert "topics" in data
+
+    topics = data["topics"]
+    topic_names = {topic["topic"] for topic in topics}
+
+    assert {
+        "Course Content",
+        "Teaching Delivery",
+        "Workload",
+        "Assessment",
+        "Other",
+    }.issubset(topic_names)
+
+    for topic in topics:
+        assert isinstance(topic["count"], int)
+        assert topic["count"] == len(topic["comments"])
+
+
+def test_grouped_feedback_excludes_other_evaluations(api_client):
+    database = api_client.application.config["TEST_DATABASE"]
+
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            """
+            INSERT INTO evaluations
+                (course_id, created_by, title, deadline, status)
+            VALUES (1, 1, 'Another Evaluation', '2099-01-01 00:00:00', 'open')
+            """
+        )
+
+        other_evaluation_id = connection.execute(
+            "SELECT id FROM evaluations WHERE title = ?",
+            ("Another Evaluation",),
+        ).fetchone()[0]
+
+        connection.execute(
+            """
+            INSERT INTO questions
+                (evaluation_id, question_text, question_type,
+                 is_required, question_order)
+            VALUES (?, 'Other feedback', 'text', 0, 1)
+            """,
+            (other_evaluation_id,),
+        )
+
+        other_question_id = connection.execute(
+            """
+            SELECT id FROM questions
+            WHERE evaluation_id = ? AND question_type = 'text'
+            """,
+            (other_evaluation_id,),
+        ).fetchone()[0]
+
+        connection.execute(
+            """
+            INSERT INTO responses
+                (evaluation_id, student_id, submitted_at, status)
+            VALUES (?, 1, CURRENT_TIMESTAMP, 'submitted')
+            """,
+            (other_evaluation_id,),
+        )
+
+        other_response_id = connection.execute(
+            """
+            SELECT id FROM responses
+            WHERE evaluation_id = ? AND student_id = 1
+            """,
+            (other_evaluation_id,),
+        ).fetchone()[0]
+
+        connection.execute(
+            """
+            INSERT INTO response_answers
+                (response_id, question_id, text_value)
+            VALUES (?, ?, ?)
+            """,
+            (
+                other_response_id,
+                other_question_id,
+                "This belongs to another evaluation.",
+            ),
+        )
+
+    response = api_client.get("/api/evaluations/1/feedback/topics")
+
+    assert response.status_code == 200
+    data = response.get_json()
+
+    all_comments = [
+        comment
+        for topic in data["topics"]
+        for comment in topic["comments"]
+    ]
+
+    assert "This belongs to another evaluation." not in all_comments

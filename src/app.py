@@ -27,9 +27,96 @@ def get_db_connection():
     return connection
 
 
+def classify_feedback(comment):
+    """Classify a written comment into a supported feedback topic."""
+    text = comment.lower()
+
+    topic_keywords = {
+        "Course Content": [
+            "course content", "course material", "learning material",
+            "content", "lecture notes", "slides", "syllabus",
+        ],
+        "Teaching Delivery": [
+            "teaching", "lecturer", "teacher", "explanation",
+            "explained", "presentation", "delivery", "lecture",
+        ],
+        "Workload": [
+            "workload", "work load", "too much work", "heavy workload",
+            "assignments", "assignment load", "time-consuming",
+        ],
+        "Assessment": [
+            "assessment", "exam", "examination", "test", "grading",
+            "marking", "quiz", "feedback on grades",
+        ],
+    }
+
+    for topic, keywords in topic_keywords.items():
+        if any(keyword in text for keyword in keywords):
+            return topic
+
+    return "Other"
+
+
 @app.route("/")
 def home():
     return '<h1>EduSurvey</h1><a href="/evaluations">View Evaluations</a>'
+
+
+@app.route("/api/evaluations/<int:evaluation_id>/feedback/topics", methods=["GET"])
+def grouped_feedback_by_topic(evaluation_id):
+    with get_db_connection() as connection:
+        evaluation = connection.execute(
+            "SELECT id FROM evaluations WHERE id = ?",
+            (evaluation_id,),
+        ).fetchone()
+
+        if evaluation is None:
+            return api_error(
+                404,
+                "EVALUATION_NOT_FOUND",
+                "The evaluation does not exist.",
+                "Select an existing evaluation and try again.",
+            )
+
+        rows = connection.execute(
+            """
+            SELECT ra.text_value
+            FROM response_answers AS ra
+            JOIN responses AS r ON r.id = ra.response_id
+            JOIN questions AS q ON q.id = ra.question_id
+            WHERE r.evaluation_id = ?
+              AND q.evaluation_id = r.evaluation_id
+              AND r.status = 'submitted'
+              AND q.question_type = 'text'
+              AND ra.text_value IS NOT NULL
+              AND TRIM(ra.text_value) != ''
+            ORDER BY r.id, q.question_order
+            """,
+            (evaluation_id,),
+        ).fetchall()
+
+    topic_names = [
+        "Course Content",
+        "Teaching Delivery",
+        "Workload",
+        "Assessment",
+        "Other",
+    ]
+    grouped = {
+        topic: {"topic": topic, "count": 0, "comments": []}
+        for topic in topic_names
+    }
+
+    for row in rows:
+        comment = row["text_value"].strip()
+        topic = classify_feedback(comment)
+        grouped[topic]["comments"].append(comment)
+        grouped[topic]["count"] += 1
+
+    return jsonify({
+        "evaluation_id": evaluation_id,
+        "topics": list(grouped.values()),
+    }), 200
 
 
 @app.route("/evaluations")
