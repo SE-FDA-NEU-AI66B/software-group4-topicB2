@@ -314,5 +314,83 @@ def rank_feedback_topics(evaluation_id):
     }), 200
 
 
+@app.route("/api/evaluations/<int:evaluation_id>/statistics", methods=["GET"])
+def evaluation_statistics(evaluation_id):
+    """Return response count and average rating for each rating question."""
+    with get_db_connection() as connection:
+        evaluation = connection.execute(
+            "SELECT id FROM evaluations WHERE id = ?",
+            (evaluation_id,),
+        ).fetchone()
+
+        if evaluation is None:
+            return api_error(
+                404,
+                "EVALUATION_NOT_FOUND",
+                "The evaluation does not exist.",
+                "Select an existing evaluation and try again.",
+            )
+
+        completed_responses = connection.execute(
+            """
+            SELECT COUNT(*) AS total
+            FROM responses
+            WHERE evaluation_id = ?
+              AND status = 'submitted'
+            """,
+            (evaluation_id,),
+        ).fetchone()["total"]
+
+        rows = connection.execute(
+            """
+            SELECT
+                q.id AS question_id,
+                q.question_text,
+                COUNT(
+                    CASE
+                        WHEN ra.rating_value BETWEEN 1 AND 5
+                        THEN ra.rating_value
+                    END
+                ) AS rating_count,
+                AVG(
+                    CASE
+                        WHEN ra.rating_value BETWEEN 1 AND 5
+                        THEN ra.rating_value
+                    END
+                ) AS average_rating
+            FROM questions AS q
+            LEFT JOIN response_answers AS ra
+                ON ra.question_id = q.id
+            LEFT JOIN responses AS r
+                ON r.id = ra.response_id
+               AND r.evaluation_id = q.evaluation_id
+               AND r.status = 'submitted'
+            WHERE q.evaluation_id = ?
+              AND q.question_type = 'rating'
+            GROUP BY q.id, q.question_text, q.question_order
+            ORDER BY q.question_order, q.id
+            """,
+            (evaluation_id,),
+        ).fetchall()
+
+    question_statistics = []
+    for row in rows:
+        average = row["average_rating"]
+        question_statistics.append({
+            "question_id": row["question_id"],
+            "question_text": row["question_text"],
+            "rating_count": row["rating_count"],
+            "average_rating": (
+                round(average, 2) if average is not None else None
+            ),
+        })
+
+    return jsonify({
+        "evaluation_id": evaluation_id,
+        "completed_responses": completed_responses,
+        "question_statistics": question_statistics,
+    }), 200
+
+
 if __name__ == "__main__":
     app.run(debug=True)

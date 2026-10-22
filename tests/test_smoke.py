@@ -553,3 +553,90 @@ def test_feedback_topic_ranking_excludes_other_evaluations(api_client):
         topic for topic in topics if topic["topic"] == "Assessment"
     )
     assert assessment["count"] == 0
+
+
+def test_evaluation_statistics_calculates_response_count_and_averages(api_client):
+    database = api_client.application.config["TEST_DATABASE"]
+
+    with sqlite3.connect(database) as connection:
+        rating_question_id = connection.execute(
+            """
+            SELECT id FROM questions
+            WHERE evaluation_id = 1 AND question_type = 'rating'
+            """
+        ).fetchone()[0]
+
+        # Add a rating to the submitted response already created by the fixture.
+        response_id = connection.execute(
+            """
+            SELECT id FROM responses
+            WHERE evaluation_id = 1 AND status = 'submitted'
+            """
+        ).fetchone()[0]
+
+        connection.execute(
+            """
+            INSERT INTO response_answers
+                (response_id, question_id, rating_value)
+            VALUES (?, ?, ?)
+            """,
+            (response_id, rating_question_id, 4),
+        )
+
+        # Add another submitted response with a rating of 2.
+        connection.execute(
+            """
+            INSERT INTO responses
+                (evaluation_id, student_id, submitted_at, status)
+            VALUES (1, 2, CURRENT_TIMESTAMP, 'submitted')
+            """
+        )
+        second_response_id = connection.execute(
+            """
+            SELECT id FROM responses
+            WHERE evaluation_id = 1 AND student_id = 2
+            """
+        ).fetchone()[0]
+
+        connection.execute(
+            """
+            INSERT INTO response_answers
+                (response_id, question_id, rating_value)
+            VALUES (?, ?, ?)
+            """,
+            (second_response_id, rating_question_id, 2),
+        )
+
+    response = api_client.get("/api/evaluations/1/statistics")
+
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data["completed_responses"] == 2
+
+    stats = data["question_statistics"]
+    rating_stat = next(
+        item for item in stats
+        if item["question_id"] == rating_question_id
+    )
+    assert rating_stat["rating_count"] == 2
+    assert rating_stat["average_rating"] == 3.0
+
+
+def test_evaluation_statistics_handles_no_ratings(api_client):
+    response = api_client.get("/api/evaluations/1/statistics")
+
+    assert response.status_code == 200
+    data = response.get_json()
+
+    # The fixture has one submitted response, but no rating answer.
+    assert data["completed_responses"] == 1
+    rating_stat = data["question_statistics"][0]
+    assert rating_stat["rating_count"] == 0
+    assert rating_stat["average_rating"] is None
+
+
+def test_evaluation_statistics_invalid_evaluation(api_client):
+    response = api_client.get("/api/evaluations/9999/statistics")
+
+    assert response.status_code == 404
+    assert response.get_json()["error"]["code"] == "EVALUATION_NOT_FOUND"
