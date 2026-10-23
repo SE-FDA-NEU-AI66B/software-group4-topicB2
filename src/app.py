@@ -72,6 +72,95 @@ def login_required(roles=None):
 
     return decorator
 
+@app.route("/api/evaluations", methods=["GET"])
+@login_required(roles=["student"])
+def get_student_evaluations():
+    student_id = session.get("user_id")
+    connection = get_db_connection()
+
+    try:
+        rows = connection.execute(
+            """
+            SELECT
+                e.id,
+                e.title AS survey_title,
+                c.course_name,
+                lecturer.full_name AS lecturer_name,
+                e.deadline AS submission_deadline,
+                e.status AS evaluation_status,
+                EXISTS (
+                    SELECT 1
+                    FROM responses AS r
+                    WHERE r.evaluation_id = e.id
+                      AND r.student_id = ?
+                      AND r.status = 'submitted'
+                ) AS is_completed
+            FROM evaluations AS e
+            JOIN courses AS c
+                ON c.id = e.course_id
+            JOIN course_enrollments AS ce
+                ON ce.course_id = c.id
+            LEFT JOIN course_lecturers AS cl
+                ON cl.course_id = c.id
+            LEFT JOIN users AS lecturer
+                ON lecturer.id = cl.lecturer_id
+            WHERE ce.student_id = ?
+              AND LOWER(e.status) IN ('open', 'closed')
+            ORDER BY e.deadline ASC, e.id ASC
+            """,
+            (student_id, student_id),
+        ).fetchall()
+
+        now = datetime.now()
+        evaluations = []
+
+        for row in rows:
+            deadline_text = row["submission_deadline"]
+            deadline = None
+
+            if deadline_text:
+                try:
+                    deadline = datetime.fromisoformat(deadline_text)
+                except (ValueError, TypeError):
+                    deadline = None
+
+            evaluation_status = (
+                row["evaluation_status"] or ""
+            ).lower()
+
+            if row["is_completed"]:
+                survey_status = "Completed"
+
+            elif evaluation_status == "closed":
+                survey_status = "Closed"
+
+            elif deadline is not None and deadline <= now:
+                survey_status = "Closed"
+
+            elif (
+                deadline is not None
+                and deadline <= now + timedelta(days=3)
+            ):
+                survey_status = "Due soon"
+
+            else:
+                survey_status = "Active"
+
+            evaluations.append({
+                "survey_title": row["survey_title"],
+                "course_name": row["course_name"],
+                "lecturer_name": row["lecturer_name"],
+                "submission_deadline": deadline_text,
+                "survey_status": survey_status,
+            })
+
+        return jsonify({
+            "evaluations": evaluations,
+            "count": len(evaluations),
+        }), 200
+
+    finally:
+        connection.close()
 
 @app.route("/api/auth/login", methods=["POST"])
 def login():
