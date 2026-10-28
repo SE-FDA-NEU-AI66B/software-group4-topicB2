@@ -81,9 +81,32 @@ The following database constraints support the EduSurvey requirements and busine
 - A Lecturer may create and manage evaluations only for courses to which they are assigned through COURSE_LECTURERS.
 - A Student may access evaluations only for courses in which they are enrolled through COURSE_ENROLLMENTS.
 
+### Authentication and Role-Based Access Control
+
+- Each user account has a unique email address.
+- Passwords must be stored as password hashes, never as plaintext.
+- Each user must be assigned exactly one role: `student`, `lecturer`, or `administrator`.
+- The `USERS.role` column is restricted by a database `CHECK` constraint to the three supported roles.
+- The backend must authenticate users using their email and password and enforce authorization according to the authenticated user's role.
+- Students may access functions permitted to students, Lecturers may manage evaluations for their assigned courses, and Administrators may perform system-level management.
+- Login failures must return the message `Invalid email or password.` without revealing whether the email or password was incorrect.
 ### 2.3 ER Diagram
 
 ![EduSurvey ER Diagram](images/erd.png)
+### 2.4 User Authentication and Role Model
+
+The `users` table stores account information and the role assigned to each account.
+
+| Column | Purpose | Constraint |
+|---|---|---|
+| `id` | User identifier | Primary key |
+| `email` | Login email address | Required and unique |
+| `password_hash` | Hashed password | Required |
+| `full_name` | User's full name | Required |
+| `role` | User role | Required; restricted to `student`, `lecturer`, or `administrator` |
+| `created_at` | Account creation timestamp | Required; defaults to the current timestamp |
+
+The current design stores the role directly in the `users` table. This ensures that each user has one role value and that only the three supported role values can be stored. Role-based authorization must also be enforced by the backend.
 ## 3. API Design
 EduSurvey provides REST-style API endpoints for authentication, course evaluations, student submissions, and lecturer feedback. The API supports the core P0 user stories defined in the requirements.
 
