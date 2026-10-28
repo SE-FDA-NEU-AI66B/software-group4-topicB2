@@ -839,3 +839,49 @@ def test_update_evaluation_deadline_not_found(api_client):
         response.get_json()["error"]["code"]
         == "EVALUATION_NOT_FOUND"
     )
+
+from datetime import datetime, timedelta
+
+from src.app import send_deadline_reminders
+
+
+def test_deadline_reminder_is_recorded_once(api_client):
+    database = api_client.application.config["TEST_DATABASE"]
+
+    now = datetime(2098, 12, 31, 0, 0, 0)
+    deadline = now + timedelta(hours=24)
+
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            "UPDATE evaluations SET deadline = ?, status = 'open' WHERE id = 1",
+            (deadline.strftime("%Y-%m-%d %H:%M:%S"),),
+        )
+
+        # Mark the existing response as unfinished.
+        connection.execute(
+            "UPDATE responses SET status = 'draft' WHERE evaluation_id = 1"
+        )
+
+        connection.execute(
+            """
+            INSERT INTO course_enrollments (student_id, course_id)
+            VALUES (1, 1)
+            """
+        )
+
+    first_result = send_deadline_reminders(now)
+    second_result = send_deadline_reminders(now)
+
+    assert len(first_result) == 1
+    assert first_result[0]["course_name"] == "Test Course"
+    assert first_result[0]["deadline"] == deadline.strftime(
+        "%Y-%m-%d %H:%M:%S"
+    )
+    assert len(second_result) == 0
+
+    with sqlite3.connect(database) as connection:
+        count = connection.execute(
+            "SELECT COUNT(*) FROM deadline_reminders WHERE evaluation_id = 1"
+        ).fetchone()[0]
+
+    assert count == 1

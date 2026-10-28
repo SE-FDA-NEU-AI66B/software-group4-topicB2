@@ -1,7 +1,7 @@
 
 from pathlib import Path
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask import Flask, render_template, jsonify, request, session
 
@@ -749,6 +749,74 @@ def update_evaluation_deadline(evaluation_id):
         "deadline": new_deadline.isoformat(),
     }), 200
 
+def send_deadline_reminders(now=None):
+    """Record one reminder for each unfinished evaluation due in 24 hours."""
+    now = now or datetime.now()
+    target_time = now + timedelta(hours=24)
+
+    with get_db_connection() as connection:
+        evaluations_due = connection.execute(
+            """
+            SELECT
+                e.id AS evaluation_id,
+                e.deadline,
+                c.course_name
+            FROM evaluations AS e
+            JOIN courses AS c ON c.id = e.course_id
+            WHERE e.status = 'open'
+              AND datetime(e.deadline) >= datetime(?)
+              AND datetime(e.deadline) < datetime(?)
+              AND EXISTS (
+                  SELECT 1
+                  FROM course_enrollments AS ce
+                  WHERE ce.course_id = e.course_id
+              )
+              AND EXISTS (
+                  SELECT 1
+                  FROM responses AS r
+                  WHERE r.evaluation_id = e.id
+                    AND r.status = 'draft'
+              )
+              AND NOT EXISTS (
+                  SELECT 1
+                  FROM deadline_reminders AS dr
+                  WHERE dr.evaluation_id = e.id
+              )
+            """,
+            (
+                (target_time - timedelta(minutes=5)).strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                ),
+                (target_time + timedelta(minutes=5)).strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                ),
+            ),
+        ).fetchall()
+
+        reminders = []
+
+        for evaluation in evaluations_due:
+            cursor = connection.execute(
+                """
+                INSERT OR IGNORE INTO deadline_reminders (evaluation_id)
+                VALUES (?)
+                """,
+                (evaluation["evaluation_id"],),
+            )
+
+            if cursor.rowcount == 1:
+                reminders.append({
+                    "evaluation_id": evaluation["evaluation_id"],
+                    "course_name": evaluation["course_name"],
+                    "deadline": evaluation["deadline"],
+                    "message": (
+                        f"Reminder: evaluation for "
+                        f"{evaluation['course_name']} is due at "
+                        f"{evaluation['deadline']}."
+                    ),
+                })
+
+    return reminders
 
 if __name__ == "__main__":
     app.run(debug=True)
