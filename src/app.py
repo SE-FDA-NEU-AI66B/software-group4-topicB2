@@ -612,5 +612,143 @@ def create_evaluation():
     }), 201
 
 
+def close_expired_evaluations(connection):
+    """Close open evaluations whose deadlines have passed."""
+    connection.execute(
+        """
+        UPDATE evaluations
+        SET status = 'closed'
+        WHERE status = 'open'
+          AND datetime(deadline) <= datetime('now', 'localtime')
+        """
+    )
+
+
+@app.route(
+    "/api/evaluations/<int:evaluation_id>/deadline",
+    methods=["PUT"],
+)
+def update_evaluation_deadline(evaluation_id):
+    """Allow administrators to update an evaluation deadline."""
+    user_id = session.get("user_id")
+
+    if not user_id:
+        return api_error(
+            401,
+            "UNAUTHORIZED",
+            "You must be logged in to update an evaluation deadline.",
+            "Log in with an administrator account and try again.",
+        )
+
+    data = request.get_json(silent=True)
+
+    if not isinstance(data, dict):
+        return api_error(
+            400,
+            "INVALID_REQUEST",
+            "A valid JSON object is required.",
+            "Send the new deadline in a JSON object.",
+        )
+
+    deadline = data.get("deadline")
+
+    if not isinstance(deadline, str) or not deadline.strip():
+        return api_error(
+            400,
+            "MISSING_DEADLINE",
+            "A new deadline is required.",
+            "Provide deadline in ISO format.",
+        )
+
+    try:
+        new_deadline = datetime.fromisoformat(deadline.strip())
+    except ValueError:
+        return api_error(
+            400,
+            "INVALID_DEADLINE",
+            "The deadline format is invalid.",
+            "Use ISO format, for example 2099-12-31T23:59:00.",
+        )
+
+    # Compare timezone-aware and timezone-naive datetimes safely.
+    if new_deadline.tzinfo is not None:
+        now = datetime.now(new_deadline.tzinfo)
+    else:
+        now = datetime.now()
+
+    if new_deadline <= now:
+        return api_error(
+            400,
+            "DEADLINE_NOT_IN_FUTURE",
+            "The new deadline must be in the future.",
+            "Provide a future date and time.",
+        )
+
+    with get_db_connection() as connection:
+        user = connection.execute(
+            "SELECT role FROM users WHERE id = ?",
+            (user_id,),
+        ).fetchone()
+
+        if user is None:
+            return api_error(
+                401,
+                "UNAUTHORIZED",
+                "The authenticated user does not exist.",
+                "Log in again with a valid account.",
+            )
+
+        if user["role"] != "administrator":
+            return api_error(
+                403,
+                "FORBIDDEN",
+                "Only administrators can update evaluation deadlines.",
+                "Log in with an administrator account.",
+            )
+
+        # Close evaluations that have already expired.
+        close_expired_evaluations(connection)
+
+        evaluation = connection.execute(
+            """
+            SELECT id, deadline, status
+            FROM evaluations
+            WHERE id = ?
+            """,
+            (evaluation_id,),
+        ).fetchone()
+
+        if evaluation is None:
+            return api_error(
+                404,
+                "EVALUATION_NOT_FOUND",
+                "The evaluation does not exist.",
+                "Select an existing evaluation and try again.",
+            )
+
+        if evaluation["status"] == "closed":
+            return api_error(
+                400,
+                "EVALUATION_CLOSED",
+                "The evaluation is closed and its deadline cannot be updated.",
+                "Create or select an evaluation that is not closed.",
+            )
+
+        connection.execute(
+            """
+            UPDATE evaluations
+            SET deadline = ?
+            WHERE id = ?
+            """,
+            (new_deadline.isoformat(), evaluation_id),
+        )
+
+    return jsonify({
+        "message": "Evaluation deadline updated successfully.",
+        "evaluation_id": evaluation_id,
+        "deadline": new_deadline.isoformat(),
+    }), 200
+
+
 if __name__ == "__main__":
     app.run(debug=True)

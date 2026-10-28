@@ -125,6 +125,18 @@ def api_client(tmp_path, monkeypatch):
                 "The course content was very useful.",
             ),
         )
+        connection.execute(
+            """
+            INSERT INTO users (email, password_hash, full_name, role)
+            VALUES (?, ?, ?, ?)
+            """,
+            (
+                "admin@test.com",
+                "test-hash",
+                "Test Administrator",
+                "administrator",
+            ),
+        )
 
     # Redirect the application to the temporary database.
     monkeypatch.setattr("src.app.DATABASE", database)
@@ -637,6 +649,7 @@ def test_evaluation_statistics_calculates_response_count_and_averages(
             """,
             (second_response_id, rating_question_id, 2),
         )
+        
 
     response = api_client.get("/api/evaluations/1/statistics")
 
@@ -738,3 +751,91 @@ def test_create_evaluation_requires_deadline(api_client):
 
     assert response.status_code == 400
     assert response.get_json()["error"]["code"] == "MISSING_DEADLINE"
+
+
+def test_update_evaluation_deadline_success(api_client):
+    with api_client.session_transaction() as session:
+        session["user_id"] = 3
+
+    response = api_client.put(
+        "/api/evaluations/1/deadline",
+        json={"deadline": "2099-12-31T23:59:00"},
+    )
+
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data["evaluation_id"] == 1
+    assert data["deadline"] == "2099-12-31T23:59:00"
+
+    database = api_client.application.config["TEST_DATABASE"]
+    with sqlite3.connect(database) as connection:
+        deadline = connection.execute(
+            "SELECT deadline FROM evaluations WHERE id = 1"
+        ).fetchone()[0]
+
+    assert deadline == "2099-12-31T23:59:00"
+
+
+def test_update_evaluation_deadline_requires_login(api_client):
+    response = api_client.put(
+        "/api/evaluations/1/deadline",
+        json={"deadline": "2099-12-31T23:59:00"},
+    )
+
+    assert response.status_code == 401
+
+
+def test_update_evaluation_deadline_forbidden_for_student(api_client):
+    login_as_student(api_client)
+
+    response = api_client.put(
+        "/api/evaluations/1/deadline",
+        json={"deadline": "2099-12-31T23:59:00"},
+    )
+
+    assert response.status_code == 403
+
+
+def test_update_evaluation_deadline_rejects_past_date(api_client):
+    with api_client.session_transaction() as session:
+        session["user_id"] = 3
+
+    response = api_client.put(
+        "/api/evaluations/1/deadline",
+        json={"deadline": "2000-01-01T00:00:00"},
+    )
+
+    assert response.status_code == 400
+    assert (
+        response.get_json()["error"]["code"]
+        == "DEADLINE_NOT_IN_FUTURE"
+    )
+
+
+def test_update_evaluation_deadline_requires_deadline(api_client):
+    with api_client.session_transaction() as session:
+        session["user_id"] = 3
+
+    response = api_client.put(
+        "/api/evaluations/1/deadline",
+        json={},
+    )
+
+    assert response.status_code == 400
+    assert response.get_json()["error"]["code"] == "MISSING_DEADLINE"
+
+
+def test_update_evaluation_deadline_not_found(api_client):
+    with api_client.session_transaction() as session:
+        session["user_id"] = 3
+
+    response = api_client.put(
+        "/api/evaluations/9999/deadline",
+        json={"deadline": "2099-12-31T23:59:00"},
+    )
+
+    assert response.status_code == 404
+    assert (
+        response.get_json()["error"]["code"]
+        == "EVALUATION_NOT_FOUND"
+    )
