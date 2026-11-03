@@ -211,11 +211,35 @@ def test_home_route():
     assert response.status_code == 200
 
 
-def test_evaluations_route():
-    response = app.test_client().get("/evaluations")
+
+def test_evaluations_route_requires_login(api_client):
+    response = api_client.get("/evaluations")
+
+    assert response.status_code == 401
+    assert response.get_json()["error"]["code"] == "UNAUTHORIZED"
+
+
+def test_evaluations_route_student_access(api_client):
+    with api_client.session_transaction() as session:
+        session["user_id"] = 1
+        session["role"] = "student"
+
+    response = api_client.get("/evaluations")
 
     assert response.status_code == 200
     assert b"EduSurvey" in response.data
+    assert b"My Evaluations" in response.data
+
+
+def test_evaluations_route_lecturer_forbidden(api_client):
+    with api_client.session_transaction() as session:
+        session["user_id"] = 2
+        session["role"] = "lecturer"
+
+    response = api_client.get("/evaluations")
+
+    assert response.status_code == 403
+    assert response.get_json()["error"]["code"] == "FORBIDDEN"
 
 
 def test_submission_requires_login(api_client):
