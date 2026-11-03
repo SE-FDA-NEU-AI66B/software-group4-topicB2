@@ -4,9 +4,19 @@ import sqlite3
 from datetime import datetime, timedelta
 
 from flask import Flask, render_template, jsonify, request, session
+from werkzeug.security import check_password_hash
+from functools import wraps
+import os
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "dev-test-key"
+app.config["SECRET_KEY"] = os.environ.get(
+    "EDUSURVEY_SECRET_KEY",
+    "dev-only-secret-change-before-deployment",
+)
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATABASE = BASE_DIR / "data" / "edusurvey.db"
@@ -26,6 +36,231 @@ def get_db_connection():
     connection = sqlite3.connect(DATABASE)
     connection.row_factory = sqlite3.Row
     return connection
+
+
+VALID_ROLES = {"student", "lecturer", "administrator"}
+
+
+def login_required(roles=None):
+    allowed_roles = set(roles) if roles is not None else None
+
+    def decorator(view):
+        @wraps(view)
+        def wrapped(*args, **kwargs):
+            if "user_id" not in session:
+                return api_error(
+                    401,
+                    "UNAUTHORIZED",
+                    "You must be logged in to access this resource.",
+                    "Log in and try again.",
+                )
+
+            if (
+                allowed_roles is not None
+                and session.get("role") not in allowed_roles
+            ):
+                return api_error(
+                    403,
+                    "FORBIDDEN",
+                    "You do not have permission to access this resource.",
+                    "Log in with an account that has the required role.",
+                )
+
+            return view(*args, **kwargs)
+
+        return wrapped
+
+    return decorator
+
+@app.route("/api/evaluations", methods=["GET"])
+@login_required(roles=["student"])
+def get_student_evaluations():
+    student_id = session.get("user_id")
+    connection = get_db_connection()
+
+    try:
+        rows = connection.execute(
+            """
+            SELECT
+                e.id,
+                e.title AS survey_title,
+                c.course_name,
+                lecturer.full_name AS lecturer_name,
+                e.deadline AS submission_deadline,
+                e.status AS evaluation_status,
+                EXISTS (
+                    SELECT 1
+                    FROM responses AS r
+                    WHERE r.evaluation_id = e.id
+                      AND r.student_id = ?
+                      AND r.status = 'submitted'
+                ) AS is_completed
+            FROM evaluations AS e
+            JOIN courses AS c
+                ON c.id = e.course_id
+            JOIN course_enrollments AS ce
+                ON ce.course_id = c.id
+            LEFT JOIN course_lecturers AS cl
+                ON cl.course_id = c.id
+            LEFT JOIN users AS lecturer
+                ON lecturer.id = cl.lecturer_id
+            WHERE ce.student_id = ?
+              AND LOWER(e.status) IN ('open', 'closed')
+            ORDER BY e.deadline ASC, e.id ASC
+            """,
+            (student_id, student_id),
+        ).fetchall()
+
+        now = datetime.now()
+        evaluations = []
+
+        for row in rows:
+            deadline_text = row["submission_deadline"]
+            deadline = None
+
+            if deadline_text:
+                try:
+                    deadline = datetime.fromisoformat(deadline_text)
+                except (ValueError, TypeError):
+                    deadline = None
+
+            evaluation_status = (
+                row["evaluation_status"] or ""
+            ).lower()
+
+            if row["is_completed"]:
+                survey_status = "Completed"
+
+            elif evaluation_status == "closed":
+                survey_status = "Closed"
+
+            elif deadline is not None and deadline <= now:
+                survey_status = "Closed"
+
+            elif (
+                deadline is not None
+                and deadline <= now + timedelta(days=3)
+            ):
+                survey_status = "Due soon"
+
+            else:
+                survey_status = "Active"
+
+            evaluations.append({
+                "survey_title": row["survey_title"],
+                "course_name": row["course_name"],
+                "lecturer_name": row["lecturer_name"],
+                "submission_deadline": deadline_text,
+                "survey_status": survey_status,
+            })
+
+        return jsonify({
+            "evaluations": evaluations,
+            "count": len(evaluations),
+        }), 200
+
+    finally:
+        connection.close()
+
+@app.route("/api/auth/login", methods=["POST"])
+def login():
+    data = request.get_json(silent=True)
+
+    if not isinstance(data, dict):
+        return api_error(
+            400,
+            "INVALID_REQUEST",
+            "A valid JSON object is required.",
+            "Send email and password as JSON.",
+        )
+
+    email = data.get("email")
+    password = data.get("password")
+
+    if (
+        not isinstance(email, str)
+        or not isinstance(password, str)
+        or not email.strip()
+        or not password
+    ):
+        return api_error(
+            400,
+            "MISSING_CREDENTIALS",
+            "Email and password are required.",
+            "Provide both email and password.",
+        )
+
+    email = email.strip().lower()
+
+    with get_db_connection() as connection:
+        user = connection.execute(
+            """
+            SELECT id, email, password_hash, full_name, role
+            FROM users
+            WHERE lower(email) = ?
+            """,
+            (email,),
+        ).fetchone()
+
+    if (
+        user is None
+        or user["role"] not in VALID_ROLES
+        or not check_password_hash(user["password_hash"], password)
+    ):
+        return api_error(
+            401,
+            "INVALID_CREDENTIALS",
+            "Email or password is incorrect.",
+            "Check your credentials and try again.",
+        )
+
+    session.clear()
+    session["user_id"] = user["id"]
+    session["role"] = user["role"]
+
+    return jsonify({
+        "authenticated": True,
+        "user": {
+            "id": user["id"],
+            "email": user["email"],
+            "full_name": user["full_name"],
+            "role": user["role"],
+        },
+    }), 200
+
+
+@app.route("/api/auth/me", methods=["GET"])
+@login_required()
+def current_user():
+    with get_db_connection() as connection:
+        user = connection.execute(
+            """
+            SELECT id, email, full_name, role
+            FROM users
+            WHERE id = ?
+            """,
+            (session["user_id"],),
+        ).fetchone()
+
+    if user is None:
+        session.clear()
+        return api_error(
+            401,
+            "UNAUTHORIZED",
+            "The authenticated user no longer exists.",
+            "Log in again with a valid account.",
+        )
+
+    return jsonify({
+        "authenticated": True,
+        "user": dict(user),
+    }), 200
+
+
+@app.route("/api/auth/logout", methods=["POST"])
+def logout():
+    session.clear()
+    return jsonify({"authenticated": False}), 200
 
 
 def classify_feedback(comment):

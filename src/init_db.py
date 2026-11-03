@@ -1,4 +1,5 @@
 import sqlite3
+from werkzeug.security import generate_password_hash
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,13 +22,14 @@ def initialize_database():
         cursor = connection.cursor()
 
         # Seed users
+        demo_password_hash = generate_password_hash("Password123!")
         users = [
-            ("student1@edusurvey.edu", "demo_hash", "Minh Nguyen", "student"),
-            ("student2@edusurvey.edu", "demo_hash", "An Tran", "student"),
-            ("student3@edusurvey.edu", "demo_hash", "Linh Pham", "student"),
-            ("lecturer1@edusurvey.edu", "demo_hash", "Anh Nguyen", "lecturer"),
-            ("lecturer2@edusurvey.edu", "demo_hash", "Hoa Le", "lecturer"),
-            ("admin@edusurvey.edu", "demo_hash", "Lan Tran", "administrator"),
+            ("student1@edusurvey.edu", demo_password_hash, "Minh Nguyen", "student"),
+            ("student2@edusurvey.edu", demo_password_hash, "An Tran", "student"),
+            ("student3@edusurvey.edu", demo_password_hash, "Linh Pham", "student"),
+            ("lecturer1@edusurvey.edu", demo_password_hash, "Anh Nguyen", "lecturer"),
+            ("lecturer2@edusurvey.edu", demo_password_hash, "Hoa Le", "lecturer"),
+            ("admin@edusurvey.edu", demo_password_hash, "Lan Tran", "administrator"),
         ]
 
         cursor.executemany(
