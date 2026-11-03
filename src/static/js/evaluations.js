@@ -275,60 +275,95 @@ document.addEventListener("DOMContentLoaded", () => {
     // RENDER EVALUATION CARDS
     // ---------------------------------
 
-    function createEvaluationCard(item) {
-        const status = item.survey_status || "Closed";
 
-        const title = escapeHTML(
-            item.survey_title || "Untitled evaluation"
-        );
+function createEvaluationCard(item) {
+    const status = item.survey_status || "Closed";
 
-        const course = escapeHTML(
-            item.course_name || "Not assigned"
-        );
+    const title = escapeHTML(
+        item.survey_title || "Untitled evaluation"
+    );
 
-        const lecturer = escapeHTML(
-            item.lecturer_name || "Not assigned"
-        );
+    const course = escapeHTML(
+        item.course_name || "Not assigned"
+    );
 
-        const deadline = escapeHTML(
-            formatDeadline(item.submission_deadline)
-        );
+    const lecturer = escapeHTML(
+        item.lecturer_name || "Not assigned"
+    );
 
-        const card = document.createElement("article");
+    const deadline = escapeHTML(
+        formatDeadline(item.submission_deadline)
+    );
 
-        card.className = "evaluation-card";
+    const evaluationId = Number(item.id);
 
-        card.innerHTML = `
-            <div class="card-top">
-                <h3 class="card-title">${title}</h3>
+    const canStart =
+        Number.isSafeInteger(evaluationId) &&
+        evaluationId > 0 &&
+        ["Active", "Due soon"].includes(status);
 
-                <span class="card-status ${getStatusClass(status)}">
-                    ${escapeHTML(status)}
-                </span>
+    const card = document.createElement("article");
+    card.className = "evaluation-card";
+
+    card.innerHTML = `
+        <div class="card-top">
+            <h3 class="card-title">${title}</h3>
+
+            <span class="card-status ${getStatusClass(status)}">
+                ${escapeHTML(status)}
+            </span>
+        </div>
+
+        <div class="card-details">
+
+            <div class="detail-item">
+                <span class="detail-label">Course name</span>
+                <span class="detail-value">${course}</span>
             </div>
 
-            <div class="card-details">
-
-                <div class="detail-item">
-                    <span class="detail-label">Course name</span>
-                    <span class="detail-value">${course}</span>
-                </div>
-
-                <div class="detail-item">
-                    <span class="detail-label">Lecturer</span>
-                    <span class="detail-value">${lecturer}</span>
-                </div>
-
-                <div class="detail-item">
-                    <span class="detail-label">Submission deadline</span>
-                    <span class="detail-value">${deadline}</span>
-                </div>
-
+            <div class="detail-item">
+                <span class="detail-label">Lecturer</span>
+                <span class="detail-value">${lecturer}</span>
             </div>
-        `;
 
-        return card;
-    }
+            <div class="detail-item">
+                <span class="detail-label">Submission deadline</span>
+                <span class="detail-value">${deadline}</span>
+            </div>
+
+        </div>
+
+        <div class="card-actions">
+            ${
+                canStart
+                    ? `
+                        <a
+                            class="button primary start-evaluation-button"
+                            href="/evaluations/${evaluationId}/complete"
+                            aria-label="Start evaluation: ${title}"
+                        >
+                            Start Evaluation
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    `
+                    : status === "Completed"
+                        ? `
+                            <span class="evaluation-completed-label">
+                                ✓ Evaluation completed
+                            </span>
+                        `
+                        : `
+                            <span class="evaluation-unavailable-label">
+                                Evaluation unavailable
+                            </span>
+                        `
+            }
+        </div>
+    `;
+
+    return card;
+}
+
 
     function renderEvaluations() {
         hideAllStates();

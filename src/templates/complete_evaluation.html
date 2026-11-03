@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#102b50">
+
+    <title>Complete Evaluation | EduSurvey</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/complete_evaluation.css') }}">
+</head>
+
+<body data-evaluation-id="{{ evaluation_id }}">
+
+<header class="topbar">
+    <a class="brand" href="/evaluations">
+        <span class="brand-mark">E</span>
+        EduSurvey
+    </a>
+
+    <a class="back-link" href="/evaluations">
+        ← My Evaluations
+    </a>
+</header>
+
+<main class="layout">
+
+    <section class="intro">
+        <p class="eyebrow">STUDENT WORKSPACE / COURSE FEEDBACK</p>
+
+        <h1 id="evaluationTitle">Course evaluation</h1>
+
+        <p id="courseMeta" class="muted">
+            Loading evaluation details...
+        </p>
+
+        <div class="deadline" id="deadlineText">
+            Checking submission deadline
+        </div>
+    </section>
+
+    <section class="progress-card">
+        <div class="progress-copy">
+            <div>
+                <strong>Your progress</strong>
+                <span id="progressLabel">0 of 0 answered</span>
+            </div>
+
+            <strong id="progressPercent">0%</strong>
+        </div>
+
+        <div class="progress-track">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+    </section>
+
+    <div class="content-grid">
+
+        <section class="questions-column">
+
+            <div class="section-title">
+                <div>
+                    <h2>Evaluation questions</h2>
+                    <p class="muted">
+                        Your feedback helps improve teaching and learning.
+                    </p>
+                </div>
+
+                <span class="required-note">
+                    <i></i> Required
+                </span>
+            </div>
+
+            <div id="loadingState" class="state-card">
+                <span class="spinner"></span>
+                <strong>Loading questions</strong>
+                <p>Please wait while we prepare your evaluation.</p>
+            </div>
+
+            <div id="errorState"
+                 class="state-card hidden"
+                 role="alert">
+
+                <strong>Unable to open this evaluation</strong>
+                <p id="errorMessage"></p>
+
+                <a class="button secondary" href="/evaluations">
+                    Back to evaluations
+                </a>
+            </div>
+
+            <div id="questionsList"></div>
+
+            <div id="validationMessage"
+                 class="validation-message hidden"
+                 role="alert">
+                Please answer all required questions before submitting.
+            </div>
+
+            <div class="mobile-submit">
+                <button id="reviewButtonMobile"
+                        class="button primary"
+                        type="button">
+                    Review answers
+                </button>
+            </div>
+
+        </section>
+
+        <aside class="review-panel">
+            <div class="review-inner">
+
+                <span class="panel-icon">✓</span>
+
+                <h2>Before you submit</h2>
+
+                <p class="muted">
+                    Review your answers to make sure your feedback is
+                    complete and accurate.
+                </p>
+
+                <div class="completion-row">
+                    <span>Questions answered</span>
+                    <strong id="sideAnswered">0 / 0</strong>
+                </div>
+
+                <div class="completion-row">
+                    <span>Required remaining</span>
+                    <strong id="requiredRemaining">—</strong>
+                </div>
+
+                <button id="reviewButton"
+                        class="button primary full"
+                        type="button"
+                        disabled>
+                    Review answers
+                </button>
+
+                <a class="cancel-link" href="/evaluations">
+                    Back to evaluations
+                </a>
+
+                <p class="privacy-note">
+                    Your responses are associated with this course evaluation.
+                </p>
+
+            </div>
+        </aside>
+
+    </div>
+
+</main>
+
+<dialog id="reviewDialog" class="review-dialog">
+
+    <button id="closeReview"
+            class="dialog-close"
+            type="button"
+            aria-label="Close">
+        ×
+    </button>
+
+    <p class="eyebrow">FINAL CHECK</p>
+
+    <h2>Review your answers</h2>
+
+    <p class="muted">
+        Please make sure your responses are ready before submitting.
+    </p>
+
+    <div id="reviewSummary" class="review-summary"></div>
+
+    <div class="dialog-actions">
+        <button id="backToEdit"
+                class="button secondary"
+                type="button">
+            Back to editing
+        </button>
+
+        <button id="confirmSubmit"
+                class="button primary"
+                type="button">
+            Submit evaluation
+        </button>
+    </div>
+
+    <p id="submitFeedback"
+       class="submit-feedback"
+       role="status"></p>
+
+</dialog>
+
+<script src="{{ url_for('static', filename='js/complete_evaluation.js') }}"
+        defer></script>
+
+</body>
+</html>

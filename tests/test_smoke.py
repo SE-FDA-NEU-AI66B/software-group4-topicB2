@@ -1,3 +1,4 @@
+from multiprocessing import connection
 import sqlite3
 import sys
 from pathlib import Path
@@ -59,7 +60,14 @@ def api_client(tmp_path, monkeypatch):
             VALUES (2, 1)
             """
         )
-
+        # Enroll student id 1 in course id 1.
+        connection.execute(
+    """
+    INSERT INTO course_enrollments (student_id, course_id)
+    VALUES (?, ?)
+    """,
+             (1, 1),
+)
         connection.execute(
             """
             INSERT INTO evaluations
@@ -673,7 +681,7 @@ def test_evaluation_statistics_calculates_response_count_and_averages(
             """,
             (second_response_id, rating_question_id, 2),
         )
-        
+
 
     response = api_client.get("/api/evaluations/1/statistics")
 
@@ -888,7 +896,7 @@ def test_deadline_reminder_is_recorded_once(api_client):
 
         connection.execute(
             """
-            INSERT INTO course_enrollments (student_id, course_id)
+            INSERT OR IGNORE INTO course_enrollments (student_id, course_id)
             VALUES (1, 1)
             """
         )
