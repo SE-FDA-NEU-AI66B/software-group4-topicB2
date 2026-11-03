@@ -139,7 +139,7 @@ def get_student_evaluations():
 
             elif (
                 deadline is not None
-                and deadline <= now + timedelta(days=3)
+                and deadline < now + timedelta(hours=24)
             ):
                 survey_status = "Due soon"
 
@@ -304,24 +304,9 @@ def home():
 
 
 @app.route("/evaluations")
+@login_required(roles=["student"])
 def evaluations():
-    with get_db_connection() as connection:
-        rows = connection.execute(
-            """
-            SELECT
-                e.id,
-                e.title,
-                e.deadline,
-                e.status,
-                c.course_code,
-                c.course_name
-            FROM evaluations AS e
-            JOIN courses AS c ON c.id = e.course_id
-            ORDER BY e.deadline, e.id
-            """
-        ).fetchall()
-
-    return render_template("evaluations.html", evaluations=rows)
+    return render_template("evaluations.html")
 
 
 @app.route("/api/evaluations/<int:evaluation_id>/feedback/topics", methods=["GET"])

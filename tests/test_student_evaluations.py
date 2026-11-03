@@ -136,7 +136,7 @@ def client(tmp_path, monkeypatch):
                     1,
                     2,
                     "Teaching Feedback",
-                    (now + timedelta(days=2)).isoformat(),
+                    (now + timedelta(hours=12)).isoformat(),
                     "open",
                 ),
                 (
@@ -299,3 +299,67 @@ def test_student_only_sees_evaluations_for_enrolled_courses(client):
 
     assert response.status_code == 200
     assert response.get_json()["evaluations"] == []
+
+def test_student_evaluations_due_soon_24_hour_boundary(
+    client, monkeypatch
+):
+    fixed_now = datetime(2026, 11, 3, 12, 0, 0)
+
+    class FixedDateTime(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            if tz is None:
+                return fixed_now
+            return fixed_now.replace(tzinfo=tz)
+
+    monkeypatch.setattr(app_module, "datetime", FixedDateTime)
+
+    connection = app_module.get_db_connection()
+
+    try:
+        test_cases = [
+            (4, "More than 24 hours", 25, 0),
+            (5, "Exactly 24 hours", 24, 0),
+            (6, "Less than 24 hours", 23, 59),
+            (7, "Within 12 hours", 12, 0),
+        ]
+
+        for evaluation_id, title, hours, minutes in test_cases:
+            deadline = (
+                fixed_now + timedelta(hours=hours, minutes=minutes)
+            ).isoformat()
+
+            connection.execute(
+                """
+                INSERT INTO evaluations
+                    (id, course_id, created_by, title, deadline, status)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (evaluation_id, 1, 2, title, deadline, "open"),
+            )
+
+        connection.commit()
+    finally:
+        connection.close()
+
+    login_as(client)
+
+    response = client.get("/api/evaluations")
+
+    assert response.status_code == 200
+
+    evaluations = response.get_json()["evaluations"]
+
+    expected_statuses = {
+        "More than 24 hours": "Active",
+        "Exactly 24 hours": "Active",
+        "Less than 24 hours": "Due soon",
+        "Within 12 hours": "Due soon",
+    }
+
+    for title, expected_status in expected_statuses.items():
+        evaluation = next(
+            item for item in evaluations
+            if item["survey_title"] == title
+        )
+        assert evaluation["survey_status"] == expected_status
