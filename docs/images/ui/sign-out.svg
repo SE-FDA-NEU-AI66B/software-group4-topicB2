@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+<rect width="1200" height="800" fill="#f5f7fb"/>
+<rect width="1200" height="72" fill="#ffffff"/>
+<rect x="60" y="18" width="38" height="38" rx="10" fill="#2457a7"/>
+<text x="79" y="44" text-anchor="middle" font-family="Arial" font-size="22" fill="white" font-weight="bold">E</text>
+<text x="112" y="45" font-family="Arial" font-size="22" fill="#172b4d" font-weight="bold">EduSurvey</text>
+<text x="70" y="145" font-family="Arial" font-size="30" fill="#172b4d" font-weight="bold">Sign Out</text>
+<text x="70" y="180" font-family="Arial" font-size="15" fill="#718096">Proposed authenticated navigation and sign-out interaction</text>
+
+<rect x="730" y="95" width="400" height="180" rx="12" fill="white" stroke="#e5eaf1"/>
+<text x="765" y="140" font-family="Arial" font-size="16" fill="#172b4d">My Account</text>
+<line x1="755" y1="160" x2="1100" y2="160" stroke="#e5eaf1"/>
+<text x="765" y="205" font-family="Arial" font-size="16" fill="#d14343">Sign out</text>
+<rect x="250" y="330" width="700" height="260" rx="16" fill="white" stroke="#e5eaf1"/>
+<text x="600" y="395" text-anchor="middle" font-family="Arial" font-size="26" font-weight="bold" fill="#172b4d">Sign out of EduSurvey?</text>
+<text x="600" y="445" text-anchor="middle" font-family="Arial" font-size="15" fill="#718096">Your current session will be terminated.</text>
+<rect x="420" y="490" width="160" height="48" rx="10" fill="white" stroke="#e5eaf1"/>
+<text x="500" y="520" text-anchor="middle" font-family="Arial" font-size="14" fill="#172b4d">Cancel</text>
+<rect x="600" y="490" width="180" height="48" rx="10" fill="#2457a7"/>
+<text x="690" y="520" text-anchor="middle" font-family="Arial" font-size="14" fill="white">Sign out</text>
+<text x="600" y="565" text-anchor="middle" font-family="Arial" font-size="12" fill="#718096">Proposed wireframe – frontend control not yet implemented.</text>
+
+</svg>
