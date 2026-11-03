@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1250" viewBox="0 0 1440 1250">
+<title>US03 - Loading questions</title>
+<rect width="1440" height="1250" fill="#f5f7fb"/>
+<rect width="1440" height="72" fill="white" stroke="#e5eaf1"/>
+<rect x="86" y="18" width="36" height="36" rx="11" fill="#2457a7"/>
+<text x="104" y="43" font-family="Arial,sans-serif" font-size="19" font-weight="800" fill="#ffffff">E</text>
+<text x="134" y="43" font-family="Arial,sans-serif" font-size="21" font-weight="800" fill="#172b4d">EduSurvey</text>
+<text x="1190" y="43" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="#2457a7">← My Evaluations</text>
+<text x="100" y="125" font-family="Arial,sans-serif" font-size="11" font-weight="800" fill="#2457a7">STUDENT WORKSPACE / COURSE FEEDBACK</text>
+<text x="100" y="174" font-family="Arial,sans-serif" font-size="32" font-weight="800" fill="#172b4d">Software Engineering Mid-Semester Evaluation</text>
+<text x="100" y="207" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#718096">SE101 · Software Engineering · Anh Nguyen</text>
+<rect x="100" y="224" width="270" height="34" rx="8" fill="#fff5e8" stroke="#fff5e8"/>
+<text x="114" y="246" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#9b6013">Submission deadline: Dec 30, 2026</text>
+<rect x="100" y="280" width="1240" height="100" rx="16" fill="#ffffff" stroke="#e5eaf1"/>
+<text x="124" y="315" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="#172b4d">Your progress</text>
+<text x="124" y="340" font-family="Arial,sans-serif" font-size="12" font-weight="400" fill="#718096">2 of 5 answered</text>
+<text x="1300" y="325" font-family="Arial,sans-serif" font-size="20" font-weight="800" fill="#2457a7">40%</text>
+<rect x="124" y="351" width="1192" height="8" rx="8" fill="#eaf0f8" stroke="#eaf0f8"/>
+<rect x="124" y="351" width="476.8" height="8" rx="8" fill="#2457a7"/>
+<text x="100" y="430" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#172b4d">Evaluation questions</text>
+<text x="1220" y="430" font-family="Arial,sans-serif" font-size="12" font-weight="400" fill="#718096">● Required</text>
+<rect x="100" y="455" width="1240" height="250" rx="16" fill="#ffffff" stroke="#e5eaf1"/><circle cx="720" cy="535" r="18" fill="none" stroke="#e5edf8" stroke-width="4"/><path d="M720 517 A18 18 0 0 1 738 535" fill="none" stroke="#2457a7" stroke-width="4"/><text x="720" text-anchor="middle" y="595" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#172b4d">Loading questions</text><text x="720" text-anchor="middle" y="628" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#718096">Please wait while we prepare your evaluation.</text></svg>

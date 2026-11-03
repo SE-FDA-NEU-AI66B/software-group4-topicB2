@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760">
+  <defs>
+    <linearGradient id="navy" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#081a38"/>
+      <stop offset="54%" stop-color="#123561"/>
+      <stop offset="100%" stop-color="#144c7d"/>
+    </linearGradient>
+    <linearGradient id="button" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1462be"/>
+      <stop offset="100%" stop-color="#237cdd"/>
+    </linearGradient>
+    <linearGradient id="logo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7be9ec"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+    <radialGradient id="glow">
+      <stop offset="0%" stop-color="#2993e5" stop-opacity=".35"/>
+      <stop offset="100%" stop-color="#2993e5" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#ffffff" stroke-opacity=".055"/>
+    </pattern>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="10" stdDeviation="15" flood-color="#1b6dcc" flood-opacity=".20"/>
+    </filter>
+  </defs>
+
+  <!-- Overall layout -->
+  <rect width="1200" height="760" fill="#f8faff"/>
+  <rect width="564" height="760" fill="url(#navy)"/>
+
+  <!-- Left panel background effects -->
+  <rect width="564" height="760" fill="url(#grid)"/>
+  <ellipse cx="560" cy="90" rx="300" ry="270" fill="url(#glow)"/>
+  <ellipse cx="15" cy="730" rx="300" ry="270" fill="#19bbc5" opacity=".045"/>
+
+  <circle cx="700" cy="580" r="195" fill="none" stroke="#81dcf8" stroke-opacity=".22"/>
+  <circle cx="700" cy="580" r="250" fill="none" stroke="#81dcf8" stroke-opacity=".035"/>
+  <circle cx="700" cy="580" r="307" fill="none" stroke="#81dcf8" stroke-opacity=".025"/>
+
+  <!-- Brand -->
+  <rect x="64" y="49" width="45" height="45" rx="14" fill="url(#logo)"/>
+  <text x="86.5" y="81" text-anchor="middle" font-family="Arial" font-size="27" font-weight="bold" fill="#133e68">E</text>
+  <text x="123" y="81" font-family="Arial" font-size="28" font-weight="bold" letter-spacing="-1" fill="#ffffff">EduSurvey</text>
+
+  <!-- Welcome content -->
+  <rect x="64" y="208" width="267" height="38" rx="19" fill="#ffffff" fill-opacity=".065" stroke="#85d8f0" stroke-opacity=".23"/>
+  <text x="197.5" y="232" text-anchor="middle" font-family="Arial" font-size="10.5" font-weight="bold" letter-spacing="1.5" fill="#a7eaf7">UNIVERSITY EVALUATION SYSTEM</text>
+
+  <text x="64" y="322" font-family="Arial" font-size="51" font-weight="bold" letter-spacing="-2.3" fill="#ffffff">Your feedback</text>
+  <text x="64" y="381" font-family="Arial" font-size="51" font-weight="bold" letter-spacing="-2.3" fill="#ffffff">matters.</text>
+
+  <text x="64" y="438" font-family="Arial" font-size="16" fill="#c5d9ed">Help improve teaching and learning through</text>
+  <text x="64" y="467" font-family="Arial" font-size="16" fill="#c5d9ed">meaningful course evaluations.</text>
+
+  <!-- Features -->
+  <rect x="64" y="518" width="310" height="44" rx="12" fill="#ffffff" fill-opacity=".055" stroke="#ffffff" stroke-opacity=".11"/>
+  <text x="82" y="545" font-family="Arial" font-size="14" fill="#ecf6ff">✓  Secure university account access</text>
+
+  <rect x="64" y="574" width="310" height="44" rx="12" fill="#ffffff" fill-opacity=".055" stroke="#ffffff" stroke-opacity=".11"/>
+  <text x="82" y="601" font-family="Arial" font-size="14" fill="#ecf6ff">✓  Simple course evaluation process</text>
+
+  <rect x="64" y="630" width="310" height="44" rx="12" fill="#ffffff" fill-opacity=".055" stroke="#ffffff" stroke-opacity=".11"/>
+  <text x="82" y="657" font-family="Arial" font-size="14" fill="#ecf6ff">✓  Better learning experiences</text>
+
+  <text x="64" y="725" font-family="Arial" font-size="12" fill="#acc3da">© EduSurvey</text>
+
+  <!-- Right panel -->
+  <rect x="564" y="0" width="636" height="760" fill="#f9fbff"/>
+  <ellipse cx="1180" cy="0" rx="340" ry="270" fill="#eaf1ff" opacity=".75"/>
+
+  <!-- Login form -->
+  <g font-family="Arial">
+    <text x="675" y="249" font-size="36" font-weight="bold" letter-spacing="-1.5" fill="#142b4c">Welcome back</text>
+    <text x="675" y="283" font-size="15" fill="#73839c">Sign in to continue to your account.</text>
+
+    <!-- Email -->
+    <text x="675" y="355" font-size="13" font-weight="bold" fill="#263a56">Email address</text>
+    <rect x="675" y="368" width="438" height="56" rx="13" fill="#ffffff" stroke="#e1e8f1" stroke-width="1.5"/>
+    <text x="693" y="402" font-size="14" fill="#9ba9bb">Enter your email</text>
+
+    <!-- Password -->
+    <text x="675" y="466" font-size="13" font-weight="bold" fill="#263a56">Password</text>
+    <rect x="675" y="479" width="438" height="56" rx="13" fill="#ffffff" stroke="#e1e8f1" stroke-width="1.5"/>
+    <text x="693" y="513" font-size="14" fill="#9ba9bb">Enter your password</text>
+
+    <rect x="1021" y="488" width="77" height="38" rx="8" fill="#ffffff"/>
+    <text x="1059" y="512" text-anchor="middle" font-size="13" font-weight="bold" fill="#1767bb">Show</text>
+
+    <!-- Sign in -->
+    <rect x="675" y="564" width="438" height="56" rx="13" fill="url(#button)" filter="url(#shadow)"/>
+    <text x="894" y="599" text-anchor="middle" font-size="15" font-weight="bold" fill="#ffffff">Sign in</text>
+
+    <!-- Help text -->
+    <text x="894" y="667" text-anchor="middle" font-size="12" fill="#8996aa">New to EduSurvey?</text>
+    <text x="894" y="687" text-anchor="middle" font-size="12" fill="#8996aa">Your account is provided by your university.</text>
+    <text x="894" y="707" text-anchor="middle" font-size="12" fill="#8996aa">Contact your university administrator if you need access.</text>
+  </g>
+
+  <!-- Wireframe label -->
+  <text x="1180" y="745" text-anchor="end" font-family="Arial" font-size="10" fill="#a0aabd">US01 · M3</text>
+</svg>
