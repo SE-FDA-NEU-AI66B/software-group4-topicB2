@@ -293,6 +293,11 @@ def classify_feedback(comment):
     return "Other"
 
 
+@app.route("/login", methods=["GET"])
+def login_page():
+    return render_template("login.html")
+
+
 @app.route("/")
 def home():
     return '<h1>EduSurvey</h1><a href="/evaluations">View Evaluations</a>'
