@@ -318,6 +318,142 @@ def complete_evaluation(evaluation_id):
     )
 
 
+@app.route(
+    "/api/courses/<int:course_id>/feedback",
+    methods=["GET"],
+)
+@login_required(roles=["lecturer"])
+def get_lecturer_course_feedback(course_id):
+    """Retrieve submitted feedback for a course taught by the lecturer."""
+
+    lecturer_id = session.get("user_id")
+
+    connection = get_db_connection()
+
+    try:
+        # Check whether the selected course exists.
+        course = connection.execute(
+            """
+            SELECT id, course_code, course_name
+            FROM courses
+            WHERE id = ?
+            """,
+            (course_id,),
+        ).fetchone()
+
+        if course is None:
+            return api_error(
+                404,
+                "COURSE_NOT_FOUND",
+                "The selected course does not exist.",
+                "Select an existing course.",
+            )
+
+        # Verify lecturer ownership before retrieving any feedback.
+        ownership = connection.execute(
+            """
+            SELECT 1
+            FROM course_lecturers
+            WHERE lecturer_id = ?
+              AND course_id = ?
+            LIMIT 1
+            """,
+            (lecturer_id, course_id),
+        ).fetchone()
+
+        if ownership is None:
+            return api_error(
+                403,
+                "FORBIDDEN",
+                "You do not have permission to view this course feedback.",
+                "Contact the administrator if you believe you should have access.",
+            )
+
+        # Count submitted responses, not individual answers.
+        count_row = connection.execute(
+            """
+            SELECT COUNT(*) AS completed_evaluation_count
+            FROM evaluations AS e
+            JOIN responses AS r
+                ON r.evaluation_id = e.id
+            WHERE e.course_id = ?
+              AND r.status = 'submitted'
+            """,
+            (course_id,),
+        ).fetchone()
+
+        # Retrieve submitted ratings and written comments.
+        rows = connection.execute(
+            """
+            SELECT
+                e.id AS evaluation_id,
+                e.title AS evaluation_title,
+                r.id AS response_id,
+                r.student_id,
+                r.submitted_at,
+                q.id AS question_id,
+                q.question_text,
+                q.question_type,
+                a.rating_value,
+                a.text_value
+            FROM evaluations AS e
+            JOIN responses AS r
+                ON r.evaluation_id = e.id
+            JOIN response_answers AS a
+                ON a.response_id = r.id
+            JOIN questions AS q
+                ON q.id = a.question_id
+               AND q.evaluation_id = e.id
+            WHERE e.course_id = ?
+              AND r.status = 'submitted'
+            ORDER BY
+                e.id,
+                r.submitted_at,
+                r.id,
+                q.question_order
+            """,
+            (course_id,),
+        ).fetchall()
+
+        # Group answers belonging to the same submitted response.
+        feedback_by_response = {}
+
+        for row in rows:
+            response_id = row["response_id"]
+
+            if response_id not in feedback_by_response:
+                feedback_by_response[response_id] = {
+                    "evaluation_id": row["evaluation_id"],
+                    "evaluation_title": row["evaluation_title"],
+                    "response_id": response_id,
+                    "student_id": row["student_id"],
+                    "submitted_at": row["submitted_at"],
+                    "answers": [],
+                }
+
+            feedback_by_response[response_id]["answers"].append({
+                "question_id": row["question_id"],
+                "question_text": row["question_text"],
+                "question_type": row["question_type"],
+                "rating_value": row["rating_value"],
+                "text_value": row["text_value"],
+            })
+
+        return jsonify({
+            "course": {
+                "id": course["id"],
+                "course_code": course["course_code"],
+                "course_name": course["course_name"],
+            },
+            "completed_evaluations": (
+                count_row["completed_evaluation_count"]
+            ),
+            "feedback": list(feedback_by_response.values()),
+        }), 200
+
+    finally:
+        connection.close()
+
 
 @app.route("/api/evaluations/<int:evaluation_id>/feedback/topics", methods=["GET"])
 def grouped_feedback_by_topic(evaluation_id):
