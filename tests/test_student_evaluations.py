@@ -189,12 +189,16 @@ def test_student_evaluations_success(client):
     assert evaluation["survey_status"] == "Active"
 
     assert set(evaluation.keys()) == {
-        "survey_title",
-        "course_name",
-        "lecturer_name",
-        "submission_deadline",
-        "survey_status",
-    }
+    "id",
+    "survey_title",
+    "course_name",
+    "lecturer_name",
+    "submission_deadline",
+    "survey_status",
+}
+
+    assert isinstance(evaluation["id"], int)
+    assert evaluation["id"] > 0
 
 
 def test_student_evaluations_due_soon(client):
