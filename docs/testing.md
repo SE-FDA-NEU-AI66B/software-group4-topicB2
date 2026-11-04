@@ -20,3 +20,24 @@ Command:
 
 ```bash
 python -m pytest tests/test_submission_workflow.py -v
+
+
+## US04 – Lecturer Feedback
+
+| Test Case ID | Test Scenario | Expected Result | Status |
+|---|---|---|---|
+| TC-US04-01 | Assigned lecturer views course feedback | HTTP 200; feedback content is displayed | Passed |
+| TC-US04-02 | Lecturer not assigned to the course views feedback | HTTP 403 with the required permission message | Passed |
+| TC-US04-03 | Student attempts to access lecturer feedback | HTTP 403 Forbidden | Passed |
+| TC-US04-04 | Unauthenticated user attempts to access feedback | HTTP 401 Unauthorized | Passed |
+| TC-US04-05 | Draft responses are excluded from feedback | Only submitted responses are displayed | Passed |
+| TC-US04-06 | Lecturer views submitted ratings and comments | Submitted ratings and written comments are displayed correctly | Passed |
+| TC-US04-07 | Completed evaluation count is calculated | Only submitted responses are counted | Passed |
+
+### Test Execution
+
+```bash
+python -m pytest tests/test_lecturer_feedback.py -v
+```
+
+**Result:** 8 tests passed.

@@ -617,16 +617,12 @@ def lecturer_feedback_detail(evaluation_id):
                 c.course_name
             FROM evaluations AS e
             JOIN courses AS c ON c.id = e.course_id
-            JOIN course_lecturers AS cl
-              ON cl.course_id = c.id
-             AND cl.lecturer_id = ?
             WHERE e.id = ?
             """,
-            (lecturer_id, evaluation_id),
+            (evaluation_id,),
         ).fetchone()
 
-        # Return 404 for nonexistent evaluations and evaluations
-        # belonging to courses the lecturer is not assigned to.
+        # Return 404 only when the evaluation does not exist.
         if evaluation is None:
             return (
                 render_template(
@@ -638,12 +634,38 @@ def lecturer_feedback_detail(evaluation_id):
                     rating_count=0,
                     ratings=[],
                     comments=[],
-                    error_message=(
-                        "Evaluation not found or you do not have "
-                        "permission to view it."
-                    ),
+                    error_message="Evaluation not found.",
                 ),
                 404,
+            )
+
+        # Check whether the lecturer is assigned to this course.
+        assignment = connection.execute(
+            """
+            SELECT 1
+            FROM course_lecturers
+            WHERE lecturer_id = ? AND course_id = ?
+            """,
+            (lecturer_id, evaluation["course_id"]),
+        ).fetchone()
+
+        if assignment is None:
+            return (
+                render_template(
+                    "lecturer_feedback.html",
+                    evaluations=[],
+                    selected_evaluation=None,
+                    completed_responses=0,
+                    average_rating=None,
+                    rating_count=0,
+                    ratings=[],
+                    comments=[],
+                    error_message=(
+                        "You do not have permission to view "
+                        "this course feedback."
+                    ),
+                ),
+                403,
             )
 
         completed_responses = connection.execute(
