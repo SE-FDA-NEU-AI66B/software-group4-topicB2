@@ -50,6 +50,8 @@ Final publication must add tested absolute UI links using that actual origin.
 | Khuat Dinh Trung | [@khuatnhatminhcfpro-cmyk](https://github.com/khuatnhatminhcfpro-cmyk) |
 | Duong Duc Anh | [@tlduongducanh281-jpg](https://github.com/tlduongducanh281-jpg) |
 
+Sprint 5 Scrum Master: **Khuat Dinh Trung (@khuatnhatminhcfpro-cmyk)**.
+
 ## Private-browser walkthrough
 
 ### US01 Sign in
@@ -150,7 +152,7 @@ protection needs verified administrator configuration, not just a green badge.
 | [P0 student UI](docs/p0-student-navigation.md) / [lecturer UI](docs/p0-lecturer-feedback.md) | Implemented routes, screenshots and earlier verification scope |
 | [Backend map](docs/backend.md) / [runtime](docs/backend-runtime.md) | Server routes, environment and readiness behavior |
 | [Deployment](docs/deployment.md) / [CI gate](docs/ci-production-gate.md) | Main-only green releases, rollback and protection evidence |
-| [Operations](docs/operations.md) / [database](docs/database-operations.md) | Health/logs/monitoring and backup/recovery policy; live-provider evidence remains required |
+| [Operations](docs/operations.md) / [monitoring](docs/monitoring.md) / [database](docs/database-operations.md) | Health/logs/monitoring and backup/recovery policy; live-provider evidence remains required |
 | [Sprint Board](https://github.com/orgs/SE-FDA-NEU-AI66B/projects/4/views/1) | Team planning; merged code does not by itself certify a hosted release |
 
 The Definition of Done requires satisfied acceptance, green checks, independent

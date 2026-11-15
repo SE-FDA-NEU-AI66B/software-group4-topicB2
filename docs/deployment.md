@@ -61,8 +61,9 @@ secret is exposed, revoke it at the provider and replace the stored setting.
 ## Green-gated releases
 
 The deploy job is in the **same CI workflow** as the real Python test/security
-jobs, with `needs: [python, secrets]`. Default success semantics prevent the job
-running if either dependency fails, is canceled or skipped. PRs, feature pushes
+jobs, with `needs: [gate]` after merged #207. The gate requires successful
+detection/Python/security and any detected Node stack. Default success semantics
+prevent deployment if a required job fails, is canceled or skipped. PRs, feature pushes
 and a disabled deployment flag cannot release. Existing full pytest and both
 security scans are retained. Node is not part of the current Flask stack.
 
@@ -81,6 +82,12 @@ check branch protections. This commit does not grant those protections or turn
 mock API tests into proof that the provider account is configured correctly.
 
 ### Required real gate rehearsal - pending
+
+The isolated negative-PR part has since been executed: [#207 evidence](ci-production-gate.md)
+records closed/unmerged PR #231 with a real failed suite/gate and skipped Deploy.
+The steps below remain the host-account/provider verification procedure, not
+proof that a reviewed green merge actually deployed. #208's
+[operations handover](operations.md) separates these observed and pending states.
 
 After setup, record service/deploy history and the latest green main SHA. Create
 an isolated draft PR with a deliberately failing pytest assertion; never merge

@@ -1,0 +1,39 @@
+{
+  "client_date": "2026-11-16",
+  "document": "docs/operations.md",
+  "sections": [
+    "1. URL, platform, release and rollback",
+    "2. CI, duration and branch protection",
+    "3. Logs, health and deterioration detection",
+    "4. Risks and technical debt",
+    "5. Maintenance ownership and frequency",
+    "6. Lessons from actual work"
+  ],
+  "prose_words_outside_tables": 312,
+  "word_limit": 800,
+  "count_method": "Whitespace-separated tokens on every non-table line, including headings/inline commands/links; no code block or heading exclusions",
+  "risk_rows": 6,
+  "maintenance_rows": 5,
+  "lesson_rows": 4,
+  "required_risk_layers": [
+    "code",
+    "tests",
+    "docs",
+    "data",
+    "infrastructure"
+  ],
+  "local_links_checked": 25,
+  "detailed_monitoring_body_preserved": true,
+  "main_ci_url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43739534488",
+  "main_ci_elapsed_seconds": 116.0,
+  "structural_checks_passed": true,
+  "ready_for_final_signoff": false,
+  "unresolved": [
+    "Instructor format clarification",
+    "Verified public URL and provider SHA",
+    "Hosted rollback and monitoring/access evidence",
+    "Applied required named checks and updated screenshot",
+    "Off-host backup evidence",
+    "Independent substantive review and approval"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-16",
+  "main_base": "7c0b06e",
+  "readme_sha256": "363aab9e2cb0684f91186bf9c270ada381e82719450f516b239bc44d9a8fb799",
+  "relative_links_checked": [
+    "#us01-sign-in",
+    "#us02-view-evaluations",
+    "#us03-submit-and-reload",
+    "#us04-review-feedback",
+    "#us11-sign-out",
+    "docs/database-operations.md",
+    "docs/SETUP.md",
+    "docs/SETUP.md",
+    "docs/evidence/209/README.md",
+    "docs/p0-student-navigation.md",
+    "docs/p0-lecturer-feedback.md",
+    "docs/backend.md",
+    "docs/backend-runtime.md",
+    "docs/deployment.md",
+    "docs/ci-production-gate.md",
+    "docs/operations.md",
+    "docs/monitoring.md",
+    "docs/database-operations.md"
+  ],
+  "badge_and_workflow": [
+    {
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/workflows/ci.yml/badge.svg?branch=main&event=push",
+      "status": 200
+    },
+    {
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/workflows/ci.yml?query=branch%3Amain+event%3Apush",
+      "status": 200
+    }
+  ],
+  "repository_homepage": null,
+  "github_deployments_count": 0,
+  "existing_public_https_origin_found": false,
+  "deployed_accounts_verified": false,
+  "ready_to_close_209": false,
+  "scope": "README merge/link validation only; original browser artifacts retained as historical; no new deployment, public tour or account verification claimed."
+}

@@ -58,3 +58,25 @@ Official platform terms re-read for this draft:
 [Render Free](https://render.com/docs/free), [persistent disks](https://render.com/docs/disks).
 The existing Blueprint proposes paid persistent storage; it does not prove
 that service has been provisioned. No paid resource was created by this task.
+
+## Main synchronization — 2026-11-16
+
+PR #235 was synchronized with main `7c0b06e` after #208 merged. The README
+conflict incorrectly placed handover-document rows inside the member table;
+resolution retains all three members, the confirmed Sprint 5 Scrum Master,
+and the operations/monitoring/database references in the handover table.
+
+[main-sync-check.json](main-sync-check.json) records the updated README hash,
+18 valid relative file/heading links and actual HTTP 200 responses for the
+main/push CI badge and workflow page. Repository homepage is still null and
+GitHub deployment records are empty at this check. That does not prove that no
+external service exists; the actual public origin remains unprovided/unverified.
+The original browser/source-hash artifacts above are retained as historical;
+this documentation-only reconciliation does not claim to repeat that tour or
+verify deployed accounts. No production data or hosting resource was changed.
+
+The existing teammate approval on commit `8c24429` is recorded in PR #235;
+review of the synchronized head is not fabricated. #209 remains open until a
+real HTTPS origin, absolute UI links and the deployed private-browser tour are
+verified. Official Render Free/disk references were re-read during this sync;
+their conditional limitations remain accurate, not observed EduSurvey behavior.
