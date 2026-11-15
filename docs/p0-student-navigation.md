@@ -66,3 +66,7 @@ A separate Chrome walkthrough also ran against `tools/run_student_demo.py` with 
 Browser logout calls the existing JSON logout API and uses `location.replace('/login')` after success. The current session is cleared; protected requests are denied. Authenticated responses and authentication endpoints receive `Cache-Control: no-store`, and restored bfcache pages revalidate the current session. This does not implement server-side copied-cookie revocation (#216), nor the server's future anonymous-HTML redirect contract (#215). This branch's tests explicitly preserve today's anonymous HTML 401 behavior. APIs remain JSON 200/401 and wrong-role access 403. Canonical backend error strings remain #214; the visible UI follows the approved wording.
 
 Public HTTPS deployment, durable seeded data and deployed browser timing evidence depend on #204/#205/#210. No ≤3,000ms SLA, full WCAG audit, screen-reader test, Safari/Firefox support or copied-cookie revocation is claimed from these checks. A teammate's recorded review and green CI are required before merge; this PR must not be self-merged or self-approved.
+
+## Latest main synchronization
+
+2026-11-15: merged main `9e5b647` after refinement PR #191 landed. Both the Sprint 4 pending-case matrix and M5 browser mappings are retained. Reverification with `PLAYWRIGHT_CHROMIUM_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' python -m pytest -q` returned **115 passed in 31.44s**. This is a local regression result, not deployed timing evidence.
