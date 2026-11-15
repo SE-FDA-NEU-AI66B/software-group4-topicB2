@@ -3,7 +3,6 @@ import sqlite3
 import unittest
 from pathlib import Path
 
-
 SCHEMA_PATH = (
     Path(__file__).resolve().parents[1] / "src" / "schema.sql"
 )
@@ -16,6 +15,7 @@ class ResponseSchemaTests(unittest.TestCase):
         self.connection.executescript(
             SCHEMA_PATH.read_text(encoding="utf-8")
         )
+        self.assertEqual(self.connection.execute("PRAGMA foreign_keys").fetchone()[0], 1)
 
         cursor = self.connection.execute(
             """
