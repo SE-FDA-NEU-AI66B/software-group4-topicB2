@@ -1,5 +1,19 @@
 # EduSurvey M4 Automated Testing
 
+**Latest #204 integration against main `83f76aa` (2026-11-15): 229 passed
+in 78.53s, zero failures/errors/skips.** Both sides of the documentation merge
+are preserved. Browser tests explicitly wait for fetched questions before
+interacting with the form; see the final #204 reconciliation section for the
+two initial timing failures, corrections and full rerun evidence.
+
+**Earlier #204 verification (2026-11-15): 216 passed in 58.86s, zero
+failures/errors/skips** on Windows/Python 3.11.9. This includes 16 new
+production-database cases and all 200 cases from main `6acf0dd`, including the
+#205 runtime-contract fixes. The historical #189 FK-OFF/exception-propagation assumptions below
+are superseded: current runtime enforces FK=1 and sanitizes SQLite failures as
+503/DATABASE_UNAVAILABLE. See the #204 register at the end and
+[the database operations runbook](database-operations.md).
+
 **Baseline #190 audit (2026-11-15, main `686bd9e`):** fresh clone + new Python
 3.11.9/Windows environment installed `requirements-dev.txt` successfully.
 `python -m pytest -v --junitxml=junit.xml` returned **185 passed, 5 failed,
@@ -752,6 +766,96 @@ variants). Existing browser, authentication/logout, feedback, uniqueness and
 submission/deadline cases are retained. No schema, production route or SQL helper
 was changed. CI verification is separate from this local result.
 
+## #204 production database, demo persistence and isolated recovery
+
+Parent #200; interfaces with deployment #205 and operations #208. The schema
+and production routes are retained. New initialization publishes only a fully
+seeded private file without replacing an existing target. Backup validation
+now rejects FK-invalid source/copy data; `tools.verify_database` validates
+read-only and compares the complete offline schema/data/sequence dump.
+
+All nodes below are in `tests/test_production_database.py`; dependencies include
+US01 #14 (real role login), US02 #18 (usable evaluations), US03 #22 (committed
+submission) and US04 #50 (restored submitted feedback).
+
+| Evidence / dependency | Real pytest node suffix | Verified result |
+|---|---|---|
+| DB204-01 / #14,#18,#50 | `test_demo_roles_have_usable_landing[student1@edusurvey.edu-student-/evaluations]`, `[lecturer1@edusurvey.edu-lecturer-/lecturer/feedback]`, `[admin@edusurvey.edu-administrator-/account]` | Three canonical demo credentials work; student active work, lecturer feedback and administrator landing exist |
+| DB204-02 / #204,#205 | `test_initializer_preserves_existing_file[production]`, `[development]` | Both environments refuse repeat initialization; existing bytes preserved |
+| DB204-03 / #204 | `test_failed_initialization_leaves_no_published_database` | Injected seed failure publishes no partial file and cleans temporary output |
+| DB204-04 / #204,#205 | `test_initializer_never_overwrites_concurrent_winner` | Late concurrent target is preserved; exclusive publication fails closed |
+| DB204-05 / #204,#205 | `test_platform_environment_and_new_process_read` | Separate process imports production env path/secure cookies and reads health |
+| DB204-06 / #22,#50,#204 | `test_actual_backup_restore_preserves_snapshot` | Real API submission backed up/restored; full schema/rows/sequences equal; later source edit excluded; restored role workflows and no-overwrite checks pass |
+| DB204-07 / #22,#204 | `test_created_record_survives_new_process` | A committed submission/answers survive a separate application process |
+| DB204-08 / #204 | `test_backup_rejects_invalid_source_without_output[missing]`, `[corrupt]`, `[foreign-key]` | Reject invalid source; no output or source mutation |
+| DB204-09 / #204 | `test_failed_backup_removes_only_its_partial_output` | Injected online-copy failure removes partial copy and preserves source |
+| DB204-10 / #204 | `test_readonly_verification_never_creates_missing_file` | Missing verification path fails without creating a file |
+| DB204-11 / #18,#22,#204 | `test_seeded_submission_survives_browser_reload` | Chromium uses full M5 seed; real login, two ratings/comment, submit, reload; completion and exactly one response/three answers persist |
+
+The fixture freezes application time, initializes only under tmp_path and
+restores environment/configuration via monkeypatch. Browser HTTP runs on a
+fixture-owned ephemeral loopback server; only that local fixture disables
+Secure cookies. Production HTTPS behavior is unchanged. Seed SQL default
+timestamps are not claimed to follow Python's frozen time; assertions compare
+actual snapshots rather than invented timestamp values.
+
+Main advanced to `6acf0dd` while this task was being prepared. The baseline
+test-contract fixes from merged deployment PR #226 are retained exactly;
+this PR does not introduce a competing baseline implementation. DB-189-F01
+checks orphan rejection on two FK-enabled runtime connections; rollback variants
+assert sanitized 503, exact draft/new snapshots and a successful retry. BE-05
+uses native absolute paths; BE-07 verifies requested creation mode 0600 and
+POSIX effective permissions, preserving restore/no-overwrite checks. Windows
+ACLs remain an operator requirement. No tests are skipped or removed.
+
+Actual execution by OpenAI Codex (AI-assisted, not a separate teammate run),
+Windows NT 10.0.26200.0 / Python 3.11.9 / pytest 9.2.0 / Flask 3.1.2 /
+Playwright 1.65.2 / installed Chrome 157.0.8103.51:
+
+```powershell
+$env:PLAYWRIGHT_CHROMIUM_EXECUTABLE='C:\Program Files\Google\Chrome\Application\chrome.exe'
+& .venv/m4-env/Scripts/python.exe -m pytest -v --cov --cov-report=term-missing --junitxml=docs/evidence/204/pytest.xml
+# 206 passed in 56.91s; exit 0; no errors/failures/skips
+```
+
+[Console](evidence/204/pytest.txt) and [JUnit](evidence/204/pytest.xml) retain
+the actual run. The initial 15-case focused run passed before adding the
+separate-process committed-record case and strengthening restored-role checks;
+the full run above includes all 16 final cases. Ruff on all changed Python
+files and `git diff --check` passed. This is not measured production latency.
+
+An additional CLI drill used a TemporaryDirectory: `python -m src.init_db
+--m5-demo`, insert a synthetic recovery marker, `python tools/backup_database.py
+source.db snapshot.db`, edit the original marker, copy snapshot to restored,
+then `python -m tools.verify_database snapshot.db --compare restored.db`.
+Integrity/FK/schema/data comparison passed; restored marker retained its
+pre-backup value. [Actual commands/results](evidence/204/restore-check.json)
+contain only statuses/counts and synthetic temporary paths. The corrected
+drill explicitly closes SQLite handles before removing all its temporary files.
+
+Pending external evidence: actual paid mount/URL, restart and redeploy survival,
+off-host backup transfer/scheduling and host-level restore under #205/#208,
+plus a teammate's independent review. Local tests do not certify those actions.
+
+### #204 integration verification with merged #205
+
+Integrated main **6acf0dd** (PR #226); resolved the documentation-only conflict
+by preserving both #204 and #205 evidence sections. Baseline runtime tests are
+byte-identical to main. No deployment workflow, Blueprint or startup guard
+was replaced. The shared initializer remains compatible with the guard's
+explicit opt-in, provisioned marker and repeat-startup preservation checks.
+
+```powershell
+$env:PLAYWRIGHT_CHROMIUM_EXECUTABLE='C:\Program Files\Google\Chrome\Application\chrome.exe'
+& .venv/m4-env/Scripts/python.exe -m pytest -v --cov --cov-report=term-missing --junitxml=docs/evidence/204/integrated-pytest.xml
+# 216 passed in 58.86s; exit 0; zero failures/errors/skips
+```
+
+Same Windows/Python 3.11.9 environment: 200 retained main cases + 16 new #204
+cases. [Integrated console](evidence/204/integrated-pytest.txt) and
+[JUnit](evidence/204/integrated-pytest.xml) are separate from the earlier
+206-case pre-merge run. Changed-module Ruff and `git diff --check` passed.
+
 ## Deployment preparation and main integration - #205 (2026-11-15)
 
 Parent #200; dependencies #204/#207. Real deployment/public HTTPS, paid-account
@@ -902,3 +1006,44 @@ full suite with installed Chrome selected through PLAYWRIGHT_CHROMIUM_EXECUTABLE
 `python -m pytest -q --junitxml=junit.xml` -> **213 passed in 189.78s**, zero
 failures/errors/skips. Changed runtime/tool/test Ruff and `git diff --check` passed.
 Public deployment/live-monitoring evidence remains pending as described above.
+
+## #204 / PR #229 reconciliation with main 83f76aa
+
+Merged main's #190 remediation and #206 monitoring changes while preserving
+the #204/#205 documentation and every dated run. The only Git conflict was
+the introductory section of this document; both sets of evidence are retained.
+
+The first integrated run returned **1 failed / 228 passed in 113.73s**:
+`tests/test_production_database.py::test_seeded_submission_survives_browser_reload`
+timed out waiting for the submit-confirmation button. The test called
+`Locator.all()` without waiting for asynchronously fetched questions. It now
+waits for the canonical seed's two rating questions and asserts each selected
+radio is checked before review. No sleeps, retries, skipped tests or weaker
+persistence assertions were introduced. Focused verification returned
+**1 passed in 4.41s** on Windows/Python 3.11.9 with installed Chrome.
+
+[Initial console](evidence/204/merge-first-pytest.txt) and
+[JUnit](evidence/204/merge-first-pytest.xml) retain the timeout result, separately
+from the final rerun. Database/backup tests, role login, exact persisted rows,
+new-process preservation and restored workflows remain unchanged.
+
+The next full run returned **1 failed / 228 passed in 87.77s** in the existing
+`tests/test_p0_browser_contracts.py::test_logout_navigates_to_login[phone]`:
+Review was clicked before fetched questions existed, so the expected missing-
+answer validation was not shown. This test now waits for the fixture's single
+rating question before exercising empty-answer validation. The validation,
+keyboard selection, submit, reload, persistence and logout assertions are all
+retained. [Second console](evidence/204/merge-second-pytest.txt) and
+[JUnit](evidence/204/merge-second-pytest.xml) preserve that run. Focused execution
+of both laptop/phone variants plus the canonical-seed reload test returned
+**3 passed in 11.55s**. These are test precondition/synchronization changes;
+production loading behavior is unchanged.
+
+Final Windows/Python 3.11.9 full execution, using installed Chrome through
+`PLAYWRIGHT_CHROMIUM_EXECUTABLE`:
+`python -m pytest -v --junitxml=docs/evidence/204/merge-pytest.xml` returned
+**229 passed in 78.53s**, no failures/errors/skips (213 retained main cases +
+16 #204 cases). [Final console](evidence/204/merge-pytest.txt) and
+[JUnit](evidence/204/merge-pytest.xml) retain the result. Changed Python module
+Ruff and `git diff --check` passed. No production schema/storage or health/log
+behavior was changed by this merge resolution.

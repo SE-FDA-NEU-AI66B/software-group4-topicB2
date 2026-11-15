@@ -13,6 +13,8 @@ def backup_database(source, destination):
     with closing(sqlite3.connect(source.resolve().as_uri() + "?mode=ro", uri=True)) as original:
         if original.execute("PRAGMA quick_check").fetchone()[0] != "ok":
             raise sqlite3.DatabaseError("Source integrity check failed")
+        if original.execute("PRAGMA foreign_key_check").fetchall():
+            raise sqlite3.IntegrityError("Source foreign-key check failed")
         descriptor = os.open(destination, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
         os.close(descriptor)
         try:
@@ -20,6 +22,8 @@ def backup_database(source, destination):
                 original.backup(backup)
                 if backup.execute("PRAGMA quick_check").fetchone()[0] != "ok":
                     raise sqlite3.DatabaseError("Backup integrity check failed")
+                if backup.execute("PRAGMA foreign_key_check").fetchall():
+                    raise sqlite3.IntegrityError("Backup foreign-key check failed")
         except Exception:
             destination.unlink(missing_ok=True)
             raise
