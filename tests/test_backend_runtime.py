@@ -41,7 +41,7 @@ def test_request_logs_exclude_user_input(api_client, caplog):
         api_client.get("/unknown/PRIVATE_PATH?answer=PRIVATE_ANSWER")
     events = [json.loads(record.message) for record in caplog.records if record.message.startswith('{"duration_ms"')]
     assert len(events) == 2
-    assert all(set(event) == {"event", "endpoint", "method", "status", "duration_ms"} for event in events)
+    assert all(set(event) == {"event", "endpoint", "method", "status", "duration_ms", "timestamp", "request_id"} for event in events)
     assert events[1]["endpoint"] == "unmatched"
     assert all(event["duration_ms"] >= 0 for event in events)
     assert "PRIVATE_" not in caplog.text
