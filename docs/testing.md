@@ -310,6 +310,24 @@ python -m pytest -v
 
 The pre-integration authentication module collected 17 items: 16 US01 cases and the retained US11 TC-38 regression. TC-01–TC-04 use their existing identifiers from PR #180; new IDs US01-A01–A12 avoid renumbering the other stories. Each parameter variant has an explicit pytest ID; nonparameterized functions carry the case ID in their docstring. Role-restriction variants each check three resources. No manual Flask server, real database, external service or wall-clock deadline is required. No production defect was found by this run. The #164 historical baseline/mutation evidence below remains distinct from this run; CI verification is pending.
 
+### #186 role-specific logout and idempotency verification
+
+Parent: US11 #183; TC-39 also exercises US02 #18, and TC-40 exercises US04 #50. Three existing pending IDs now map to the exact planned nodes in `tests/test_auth.py`: `test_student_page_denied_after_logout` (TC-39), `test_lecturer_feedback_denied_after_logout` (TC-40), and `test_anonymous_logout_is_idempotent` (TC-41). The current M4 matrix is **97 cases / 83 implemented mappings / 14 pending**; all 13 documented US11 cases have current-contract mappings. Historical totals/runs above remain dated evidence, not current counts.
+
+The new fixture extends only the existing per-test temporary auth SQLite database. It uses `fixed_app_clock` at **2026-11-04T12:00:00**, explicit timestamps for the newly seeded course/enrollment/assignment/evaluation/response rows, an enrolled student, assigned lecturer and real submitted text answer. Tests use real credential login rather than injecting sessions. Before logout, they prove the page/data or lecturer feedback actually succeeds; after logout, they assert the exact 401 JSON error, absent private markers and no Location header. The existing `assert_anonymous` helper checks both `user_id` and `role` are absent and `/api/auth/me` is denied. TC-41 performs two anonymous POSTs, verifying 200/authenticated=false and anonymous session state after each. No application database, manual server or wall-clock deadline is required by these three tests.
+
+Actual local macOS arm64 / Python 3.14.8 / Flask 3.1.2 / pytest 9.2.0 verification on 2026-11-15, based on main `2cb2b05`:
+
+```text
+python -m pytest -q tests/test_auth.py
+24 passed in 3.05s
+
+PLAYWRIGHT_CHROMIUM_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' python -m pytest -q
+119 passed in 31.59s
+```
+
+The full suite includes the retained Chromium UI cases and all current main regressions; 116 baseline items + 3 new cases, with no skips. PR #219's additional lecturer UI tests remain independent until merged. All pre-existing authentication/TC-US11 test and fixture source was verified byte-for-byte unchanged (the new file starts with the complete main version). Production source is unchanged. Ruff reports the same pre-existing SIM117 finding at `test_users_email_unique_constraint` on both main and this branch; no new finding was introduced. No redirect, copied-cookie revocation (#216), deployed timing or ≤3,000ms acceptance is claimed. Redirect policy remains #215 and requires deliberate future HTML-only expectation updates; this task preserves the current contract.
+
 **PR #181 after integration (2026-11-15):** `python -m pytest -v` → **77 passed in 4.51s**; `python -m pytest -v tests/test_auth.py` → **21 passed in 2.32s**. The suite retains all distinct main US11 tests and all US01 tests; its single `test_logout_clears_session` combines both branches’ assertions. The original `TC-US11-*` IDs remain present. No production source, shared fixture file or SQL scanner was changed.
 
 **PR #182 after integration (2026-11-15):** `python -m pytest -v` → **88 passed in 2.66s**; `python -m pytest -v tests/test_auth.py tests/test_student_evaluations.py` → **41 passed in 2.40s** (21 authentication/US11 and 20 US02 items). Merge dependencies are #180 → #181 → #182. The final matrix has 73 unique IDs, 54 existing mappings and 19 pending cases belonging to US03, US04 and US11. No pending case was marked implemented without a real test. Historical mutation evidence is unchanged.
@@ -377,24 +395,6 @@ All nodes below are in `tests/test_p0_browser_contracts.py`:
 | M5-UI05 | `test_open_evaluation_error_explains_next_action[closed]`, `test_open_evaluation_error_explains_next_action[unenrolled]` |
 
 Local 2026-11-15: `PLAYWRIGHT_CHROMIUM_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' python -m pytest -q --cov --cov-report=term --junitxml=/private/tmp/201-junit.xml` → **115 passed, 214 warnings in 29.67s**, no skips. Existing 106 tests are preserved. SQLite ResourceWarnings on Python 3.14 and pre-existing app lint findings are not resolved by this frontend task. The successful run preceded a node-only rename of the combined walkthrough to the approved P0C-07 proposal `test_logout_navigates_to_login`; assertions are unchanged. CI verifies the final node names separately. See [setup, environment, screenshots and limits](p0-student-navigation.md). Pytest elapsed time is not acceptance timing evidence; public browser timing, redirects #215 and replay revocation #216 retain their pending status.
-
-### #186 role-specific logout and idempotency verification
-
-Parent: US11 #183; TC-39 also exercises US02 #18, and TC-40 exercises US04 #50. Three existing pending IDs now map to the exact planned nodes in `tests/test_auth.py`: `test_student_page_denied_after_logout` (TC-39), `test_lecturer_feedback_denied_after_logout` (TC-40), and `test_anonymous_logout_is_idempotent` (TC-41). The current M4 matrix is **97 cases / 83 implemented mappings / 14 pending**; all 13 documented US11 cases have current-contract mappings. Historical totals/runs above remain dated evidence, not current counts.
-
-The new fixture extends only the existing per-test temporary auth SQLite database. It uses `fixed_app_clock` at **2026-11-04T12:00:00**, explicit timestamps for the newly seeded course/enrollment/assignment/evaluation/response rows, an enrolled student, assigned lecturer and real submitted text answer. Tests use real credential login rather than injecting sessions. Before logout, they prove the page/data or lecturer feedback actually succeeds; after logout, they assert the exact 401 JSON error, absent private markers and no Location header. The existing `assert_anonymous` helper checks both `user_id` and `role` are absent and `/api/auth/me` is denied. TC-41 performs two anonymous POSTs, verifying 200/authenticated=false and anonymous session state after each. No application database, manual server or wall-clock deadline is required by these three tests.
-
-Actual local macOS arm64 / Python 3.14.8 / Flask 3.1.2 / pytest 9.2.0 verification on 2026-11-15, based on main `2cb2b05`:
-
-```text
-python -m pytest -q tests/test_auth.py
-24 passed in 3.05s
-
-PLAYWRIGHT_CHROMIUM_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' python -m pytest -q
-119 passed in 31.59s
-```
-
-The full suite includes the retained Chromium UI cases and all current main regressions; 116 baseline items + 3 new cases, with no skips. PR #219's additional lecturer UI tests remain independent until merged. All pre-existing authentication/TC-US11 test and fixture source was verified byte-for-byte unchanged (the new file starts with the complete main version). Production source is unchanged. Ruff reports the same pre-existing SIM117 finding at `test_users_email_unique_constraint` on both main and this branch; no new finding was introduced. No redirect, copied-cookie revocation (#216), deployed timing or ≤3,000ms acceptance is claimed. Redirect policy remains #215 and requires deliberate future HTML-only expectation updates; this task preserves the current contract.
 
 ## 4. What the tests found
 
