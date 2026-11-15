@@ -8,7 +8,11 @@ Sprint goal: make automated testing of all five P0 stories traceable, reproducib
 
 The repository baseline runs **106 tests successfully** (`python -m pytest -v`: **106 passed in 2.95s**, Python 3.12.4 / pytest 7.4.4, macOS). This refinement changes documentation and GitHub backlog metadata only. It does not implement the new planned tests or change application rules.
 
-**Remaining acceptance blocker for #163:** the [Sprint Board](https://github.com/orgs/SE-FDA-NEU-AI66B/projects/4/views/1) cannot be read or updated with the available token: GitHub explicitly reports missing `read:project` scope. Board writes require `project` / equivalent organization Projects write permission. Repository issue assignees, labels, milestone and native sub-issue relationships are updated separately; they are not proof that Board fields were updated. Do not mark this issue fully complete or merge a closing PR until the Board step is verified.
+**Board verified:** after the user authorized Projects access, all **21 issue items** were applied and re-read successfully on the [Sprint Board](https://github.com/orgs/SE-FDA-NEU-AI66B/projects/4/views/1). #163 is **In Review**, eight closed baseline tasks remain Done and all seven follow-ups are Todo. Assignees, milestones and native parent relationships match the issue records. This refinement is ready for independent review; #163 closes through the reviewed PR rather than an automatic self-merge.
+
+Board-specific decisions preserve history: the four closed parent stories retain their original **Sprint 3** iteration, while testing tasks and restored US11 story #183 use the existing **Sprint 4** iteration. **Testing Sprint = Sprint 4** explicitly includes all five P0 stories and all 16 tasks in the testing scope. GitHub reports the native Priority field as derived from issue fields and rejects option edits, so **Testing Priority** stores P0/P1/P2 alongside the existing repository priority labels. **Estimated hours** stores task estimates separately; **Point** and **Points** are unchanged. No unrelated Board item was modified.
+
+The real Sprint 4 iteration starts **2026-11-01**, lasts **13 days**, and is already listed as completed by GitHub. Its dates were preserved. The 2026-11-15 audit and remaining work are a late refinement snapshot, not evidence that future tests were finished within that earlier iteration.
 
 ## P0 stories and test strategy
 
@@ -26,11 +30,11 @@ Each story has at least three concrete normal/error cases in [testing.md](testin
 
 ## Prioritized task register
 
-The following issue metadata and estimates are real. **Desired Board status is a prepared value only, not a verified Project field.** Map these semantic statuses to the existing Board options after authorized discovery; do not invent field IDs, reset iterations or assign fictional sprint dates. Cross-story tasks have explicit related issues instead of invalid `#0` parents.
+The following issue metadata, estimates and Board statuses were verified after writes on 2026-11-15. The Board uses existing Todo / In Progress / In Review / Done options and the real Sprint 4 iteration; no dates were invented. Cross-story tasks have explicit related issues instead of invalid `#0` parents.
 
-| Issue | Work | Responsible member | Estimated hours | Parent | Priority | Repository state | Desired Board status |
+| Issue | Work | Responsible member | Estimated hours | Parent | Priority | Repository state | Verified Board status |
 |---|---|---|---:|---|---|---|---|
-| [#163](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/163) | Refine Sprint 4 backlog | @khuatnhatminhcfpro-cmyk | 2 | Cross-story | P0 | OPEN | In Progress |
+| [#163](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/163) | Refine Sprint 4 backlog | @khuatnhatminhcfpro-cmyk | 2 | Cross-story | P0 | OPEN | In Review |
 | [#164](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/164) | M4 automated testing documentation | @khuatnhatminhcfpro-cmyk | 3 | Cross-story | P0 | CLOSED | Done |
 | [#165](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/165) | US01 authentication tests | @khuatnhatminhcfpro-cmyk | 3 | [#14](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/14) | P0 | CLOSED | Done |
 | [#166](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/166) | US02 evaluation-list tests | @khuatnhatminhcfpro-cmyk | 3 | [#18](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/18) | P0 | CLOSED | Done |
@@ -86,24 +90,28 @@ Use the exact deterministic inputs/expected outputs in testing.md and each issue
 
 ## Board application and completion evidence
 
-[The prepared Board register](sprint4-board.csv) contains all 16 tasks and five parent stories with issue URL, owner, hours/story points, priority, desired status, Sprint 4, parent and repository milestone. **No row claims that Board assignment is applied.** The repository milestone does not set a Project iteration or Sprint field.
+[The verified Board register](sprint4-board.csv) contains all 16 tasks and five parent stories. Each row records the actual assignee, hours/story-point reference, native parent, repository milestone, Testing Priority, development Sprint, Testing Sprint and stored Status. Every row is marked re-read verified; the earlier permission blocker was resolved through the user's OAuth authorization.
 
-Once authorized access is available:
+The write/read audit established:
 
-1. Read organization project #4 and discover its existing Status, Priority, Sprint/Iteration and estimate fields/options. Confirm the actual Sprint 4 iteration rather than inventing dates.
-2. Add or find each issue item; preserve unrelated project items and fields. Apply the prepared priority, owner, estimated hours and Sprint 4 assignment. Keep hours separate from story points.
-3. Re-read every item to verify stored values and native issue relationships; attach actual evidence. Opening a PR or a successful optional Board workflow alone is insufficient proof.
-4. Set #163 to In Review while its PR is reviewed. Only close #163 / set Done once the Board acceptance and independent review are complete. Closed baseline tasks remain Done; new task plans remain ready/Todo until work begins.
+- All 21 expected issue items exist, including newly added missing items; no original Board item was removed.
+- Testing Sprint is Sprint 4 for all 21, and Testing Priority matches each issue's P0/P1 label. The seven follow-ups are Todo; #163 is In Review; closed baseline issues remain Done.
+- Every one of the 16 tasks has the expected positive Estimated hours value and responsible assignee. The 43h total / 19h open estimates agree with repository issue bodies.
+- Tasks and restored US11 use the real Sprint 4 iteration. The four closed development stories keep their original Sprint 3 values; Testing Sprint provides the separate M4 coverage scope.
+- Existing Point/Points values and all unrelated items' recorded field values are unchanged. Sprint configuration/dates are not rewritten.
+- Ten native parent/sub-issue relationships were re-read successfully. Cross-story tasks remain explicitly linked by references rather than fake #0 parents.
+
+A successful optional Board workflow alone was not used as proof: values were read back from GitHub after the updates. Parent-story Done status reflects historical feature completion, while unfinished M4 tests remain visible in the open follow-up tasks.
 
 | Acceptance criterion | Evidence / state |
 |---|---|
-| All five P0 stories reviewed | Requirements/story audit above; native US11 story #183 created |
+| All five P0 stories reviewed and included in Sprint 4 testing | Requirements/story audit; restored US11 #183; Testing Sprint = Sprint 4 on all five |
 | At least three normal/error cases per story | Existing and planned cases in testing.md; all story counts exceed three |
 | Applicable numerical limits cover below/at/above | US02/deadline boundaries exist; rating/text plans #184 and count examples #185 explicitly defined |
-| Owners, hours and balanced responsibilities | Actual issue metadata and register above; all three members assigned |
-| Parent relationships | Ten native links verified; invalid #0/#1 references corrected |
+| Owners, hours and balanced responsibilities | Verified issue metadata and Board Estimated hours; all three members assigned |
+| Parent relationships | Ten native links re-read; invalid #0/#1 references corrected |
 | Every case maps to a real or planned pytest test | 79 existing mappings + 18 explicitly proposed nodes in open issues |
-| Project Board Sprint/priority/status values | **BLOCKED / NOT VERIFIED: Projects token scope is missing** |
-| Backlog fully ready and #163 closed | Repository plan is prepared; full acceptance/closure waits for Board verification and review |
+| Project Board Sprint/priority/status/estimate values | **Applied and re-read verified for all 21 items** using Testing Sprint/Testing Priority and preserved development iterations |
+| Backlog ready and refinement closure | **Ready for independent review/implementation**; #163 is In Review and closes when its reviewed PR merges |
 
-AI assistance: OpenAI Codex inspected repository/GitHub evidence, organized tasks and traceability, and verified the baseline command. No sprint meeting, execution result, Board change or teammate review is fabricated.
+AI assistance: OpenAI Codex inspected repository/GitHub evidence, organized tasks and traceability, verified the baseline command, applied authorized Board updates and re-read the result. No sprint meeting, execution result or teammate review is fabricated.
