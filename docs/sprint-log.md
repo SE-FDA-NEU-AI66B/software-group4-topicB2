@@ -197,6 +197,11 @@ access/review evidence. Original issue closures are preserved. The later #163
 refinement snapshot is also historical; #163 and #184–#189 are now closed,
 while #183/#190 remain open. Task hours are estimates, not story-point velocity.
 
+The subsequent user-authorized #190 CI remediation passed **190 tests in
+51.40s** locally on Windows, resolving the five obsolete/platform-specific
+test expectations. It does not retroactively change the baseline run or claim
+independent human review and Board verification.
+
 ### Sprint Goal
 
 Complete Sprint 4 deliverables, improve automated testing, finalize setup and testing documentation, and prepare the repository for Milestone 4 review.

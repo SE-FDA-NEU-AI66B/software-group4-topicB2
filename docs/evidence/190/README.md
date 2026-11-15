@@ -5,6 +5,13 @@ dependencies, attribution and unresolved work. Files describe baseline
 `686bd9e5bdcbf03947b28cbf8afe393dd087792a` on 2026-11-15, not this documentation
 PR's future CI result.
 
+**Later remediation:** `remediation-pytest.txt` and `remediation-pytest.xml`
+record the working-branch rerun after correcting the five baseline failures:
+**190 passed in 51.40s**, zero failures/errors/skips. The original `pytest.*`,
+node/mapping files, GitHub snapshot and rendered HTML/PNG/PDF remain the
+unchanged baseline. See the report/testing.md remediation section for exact
+commands and contract updates; no independent human execution is claimed.
+
 | File | Provenance |
 |---|---|
 | `pytest.txt` | Full PowerShell-captured pytest console, transcoded from UTF-16 to UTF-8 without editing the result |

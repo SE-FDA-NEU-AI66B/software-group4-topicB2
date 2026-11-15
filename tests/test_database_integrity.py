@@ -39,20 +39,20 @@ def test_schema_rejects_orphans(api_client, parent):
 
 
 def test_runtime_foreign_keys_finding(api_client):
-    """DB-189-F01: characterize the gap, not a desired enforcement contract."""
+    """DB-189-F01: #223 fixed the gap; fresh runtime connections reject orphans."""
+    before = snapshot()
     with closing(app_module.get_db_connection()) as db:
-        assert db.execute("PRAGMA foreign_keys").fetchone()[0] == 0
-        # A real orphan is accepted on the runtime connection. Never commit it.
-        db.execute(
-            "INSERT INTO response_answers (response_id, question_id, rating_value) "
-            "VALUES (999, 1, 4)"
-        )
-        violations = db.execute("PRAGMA foreign_key_check").fetchall()
-        assert any(row[0] == "response_answers" and row[2] == "responses" for row in violations)
+        assert db.execute("PRAGMA foreign_keys").fetchone()[0] == 1
+        with pytest.raises(sqlite3.IntegrityError, match="FOREIGN KEY constraint failed"):
+            db.execute(
+                "INSERT INTO response_answers (response_id, question_id, rating_value) "
+                "VALUES (999, 1, 4)"
+            )
         db.rollback()
     with closing(app_module.get_db_connection()) as fresh:
-        assert fresh.execute("PRAGMA foreign_keys").fetchone()[0] == 0
+        assert fresh.execute("PRAGMA foreign_keys").fetchone()[0] == 1
         assert fresh.execute("PRAGMA foreign_key_check").fetchall() == []
+    assert snapshot() == before
 
 
 def snapshot():
@@ -66,12 +66,18 @@ def snapshot():
 @pytest.mark.parametrize("existing", [False, True], ids=["new", "draft"])
 def test_submission_write_failure_rolls_back(api_client, fixed_app_clock, monkeypatch, existing):
     original_connect = app_module.get_db_connection
+    injected_failures = []
+
+    def record_injected_failure():
+        injected_failures.append(True)
+        return 1
 
     def controlled_connection():
         db = original_connect()
         # Freeze the SQL clock as well as Python; leave production FK settings intact.
-        assert db.execute("PRAGMA foreign_keys").fetchone()[0] == 0
+        assert db.execute("PRAGMA foreign_keys").fetchone()[0] == 1
         db.create_function("current_timestamp", 0, lambda: fixed_app_clock.isoformat())
+        db.create_function("record_injected_failure", 0, record_injected_failure)
         return db
 
     monkeypatch.setattr(app_module, "get_db_connection", controlled_connection)
@@ -101,18 +107,24 @@ def test_submission_write_failure_rolls_back(api_client, fixed_app_clock, monkey
                 SELECT 1 FROM response_answers
                 WHERE response_id = NEW.response_id AND question_id = 1 AND rating_value = 5
             )
-            BEGIN SELECT RAISE(ABORT, 'injected second answer failure'); END
+            BEGIN
+                SELECT record_injected_failure();
+                SELECT RAISE(ABORT, 'injected second answer failure');
+            END
         """)
     before = snapshot()
     with api_client.session_transaction() as session:
         session["user_id"] = 1
         session["role"] = "student"
-    # TESTING propagates the unhandled SQLite error; this does not claim safe 500 UX.
-    with pytest.raises(sqlite3.IntegrityError, match="injected second answer failure"):
-        api_client.post("/api/submissions", json={
-            "evaluation_id": 1,
-            "answers": {"1": {"rating_value": 5}, "2": {"text_value": "Replacement"}},
-        })
+    # #223 sanitizes exceptions after the real transaction has rolled back.
+    response = api_client.post("/api/submissions", json={
+        "evaluation_id": 1,
+        "answers": {"1": {"rating_value": 5}, "2": {"text_value": "Replacement"}},
+    })
+    assert injected_failures == [True]  # Trigger reached only after answer 1 exists.
+    assert response.status_code == 503
+    assert response.get_json()["error"]["code"] == "DATABASE_UNAVAILABLE"
+    assert "injected second answer failure" not in response.text
     assert snapshot() == before
     # Remove only the injection, then prove a normal retry can commit all writes.
     with closing(sqlite3.connect(app_module.DATABASE)) as db, db:
@@ -122,6 +134,7 @@ def test_submission_write_failure_rolls_back(api_client, fixed_app_clock, monkey
         "answers": {"1": {"rating_value": 5}, "2": {"text_value": "Replacement"}},
     })
     assert response.status_code == 201
+    assert injected_failures == [True]
     responses, answers = snapshot()
     assert len(responses) == 1
     assert responses[0][3:] == (fixed_app_clock.isoformat(), "submitted")

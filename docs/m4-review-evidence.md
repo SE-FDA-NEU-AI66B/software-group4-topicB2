@@ -1,5 +1,16 @@
 # M4 clean-clone and independent review audit — #190
 
+**Subsequent CI remediation:** the user authorized fixing the failing checks.
+The five baseline failures below are resolved on this PR by updating obsolete
+test expectations and OS-specific fixtures; production behavior and CI gates
+are unchanged. Full Windows/Python 3.11.9 rerun: **190 passed in 51.40s**, zero
+failures/errors/skips. See [the updated node/contract register](testing.md#190-ci-remediation-after-the-baseline-audit),
+[rerun console](evidence/190/remediation-pytest.txt) and
+[rerun JUnit](evidence/190/remediation-pytest.xml). The original clone evidence,
+GitHub snapshot and rendered screenshot/PDF below remain historical baseline
+artifacts. Current PR CI, independent human execution/reviews and live Board
+reconciliation remain separate from this local result.
+
 Audit date: **2026-11-15, Asia/Ho_Chi_Minh**. Execution operator: **OpenAI Codex
 in the user's Windows workspace**, authenticated GitHub actor `lesyhuy2k6-gif`.
 This is AI-assisted execution, not a claim that a teammate independently ran

@@ -211,10 +211,11 @@ Verification checklist:
 EduSurvey uses `pytest` to run the automated test suite.
 
 The actual #190 [clean-clone audit](m4-review-evidence.md) installed development
-dependencies in a new Python 3.11.9 Windows environment. The current audited
-baseline `686bd9e` has five failing runtime/database audit tests; see exact
-results and blockers before treating setup as verified for M4. This automated
-run does not fill the independent human fresh-machine checklist in Section 9.
+dependencies in a new Python 3.11.9 Windows environment. Baseline `686bd9e`
+had five failing runtime/database audit tests; the subsequent PR remediation
+rerun passed all 190 tests on Windows. See the report for separate baseline
+and rerun evidence. Automated execution does not fill the independent human
+fresh-machine checklist in Section 9.
 
 ### 10.1 Install Test Dependencies
 

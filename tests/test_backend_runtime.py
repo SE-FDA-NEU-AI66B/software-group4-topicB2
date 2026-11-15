@@ -2,7 +2,9 @@
 
 import json
 import logging
+import os
 import sqlite3
+import stat
 from contextlib import closing
 from datetime import UTC
 
@@ -72,9 +74,11 @@ def test_missing_database_is_safe_503(api_client, monkeypatch, tmp_path, caplog)
 
 
 @pytest.mark.parametrize("secret,path,valid", [(None, "/data/app.db", False), ("short", "/data/app.db", False), ("s" * 40, None, False), ("s" * 40, "relative.db", False), ("s" * 40, "/data/app.db", True)])
-def test_production_config_requires_explicit_secrets_and_storage(monkeypatch, secret, path, valid):
+def test_production_config_requires_explicit_secrets_and_storage(monkeypatch, tmp_path, secret, path, valid):
     """BE-05: production refuses implicit demo config; HTTPS session cookie required."""
     monkeypatch.setenv("EDUSURVEY_ENV", "production")
+    if path == "/data/app.db":
+        path = str(tmp_path / "app.db")
     for key, value in (("EDUSURVEY_SECRET_KEY", secret), ("EDUSURVEY_DATABASE", path)):
         if value is None:
             monkeypatch.delenv(key, raising=False)
@@ -109,7 +113,13 @@ def test_online_backup_and_restore_round_trip(api_client, tmp_path):
     backup = tmp_path / "snapshot.db"
     restored = tmp_path / "restored.db"
     backup_database(source, backup)
-    assert backup.stat().st_mode & 0o077 == 0
+    mode = backup.stat().st_mode
+    if os.name == "nt":
+        # Windows exposes read/write attributes, not POSIX group/other permissions.
+        # This does not claim to audit Windows ACLs.
+        assert mode & stat.S_IREAD and mode & stat.S_IWRITE
+    else:
+        assert mode & 0o077 == 0
     with app_module.get_db_connection() as connection:
         connection.execute("UPDATE courses SET course_name='CHANGED' WHERE id=1")
     backup_database(backup, restored)

@@ -9,6 +9,11 @@ read was denied for missing `read:project`; historical Board statuses must not
 be treated as a current verification. See [the evidence register](m4-review-evidence.md)
 and the separate current issue columns in [the CSV](sprint4-board.csv).
 
+Subsequent #190 remediation resolves those five test failures without changing
+production code or CI gates: **190 passed in 51.40s** locally on Windows.
+Original clean-clone results remain historical. See the linked evidence report
+for the separate rerun and remaining human review/Board sign-off requirements.
+
 Evidence date: **2026-11-15** (Asia/Ho_Chi_Minh). Refinement issue: [#163](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/163). Source: fetched `origin/main` **5a52af6**, requirements, current route/schema code, existing pytest collection, issues #163–#171 and merged PRs #172/#173/#178/#180/#181/#182. This is a current refinement snapshot, not a reconstruction of an earlier planning meeting.
 
 ## Scope and readiness
