@@ -485,3 +485,15 @@ The full run on main `2cb2b05` plus this task had zero failures/errors/skips,
 including the existing access-denial, browser, 24-hour and deadline-equality
 tests. Coverage was 95% overall (including tests) and 88% for `src/app.py`.
 The separate #184 submission-boundary PR is not included in this branch.
+
+### #185 merge verification against main 33cc07d
+
+Merged the #202 lecturer UI and #186 logout evidence without dropping their
+mappings. Totals now include both #185 and #186. Updated the label-bound count
+assertion for the new `data-completed-count` wrapper; production code is unchanged
+by this conflict resolution. The first integration run used the old assertion
+and reported 3 failed / 128 passed; all three failures were the wrapper mismatch.
+After correction: `python -m pytest -q tests/test_lecturer_feedback.py` ->
+**11 passed in 2.68s**; changed-module Ruff and `git diff --check` passed.
+Full Windows/Python 3.12.6 run with the same Chrome executable setting above:
+`python -m pytest -q --junitxml=junit.xml` -> **131 passed in 114.71s**, no skips.
