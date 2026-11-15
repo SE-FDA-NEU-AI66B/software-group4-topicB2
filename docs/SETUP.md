@@ -205,3 +205,14 @@ Verification checklist:
 - [ ] Seed data and database constraints are verified.
 - [ ] The Flask application starts successfully.
 - [ ] The `/evaluations` page displays evaluation data from SQLite.
+
+## 10. Automated Testing
+
+EduSurvey uses `pytest` to run the automated test suite.
+
+### 10.1 Install Test Dependencies
+
+After activating the virtual environment, install the development and testing dependencies:
+
+```bash
+python -m pip install -r requirements-dev.txt
