@@ -1,0 +1,115 @@
+{
+  "scope": "Local US12 verification after #207 main integration; no production migration",
+  "base_commit": "9c5d55c",
+  "environment": "Windows / Python 3.12.6 / pytest 9.0.2 / installed Chrome",
+  "command": "python -m pytest -q --junitxml=junit.xml",
+  "tests": 307,
+  "passed": 307,
+  "pytest_summary": "307 passed in 163.11s (0:02:43)",
+  "modules": {
+    "tests.test_admin_api": {
+      "tests": 50,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_auth": {
+      "tests": 27,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_backend_runtime": {
+      "tests": 36,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_ci_gate": {
+      "tests": 28,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_database_integrity": {
+      "tests": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_deployment": {
+      "tests": 10,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_feedback_classifier": {
+      "tests": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_lecturer_feedback": {
+      "tests": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_monitoring": {
+      "tests": 13,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_p0_browser_contracts": {
+      "tests": 18,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_production_database": {
+      "tests": 16,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_response_schema.ResponseSchemaTests": {
+      "tests": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_smoke": {
+      "tests": 35,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_status.EvaluationStatusTests": {
+      "tests": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_student_evaluations": {
+      "tests": 21,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_submission_workflow": {
+      "tests": 22,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_submissions": {
+      "tests": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "formal_po_review": "pending",
+  "database_owner_review": "pending"
+}

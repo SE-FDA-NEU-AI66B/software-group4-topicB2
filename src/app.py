@@ -16,6 +16,7 @@ from flask import (
 from werkzeug.security import check_password_hash
 
 if __package__:
+    from .admin import AREA_DENIED, SUPPORT_DEFAULT, register_admin, support_setting
     from .runtime import (
         TransactionConnection,
         configure_runtime,
@@ -23,6 +24,7 @@ if __package__:
         register_runtime,
     )
 else:
+    from admin import AREA_DENIED, SUPPORT_DEFAULT, register_admin, support_setting
     from runtime import (
         TransactionConnection,
         configure_runtime,
@@ -65,7 +67,7 @@ def get_db_connection():
 VALID_ROLES = {"student", "lecturer", "administrator"}
 
 
-def login_required(roles=None):
+def login_required(roles=None, forbidden_message="You do not have permission to access this resource."):
     allowed_roles = set(roles) if roles is not None else None
 
     def decorator(view):
@@ -82,6 +84,14 @@ def login_required(roles=None):
                     "Log in and try again.",
                 )
 
+            with get_db_connection() as connection:
+                account = connection.execute("SELECT role FROM users WHERE id = ?", (session["user_id"],)).fetchone()
+            if account is None or account["role"] not in VALID_ROLES:
+                session.clear()
+                if not request.path.startswith("/api/") and request.accept_mimetypes.best_match(["application/json", "text/html"]) != "application/json":
+                    return redirect("/login")
+                return api_error(401, "UNAUTHORIZED", "The authenticated user no longer exists.", "Log in again with a valid account.")
+            session["role"] = account["role"]
             if (
                 allowed_roles is not None
                 and session.get("role") not in allowed_roles
@@ -89,7 +99,7 @@ def login_required(roles=None):
                 return api_error(
                     403,
                     "FORBIDDEN",
-                    "You do not have permission to access this resource.",
+                    forbidden_message,
                     "Log in with an account that has the required role.",
                 )
 
@@ -98,6 +108,10 @@ def login_required(roles=None):
         return wrapped
 
     return decorator
+
+
+register_admin(app, lambda: get_db_connection(), login_required, api_error, VALID_ROLES,
+               lambda: datetime.now(UTC).isoformat())
 
 @app.route("/api/evaluations", methods=["GET"])
 @login_required(roles=["student"])
@@ -322,19 +336,28 @@ def classify_feedback(comment):
 @app.after_request
 def prevent_private_page_caching(response):
     """Avoid storing authenticated pages or authentication responses in caches."""
-    if session.get("user_id") or request.path.startswith("/api/auth/"):
+    if session.get("user_id") or request.path.startswith("/api/auth/") or request.endpoint in {"home", "login_page"}:
         response.headers["Cache-Control"] = "no-store"
     return response
 
 
 @app.route("/login", methods=["GET"])
 def login_page():
-    return render_template("login.html")
+    return render_template("login.html", support_contact=login_support_contact())
 
 
 @app.route("/")
 def home():
-    return render_template("login.html")
+    return render_template("login.html", support_contact=login_support_contact())
+
+
+def login_support_contact():
+    try:
+        with get_db_connection() as connection:
+            return support_setting(connection)["value"]
+    except sqlite3.Error:
+        # Keep public sign-in/recovery available when DB is unavailable; health stays 503.
+        return SUPPORT_DEFAULT
 
 
 @app.route("/account")
@@ -1697,6 +1720,7 @@ def close_expired_evaluations(connection):
     "/api/evaluations/<int:evaluation_id>/deadline",
     methods=["PUT"],
 )
+@login_required(roles=["administrator"], forbidden_message=AREA_DENIED)
 def update_evaluation_deadline(evaluation_id):
     """Allow administrators to update an evaluation deadline."""
     user_id = session.get("user_id")
@@ -1771,7 +1795,7 @@ def update_evaluation_deadline(evaluation_id):
             return api_error(
                 403,
                 "FORBIDDEN",
-                "Only administrators can update evaluation deadlines.",
+                AREA_DENIED,
                 "Log in with an administrator account.",
             )
 

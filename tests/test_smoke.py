@@ -1,7 +1,5 @@
 import sqlite3
 
-from src.app import app
-
 
 def login_as_student(client):
     with client.session_transaction() as session:
@@ -63,8 +61,8 @@ def add_feedback(database, comment, student_id):
         )
 
 
-def test_home_route():
-    response = app.test_client().get("/")
+def test_home_route(api_client):
+    response = api_client.get("/")
     assert response.status_code == 200
 
 

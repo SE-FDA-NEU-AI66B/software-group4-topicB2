@@ -1189,3 +1189,74 @@ $env:PLAYWRIGHT_CHROMIUM_EXECUTABLE='C:\Program Files\Google\Chrome\Application\
 remain historical evidence. `git diff --check` passed. This merge does not
 apply administrator rules, grant approval, certify a provider release or
 replace the outstanding administrator/release handoff.
+
+## US12 administrator API verification - #195 (2026-11-16)
+
+Parent #192 (P1, not a new Sprint 4 commitment); integration dependencies #194/#196.
+[Contract and scope/review gates](admin-api.md). Requester delegated the minimal
+setting choice; formal PO and database-owner agreement remain pending before
+merge. The 97 P0 story-case matrix is separate from these US12 cases.
+
+All nodes below are in `tests/test_admin_api.py`; 50 variants were collected and
+executed using Flask clients and per-test temporary SQLite. Existing auth/smoke/
+P0/browser tests are retained, not copied.
+
+| Trace ID | Actual pytest function / parameters | Verified behavior |
+|---|---|---|
+| US12-01 | `test_admin_denies_other_roles[area/users/role/settings/setting-write/deadline-student/lecturer]` (12 actual combinations; e.g. `[area-student]`) | Exact required 403 despite stale/forged session role and query impersonation; unchanged snapshots |
+| US12-02 | `test_admin_requires_login[area/users/role/settings/setting-write/deadline]` (6 variants) | API 401, no writes |
+| US12-03 | `test_admin_reads_minimal_user_fields` | Area access, persisted user list, no password hashes and no-store |
+| US12-04 | `test_admin_role_update_changes_existing_session[student/lecturer/administrator]` (3 variants) | Exact persisted role; current permissions on existing client's student/lecturer/admin routes; unrelated records intact |
+| US12-05 | `test_demotion_revokes_existing_admin_and_self_session` | Existing signed admin sessions cannot manage after self-demotion |
+| US12-06 | `test_invalid_role_update_has_no_writes[payload0]` through `[payload8]` | Unknown/type/case/injected roles, wrong body and extra actor field reject without writes |
+| US12-07 | `test_missing_target_and_deleted_actor_are_rejected` | Missing target 404; deleted actor 401 and session cleared |
+| US12-08 | `test_support_contact_persists_and_applies[1]`, `[200]` | Trimmed valid bounds; exact UTC/actor persistence; public home/login consume saved text |
+| US12-09 | `test_invalid_setting_has_no_writes` (9 variants: empty/blank/201 chars/int/bool/null/list/newline/NUL) | Invalid input rejects without writes |
+| US12-10 | `test_setting_catalog_strict_and_html_is_escaped` | Unknown key/extra field rejected; stored HTML displayed only as escaped text |
+| US12-11 | `test_old_database_migration_is_additive_and_repeatable` | Old login fallback, setting write 503 before migration, repeat migration preserves settings/users/courses/enrollments/evaluations |
+| US12-12 | `test_migration_missing_database_creates_nothing` | Missing path cannot produce empty replacement database |
+| US12-13 | `test_admin_rechecked_inside_write_transaction[role]`, `[setting]` | Role revoked between middleware and transaction cannot authorize a write |
+| US12-14 | `test_failed_setting_write_preserves_existing_value` | Real SQLite trigger failure returns safe 503 and exact prior values remain |
+
+The grouping notation above names parameter families, not a literal combined
+pytest node. Use collect-only for the complete actual IDs:
+`python -m pytest --collect-only -q tests/test_admin_api.py` -> 50 tests.
+The timestamp assertions use the existing frozen clock at 2026-11-04T12:00:00,
+with explicit UTC offset for setting updates. Auth/config/connection changes are
+restored by fixtures; no production data is accessed. Home smoke now uses the
+isolated API client because home renders a database-backed setting.
+
+Actual Windows / Python 3.12.6 / pytest 9.0.2 commands/results:
+
+```text
+python -m pytest -q tests/test_admin_api.py tests/test_auth.py tests/test_smoke.py
+112 passed in 25.33s
+
+# Installed Chrome selected through PLAYWRIGHT_CHROMIUM_EXECUTABLE
+python -m pytest -q --junitxml=junit.xml
+279 passed in 163.46s (0:02:43)
+```
+
+JUnit: zero failures/errors/skips (229 retained + 50 US12 variants). At that original base, new module/migration/tests passed Ruff and app retained
+pre-existing SIM114/UP017 findings; final #207 integration below supersedes that
+lint baseline. `git diff --check` passed. The initial focused run had 2 failed / 106
+passed due to naive timestamp test expectations; the test was corrected to the
+API's UTC contract, with no failing test skipped or production behavior weakened.
+[Per-module local evidence](evidence/195/local-tests.json).
+
+Formal PO/#196 review, independent recorded approval and production migration
+remain pending. No admin frontend, copied-cookie revocation or production deploy
+is claimed by these backend checks.
+
+### Final #195 integration with main 9c5d55c
+
+Merged #207's CI/lint/protection updates, retaining both documentation sections
+and the isolated home smoke. New main removes the previously recorded baseline
+app lint findings; `python -m ruff check . --output-format concise` now passes.
+Windows/Python 3.12.6 with installed Chrome:
+`python -m pytest -q --junitxml=junit.xml` -> **307 passed in 163.11s**, zero
+failures/errors/skips (257 retained main cases + 50 US12 variants).
+[Latest per-module evidence](evidence/195/local-tests-9c5d55c.json). The earlier
+279-case result remains historical evidence for base 55e81b5. `git diff --check`
+passed. Formal PO/#196 approval and independent review remain merge gates;
+no deployment or production migration was executed.
