@@ -187,3 +187,179 @@ def test_open_evaluation_error_explains_next_action(browser_app, rule):
     with sqlite3.connect(database) as db:
         assert db.execute("SELECT COUNT(*) FROM responses").fetchone()[0] == 0
     page.close()
+
+
+def seed_lecturer_feedback(database):
+    """Synthetic submitted, draft and foreign-course feedback for US04 UI cases."""
+    from contextlib import closing
+
+    with closing(sqlite3.connect(database)) as db, db:
+        db.execute("INSERT INTO responses (id, evaluation_id, student_id, submitted_at, status) VALUES (1, 1, 1, '2026-11-04 10:00:00', 'submitted')")
+        db.execute("INSERT INTO response_answers (response_id, question_id, rating_value) VALUES (1, 1, 4)")
+        db.execute("INSERT INTO response_answers (response_id, question_id, text_value) VALUES (1, 2, ?)", ('Helpful examples. Practical labs made the concepts easier to follow.',))
+        db.execute("INSERT INTO users (id, email, password_hash, full_name, role) VALUES (4, 'draft@example.test', 'fixture-hash', 'Draft Student', 'student')")
+        db.execute("INSERT INTO responses (id, evaluation_id, student_id, status) VALUES (2, 1, 4, 'draft')")
+        db.execute("INSERT INTO response_answers (response_id, question_id, text_value) VALUES (2, 2, 'DRAFT_ONLY_COMMENT')")
+        db.execute("INSERT INTO courses (id, course_code, course_name) VALUES (2, 'OTHER202', 'FOREIGN_COURSE')")
+        db.execute("INSERT INTO evaluations (id, course_id, created_by, title, deadline, status) VALUES (2, 2, 2, 'UNASSIGNED_PRIVATE', '2099-01-01 00:00:00', 'open')")
+        db.execute("INSERT INTO questions (id, evaluation_id, question_text, question_type, is_required, question_order) VALUES (3, 2, 'Foreign question', 'text', 0, 1)")
+        db.execute("INSERT INTO responses (id, evaluation_id, student_id, status, submitted_at) VALUES (3, 2, 1, 'submitted', '2026-11-04 10:00:00')")
+        db.execute("INSERT INTO response_answers (response_id, question_id, text_value) VALUES (3, 3, 'FOREIGN_ONLY_COMMENT')")
+
+
+@pytest.mark.parametrize("viewport", [{"width": 1440, "height": 900}, {"width": 390, "height": 844}], ids=["laptop", "phone"])
+def test_lecturer_feedback_click_through(browser_app, viewport):
+    """M5-L01/L02; US04 #50 + P0C-07: submitted-only detail and keyboard sign-out."""
+    browser, url, database = browser_app
+    seed_lecturer_feedback(database)
+    context = browser.new_context(viewport=viewport)
+    page = context.new_page()
+    sign_in(page, url, "lecturer@test.com")
+    expect(page).to_have_url(url + "/lecturer/feedback")
+    expect(page.locator(".evaluation")).to_have_count(1)
+    expect(page.locator('.evaluation[data-evaluation-id="1"] strong')).to_have_text("1")
+    expect(page.get_by_text("UNASSIGNED_PRIVATE", exact=True)).to_have_count(0)
+    assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+    review = page.get_by_role("link", name="Review feedback: Test Evaluation", exact=True)
+    review.focus()
+    page.keyboard.press("Enter")
+    expect(page.get_by_role("heading", name="Student ratings", exact=True)).to_be_visible()
+    expect(page.locator("[data-completed-count]")).to_have_text("1")
+    expect(page.get_by_label("Feedback summary")).to_contain_text("4.0 / 5")
+    expect(page.get_by_role("heading", name="Written comments", exact=True)).to_be_visible()
+    expect(page.get_by_text("Helpful examples. Practical labs made the concepts easier to follow.", exact=True)).to_be_visible()
+    expect(page.get_by_text("DRAFT_ONLY_COMMENT", exact=True)).to_have_count(0)
+    expect(page.get_by_text("FOREIGN_ONLY_COMMENT", exact=True)).to_have_count(0)
+    assert page.locator("script").count() == 1  # Only the shared session script; feedback stays escaped text.
+    assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+    page.reload(wait_until="domcontentloaded")
+    expect(page.locator("[data-completed-count]")).to_have_text("1")
+    if evidence_dir := os.environ.get("P0_SCREENSHOT_DIR"):
+        destination = Path(evidence_dir)
+        destination.mkdir(parents=True, exist_ok=True)
+        page.screenshot(path=str(destination / f"lecturer-detail-{viewport['width']}.png"), full_page=True)
+    # Verify long unbroken and HTML-like feedback remains text and wraps safely.
+    from contextlib import closing
+
+    with closing(sqlite3.connect(database)) as db, db:
+        db.execute("UPDATE response_answers SET text_value = ? WHERE response_id=1 AND question_id=2", ('Helpful examples. <script>alert("xss")</script> ' + 'LongFeedback' * 30,))
+    page.reload(wait_until="domcontentloaded")
+    expect(page.get_by_text('Helpful examples. <script>alert("xss")</script>', exact=False)).to_be_visible()
+    assert page.locator("script").count() == 1
+    assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+    page.get_by_role("link", name="All evaluations", exact=False).click()
+    expect(page.get_by_role("link", name="Review feedback:", exact=False)).to_have_count(1)
+    logout = page.get_by_role("button", name="Sign out", exact=True)
+    logout.focus()
+    page.keyboard.press("Enter")
+    expect(page).to_have_url(url + "/login")
+    response = context.request.get(url + "/lecturer/feedback/1", headers={"Accept": "text/html"})
+    assert response.status == 401
+    assert "Helpful examples" not in response.text()
+    assert context.request.get(url + "/api/courses/1/feedback").status == 401
+    context.close()
+
+
+def test_lecturer_feedback_empty_states(browser_app):
+    """M5-L03: distinguish assigned evaluation without submissions from no assignments."""
+    from contextlib import closing
+
+    browser, url, database = browser_app
+    page = browser.new_page(viewport={"width": 390, "height": 844})
+    sign_in(page, url, "lecturer@test.com")
+    expect(page).to_have_url(url + "/lecturer/feedback")
+    page.get_by_role("link", name="Review feedback:", exact=False).click()
+    expect(page.get_by_role("heading", name="No feedback submitted yet")).to_be_visible()
+    expect(page.locator("[data-completed-count]")).to_have_text("0")
+    expect(page.get_by_text("draft answers are excluded", exact=False)).to_be_visible()
+    page.get_by_role("link", name="Refresh feedback", exact=True).click()
+    expect(page.get_by_role("heading", name="No feedback submitted yet")).to_be_visible()
+    with closing(sqlite3.connect(database)) as db, db:
+        db.execute("DELETE FROM course_lecturers")
+    page.get_by_role("link", name="All evaluations", exact=False).click()
+    expect(page.get_by_role("heading", name="No evaluations available")).to_be_visible()
+    expect(page.get_by_text("contact your university administrator", exact=False)).to_be_visible()
+    page.get_by_role("link", name="Refresh assigned evaluations").click()
+    expect(page.get_by_role("heading", name="No evaluations available")).to_be_visible()
+    if evidence_dir := os.environ.get("P0_SCREENSHOT_DIR"):
+        destination = Path(evidence_dir)
+        destination.mkdir(parents=True, exist_ok=True)
+        page.screenshot(path=str(destination / "lecturer-empty-390.png"), full_page=True)
+    page.close()
+
+
+@pytest.mark.parametrize("path,code", [("/lecturer/feedback/2", 403), ("/lecturer/feedback/999", 404)])
+def test_lecturer_feedback_access_error_recovery(browser_app, path, code):
+    """M5-L04: ownership/not-found errors never expose foreign feedback and allow recovery."""
+    browser, url, database = browser_app
+    seed_lecturer_feedback(database)
+    page = browser.new_page()
+    sign_in(page, url, "lecturer@test.com")
+    expect(page).to_have_url(url + "/lecturer/feedback")
+    response = page.goto(url + path, wait_until="domcontentloaded")
+    assert response.status == code
+    expect(page.get_by_role("alert")).to_be_visible()
+    if code == 403:
+        expect(page.get_by_text("You do not have permission to view this course feedback.", exact=True)).to_be_visible()
+    else:
+        expect(page.get_by_text("Evaluation not found.", exact=True)).to_be_visible()
+    assert "FOREIGN_ONLY_COMMENT" not in page.content()
+    assert "UNASSIGNED_PRIVATE" not in page.content()
+    page.get_by_role("link", name="Return to assigned evaluations").click()
+    expect(page).to_have_url(url + "/lecturer/feedback")
+    expect(page.get_by_role("link", name="Review feedback:", exact=False)).to_have_count(1)
+    page.close()
+
+
+@pytest.mark.parametrize("role", ["anonymous", "student", "administrator"])
+def test_lecturer_feedback_wrong_role_browser_errors(browser_app, role):
+    """M5-L05: browser-only error presentation; preserve API/JSON denial contracts."""
+    browser, url, database = browser_app
+    seed_lecturer_feedback(database)
+    page = browser.new_page(viewport={"width": 390, "height": 844})
+    if role != "anonymous":
+        sign_in(page, url, "student@test.com" if role == "student" else "admin@test.com")
+        expect(page).to_have_url(url + ("/evaluations" if role == "student" else "/account"))
+    expected = 401 if role == "anonymous" else 403
+    response = page.goto(url + "/lecturer/feedback/1", wait_until="domcontentloaded")
+    assert response.status == expected
+    expect(page.get_by_role("heading", name="Unable to display feedback")).to_be_visible()
+    assert "Helpful examples" not in page.content()
+    assert "Test Evaluation" not in page.content()
+    denial = page.request.get(url + "/api/courses/1/feedback")
+    assert denial.status == expected
+    assert denial.headers["content-type"].startswith("application/json")
+    legacy = page.request.get(url + "/lecturer/feedback/1", headers={"Accept": "application/json"})
+    assert legacy.status == expected
+    assert legacy.headers["content-type"].startswith("application/json")
+    assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+    if role == "anonymous":
+        page.get_by_role("link", name="Sign in to continue").click()
+        expect(page).to_have_url(url + "/login")
+    else:
+        page.get_by_role("link", name="Return to My account", exact=True).click()
+        expect(page).to_have_url(url + "/account")
+    page.close()
+
+
+def test_lecturer_feedback_unavailable_retry(browser_app, monkeypatch):
+    """M5-L06: an actual SQLite failure gives safe 503 UI and a working retry."""
+    browser, url, database = browser_app
+    seed_lecturer_feedback(database)
+    page = browser.new_page()
+    sign_in(page, url, "lecturer@test.com")
+    expect(page).to_have_url(url + "/lecturer/feedback")
+
+    def database_failure():
+        raise sqlite3.OperationalError("PRIVATE_DATABASE_FAILURE_DETAIL")
+
+    with monkeypatch.context() as patch:
+        patch.setattr(app_module, "get_db_connection", database_failure)
+        response = page.reload(wait_until="domcontentloaded")
+        assert response.status == 503
+        expect(page.get_by_text("Feedback is temporarily unavailable.", exact=True)).to_be_visible()
+        assert "PRIVATE_DATABASE_FAILURE_DETAIL" not in page.content()
+        assert "Helpful examples" not in page.content()
+    page.get_by_role("link", name="Try again", exact=True).click()
+    expect(page.get_by_role("link", name="Review feedback:", exact=False)).to_have_count(1)
+    page.close()
