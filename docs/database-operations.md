@@ -64,8 +64,8 @@ gunicorn --config gunicorn.conf.py src.app:app
 Run initialization once, at runtime where the volume is attached. Do not put
 the initializer unconditionally before Gunicorn: later attempts intentionally
 refuse an existing file. #205's `tools.prepare_production` integration owns
-idempotent startup verification and its provisioned marker; it is on a separate
-deployment implementation, now merged in main by PR #226; this PR validates
+idempotent startup verification and its provisioned marker. That deployment
+implementation is now merged in main by PR #226; this PR validates
 compatibility but does not claim live provisioning. Missing previously provisioned
 data is a recovery event, not permission to reseed.
 

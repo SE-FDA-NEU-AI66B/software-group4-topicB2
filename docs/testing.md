@@ -1,9 +1,9 @@
 # EduSurvey M4 Automated Testing
 
-**Latest #204 verification (2026-11-15): 206 passed in 56.91s, zero
+**Latest #204 verification (2026-11-15): 216 passed in 58.86s, zero
 failures/errors/skips** on Windows/Python 3.11.9. This includes 16 new
-production-database cases, the retained 190 cases and the #227 runtime-contract
-test fixes. The historical #189 FK-OFF/exception-propagation assumptions below
+production-database cases and all 200 cases from main `6acf0dd`, including the
+#205 runtime-contract fixes. The historical #189 FK-OFF/exception-propagation assumptions below
 are superseded: current runtime enforces FK=1 and sanitizes SQLite failures as
 503/DATABASE_UNAVAILABLE. See the #204 register at the end and
 [the database operations runbook](database-operations.md).
@@ -779,6 +779,25 @@ drill explicitly closes SQLite handles before removing all its temporary files.
 Pending external evidence: actual paid mount/URL, restart and redeploy survival,
 off-host backup transfer/scheduling and host-level restore under #205/#208,
 plus a teammate's independent review. Local tests do not certify those actions.
+
+### #204 integration verification with merged #205
+
+Integrated main **6acf0dd** (PR #226); resolved the documentation-only conflict
+by preserving both #204 and #205 evidence sections. Baseline runtime tests are
+byte-identical to main. No deployment workflow, Blueprint or startup guard
+was replaced. The shared initializer remains compatible with the guard's
+explicit opt-in, provisioned marker and repeat-startup preservation checks.
+
+```powershell
+$env:PLAYWRIGHT_CHROMIUM_EXECUTABLE='C:\Program Files\Google\Chrome\Application\chrome.exe'
+& .venv/m4-env/Scripts/python.exe -m pytest -v --cov --cov-report=term-missing --junitxml=docs/evidence/204/integrated-pytest.xml
+# 216 passed in 58.86s; exit 0; zero failures/errors/skips
+```
+
+Same Windows/Python 3.11.9 environment: 200 retained main cases + 16 new #204
+cases. [Integrated console](evidence/204/integrated-pytest.txt) and
+[JUnit](evidence/204/integrated-pytest.xml) are separate from the earlier
+206-case pre-merge run. Changed-module Ruff and `git diff --check` passed.
 
 ## Deployment preparation and main integration - #205 (2026-11-15)
 
