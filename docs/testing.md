@@ -429,6 +429,8 @@ All nodes are in `tests/test_p0_browser_contracts.py`; existing mappings above a
 
 ### Backend audit: approved P0 contracts and M5 runtime
 
+Latest integration (2026-11-15): merged main `dff0de8` after #220/#222 landed. Full local regression: **183 passed in 56.15s** with `PLAYWRIGHT_CHROMIUM_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' python -m pytest -q`. Earlier 169-test results describe the pre-merge baseline. All new main tests are retained; no skipped test is introduced.
+
 P0C-01/02 reuse `tests/test_auth.py::test_login_wrong_password` and `::test_login_unknown_email` for canonical messages; no duplicate credential scenarios are added. P0C-05/06 are implemented in `tests/test_submission_workflow.py::test_duplicate_submission_canonical_message` and `::test_duplicate_questions_canonical_message`, including preserved stored answers/counts. P0C-08 is `tests/test_auth.py::test_protected_html_redirects_after_logout` with student, lecturer and administrator variants; all protected HTML follow-ups reach login while API denials remain JSON 401.
 
 Runtime/security tests are in `tests/test_backend_runtime.py`, using isolated SQLite/fixed domain clocks where applicable:

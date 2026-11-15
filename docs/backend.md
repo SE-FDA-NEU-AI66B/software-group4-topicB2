@@ -86,3 +86,5 @@ Linux browser installation: `python -m playwright install --with-deps chromium`.
 Actual verification: **169 tests passed in 54.47s** locally, with all 128 existing scenarios retained and 41 new variants. Stronger duplicate-preservation assertions passed in a subsequent focused run (2 passed in 0.12s). A real temporary Gunicorn production-mode smoke also passed. These are local/CI checks, not deployed availability or performance evidence.
 
 See [backend runtime handover](backend-runtime.md) for environment variables, launch/backup/restore instructions and monitoring definitions, and [testing.md](testing.md) for actual test evidence.
+
+Latest integration (2026-11-15): merged main `dff0de8` after #220/#222 landed. Full local regression: **183 passed in 56.15s** with `PLAYWRIGHT_CHROMIUM_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' python -m pytest -q`. Earlier 169-test results describe the pre-merge baseline. All new main tests are retained; no skipped test is introduced.
