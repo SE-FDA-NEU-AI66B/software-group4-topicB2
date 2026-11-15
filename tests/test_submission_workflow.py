@@ -446,3 +446,35 @@ def test_submission_deadline_boundary(
         )
         assert response_count == 1
         assert answer_count == 2
+
+
+def test_duplicate_submission_canonical_message(submission_client):
+    """P0C-05 / #214: canonical duplicate message, original data remains intact."""
+    client = submission_client
+    with client.session_transaction() as session:
+        session["user_id"], session["role"] = 1, "student"
+    payload = valid_submission_payload()
+    assert client.post("/api/submissions", json=payload).status_code == 201
+    payload["answers"]["1"]["rating_value"] = 1
+    payload["answers"]["2"]["text_value"] = "Attempted overwrite"
+    response = client.post("/api/submissions", json=payload)
+    assert response.status_code == 409
+    assert response.get_json()["error"]["message"] == "You have already completed this evaluation."
+    with sqlite3.connect(app_module.DATABASE) as connection:
+        assert connection.execute("SELECT COUNT(*) FROM responses WHERE status='submitted'").fetchone()[0] == 1
+        assert connection.execute("SELECT rating_value FROM response_answers WHERE question_id=1").fetchone()[0] == 5
+        assert connection.execute("SELECT text_value FROM response_answers WHERE question_id=2").fetchone()[0] == "The course is useful."
+
+
+def test_duplicate_questions_canonical_message(submission_client):
+    """P0C-06 / #214: reopening completed questions gives the same canonical denial."""
+    client = submission_client
+    with client.session_transaction() as session:
+        session["user_id"], session["role"] = 1, "student"
+    assert client.post("/api/submissions", json=valid_submission_payload()).status_code == 201
+    before = get_database_counts(client)
+    response = client.get("/api/evaluations/1/questions")
+    assert get_database_counts(client) == before
+    assert response.status_code == 409
+    assert response.get_json()["error"]["code"] == "DUPLICATE_SUBMISSION"
+    assert response.get_json()["error"]["message"] == "You have already completed this evaluation."

@@ -1,5 +1,10 @@
 # EduSurvey M4 Automated Testing
 
+**Backend audit contract update — 2026-11-15.**
+
+Current behavior supersedes earlier dated 401-HTML/old-message snapshots below: approved #214 uses canonical API messages, and #215 redirects anonymous protected HTML navigation to `/login` while APIs/JSON clients retain JSON 401. Existing denial scenarios and all old test IDs are retained; their HTML-only assertions are deliberately updated. Topic/ranking/statistics APIs now require assigned lecturer access. [Backend file/route map](backend.md) and [runtime handover](backend-runtime.md) explain the implementation and remaining deployment/security limits.
+
+
 ## 1. What we test, and why
 
 Evidence reviewed on 2026-11-15: original M4 documentation (#164), US01 tests (#165), US02 tests (#166 where present), and the team’s US11 work on fetched main `ecc0727`. Integration preserves all original case IDs, the four M4 sections, pending-case markers and historical mutation/run evidence. New verification results below are separate from those historical runs. The later #172/#173 integration adds the already-existing PR lecturer-page routes while preserving main’s shared business functions; unrelated local changes are untouched.
@@ -24,7 +29,7 @@ For new tests, use a separate temporary SQLite database per case, load `src/sche
 | ID | Story | Input | Expected result | Kind |
 |---|---|---|---|---|
 | TC-01 | US01 | POST /api/auth/login; student1@edusurvey.edu / Password123! | 200; authenticated=true; student role; no password_hash | Normal |
-| TC-02 | US01 | Same email; password=wrong-password | 401; INVALID_CREDENTIALS; "Email or password is incorrect." | Error |
+| TC-02 | US01 | Same email; password=wrong-password | 401; INVALID_CREDENTIALS; "Invalid email or password." | Error |
 | TC-03 | US01 | unknown@edusurvey.edu / Password123! | 401; INVALID_CREDENTIALS | Error |
 | TC-04 | US01 | Known email; omit password | 400; MISSING_CREDENTIALS; "Email and password are required." | Error |
 | TC-05 | US02 | Student 1 enrolled in course 1; GET /api/evaluations; three open/closed evaluations | 200; count=3; Course Feedback has title, course, lecturer, deadline and Active status | Normal |
@@ -38,7 +43,7 @@ For new tests, use a separate temporary SQLite database per case, load `src/sche
 | TC-13 | US02 | Same T; open evaluation; deadline=T+1s | 200; Due soon | Boundary |
 | TC-14 | US03 | Fresh enrolled student; rating question 1=5 and required text question 2="The course is useful."; frozen T; open evaluation | 201; status=submitted; one response and answer persisted; "Evaluation submitted successfully." | Normal |
 | TC-15 | US03 | Student session; POST /api/submissions with evaluation_id=1, answers={} | 400; MISSING_REQUIRED_ANSWERS; "Please answer all required questions before submitting." | Error |
-| TC-16 | US03 | Existing submitted response for student 1/evaluation 1; valid_payload() | 409; DUPLICATE_SUBMISSION; "You have already submitted this evaluation." | Error |
+| TC-16 | US03 | Existing submitted response for student 1/evaluation 1; valid_payload() | 409; DUPLICATE_SUBMISSION; "You have already completed this evaluation." | Error |
 | TC-17 | US03 | Anonymous; valid submission payload | 401; UNAUTHORIZED | Error |
 | TC-18 | US03 | Frozen T=2026-11-04T12:00:00; deadline=T+1s; valid answers and no response | 201; status=submitted | Boundary |
 | TC-19 | US03 | Same frozen T; deadline=T; valid answers and no response | 400; DEADLINE_EXPIRED; "The submission deadline has passed." | Boundary |
@@ -61,7 +66,7 @@ For new tests, use a separate temporary SQLite database per case, load `src/sche
 | TC-36 | US04 | Assigned lecturer; course 1 has one submitted and one draft response | 200; completed_evaluations=1; draft excluded | Normal |
 | TC-37 | US04 | Assigned lecturer; 20 distinct students each have one submitted response in course 1 | 200; completed_evaluations=20; 20 responses | Normal |
 | TC-38 | US11 | Login with student1@edusurvey.edu / Password123!; POST /api/auth/logout; GET /api/auth/me using the same client | GET returns 401 after logout; logout implementation returns 200, authenticated=false | Normal |
-| TC-39 | US11 / US02 | Real student login; verify protected page/API access and seeded evaluation; logout; GET /evaluations and /api/evaluations using the cleared session | Both 401 JSON UNAUTHORIZED; no redirect/student data; user_id/role absent | Error |
+| TC-39 | US11 / US02 | Real student login; verify protected page/API access and seeded evaluation; logout; GET /evaluations and /api/evaluations using the cleared session | HTML 302 to /login; API 401 JSON UNAUTHORIZED; no student data; user_id/role absent | Error |
 | TC-40 | US11 / US04 | Real assigned lecturer login; verify seeded submitted feedback is accessible; logout; GET /api/courses/1/feedback | 401 JSON UNAUTHORIZED; no feedback/course data; user_id/role absent | Error |
 | TC-41 | US11 | Anonymous POST /api/auth/logout twice; inspect session after each | Both 200 JSON authenticated=false; no redirect; user_id/role absent and auth/me remains 401 | Normal |
 | US02-L01 | US02 | Open, unfinished evaluation with deadline=T+12h | 200; Due soon | Normal |
@@ -87,8 +92,8 @@ For new tests, use a separate temporary SQLite database per case, load `src/sche
 | US01-A01 | US01 | Lecturer demo credentials lecturer1@edusurvey.edu / Password123! | 200; user_id=2, role=lecturer in response and session | Normal |
 | US01-A02 | US01 | Administrator demo credentials admin@edusurvey.edu / Password123! | 200; user_id=3, role=administrator in response and session | Normal |
 | US01-A03 | US01 | Anonymous GET /api/auth/me | 401; UNAUTHORIZED; no authenticated session | Error |
-| US01-A04 | US01 | Anonymous GET /evaluations | 401 JSON; UNAUTHORIZED; no authenticated session | Error |
-| US01-A05 | US01 | Anonymous GET /evaluations/1/complete | 401 JSON; UNAUTHORIZED; no authenticated session | Error |
+| US01-A04 | US01 | Anonymous GET /evaluations | HTML 302 to /login; no authenticated session (explicit JSON requests still 401) | Error |
+| US01-A05 | US01 | Anonymous GET /evaluations/1/complete | HTML 302 to /login; no authenticated session (explicit JSON requests still 401) | Error |
 | US01-A06 | US01 | Anonymous GET /api/evaluations | 401; UNAUTHORIZED; no authenticated session | Error |
 | US01-A07 | US01 | Student login then GET /api/auth/me; repeat with independent client | Original client: 200 and exact public student identity; independent client: 401 | Normal |
 | US01-A08 | US01 | Student demo login then GET both student pages and list API; no evaluations seeded | Pages: 200 HTML; API: 200 with count=0 and evaluations=[] | Normal |
@@ -107,13 +112,13 @@ For new tests, use a separate temporary SQLite database per case, load `src/sche
 | TC-US03-09 | US03 | Same frozen T; deadline=T+1s | 201; one response and two answers persisted | Normal |
 | US03-P01 | US03 | Enrolled student; rating=5 and optional text="The course was useful." | 201; persisted response and exact two answers | Normal |
 | US04-P01 | US04 | Assigned lecturer GET /lecturer/feedback/1 | 200 HTML with evaluation title, completed count label and submitted comment | Normal |
-| US04-P02 | US04 | Anonymous GET /lecturer/feedback/1 | 401 | Error |
+| US04-P02 | US04 | Anonymous GET /lecturer/feedback/1 | HTML 302 to /login; JSON requests 401 | Error |
 | US04-P03 | US04 | Student GET /lecturer/feedback | 403 | Error |
 | US04-P04 | US04 | Lecturer GET /lecturer/feedback/999; evaluation nonexistent | 404 | Error |
 | TC-US04-01 | US04 | Assigned lecturer GET /lecturer/feedback/1 | 200; evaluation title, completed-count label and seeded comment | Normal |
 | TC-US04-02 | US04 | Remove lecturer 2 course assignment; request existing evaluation 1 | 403; "You do not have permission to view this course feedback." | Error |
 | TC-US04-03 | US04 | Student GET /lecturer/feedback | 403 | Error |
-| TC-US04-04 | US04 | Anonymous GET /lecturer/feedback/1 | 401 | Error |
+| TC-US04-04 | US04 | Anonymous GET /lecturer/feedback/1 | HTML 302 to /login; JSON requests 401 | Error |
 | TC-US04-05 | US04 | Add draft response/comment DRAFT_ONLY_COMMENT alongside seeded submitted response | 200; draft comment absent, seeded submitted comment present | Normal |
 | TC-US04-06 | US04 | Add rating=5 to the seeded submitted response; GET feedback | 200; Student ratings, 5 / 5, Written comments and actual comment displayed | Normal |
 | TC-US04-07 | US04 | One seeded submitted response plus one new submitted response and one draft | 200; completed count=2; new submitted comment visible, draft absent | Normal |
@@ -123,7 +128,7 @@ For new tests, use a separate temporary SQLite database per case, load `src/sche
 
 The US02 fixture freezes the route clock before creating data at T=2026-11-03T12:00:00. The Due soon rule is strictly less than 24 hours; tests now check 86399, 86400 and 86401 seconds remaining separately. Deadline equality is Closed; additional tests check T-1s, T and T+1s. Rating boundaries and submission examples below belong to pending US03 work. Five required answers and 20 completed responses are acceptance examples, not implementation maxima.
 
-[The PO-reviewed #188 contract matrix](p0-acceptance-review.md) records the comparison, approved targets, exact future test IDs/nodes, responsible owners, dependencies and diagnostic evidence. Login/duplicate messages must retain the requirements' canonical wording in a future implementation; only the `Due soon` documentation spelling is normalized here after explicit PO approval. Browser logout/protected-HTML navigation must lead to login while APIs retain 200/401 JSON. Browser controls/navigation from #201 are now merged via #218; backend changes #214/#215 and the remaining lecturer work #202 are separate; copied-cookie revocation remains a separate unresolved decision under #216. The inclusive <=3,000ms budget measures a visible browser outcome including navigation; local Flask timings and whole-suite runtime are not deployed/browser acceptance evidence.
+[The PO-reviewed #188 contract matrix](p0-acceptance-review.md) records the comparison, approved targets, exact future test IDs/nodes, responsible owners, dependencies and diagnostic evidence. Login/duplicate messages must retain the requirements' canonical wording in a future implementation; only the `Due soon` documentation spelling is normalized here after explicit PO approval. Browser logout/protected-HTML navigation must lead to login while APIs retain 200/401 JSON. Browser controls/navigation from #201 are now merged via #218; the approved #214/#215 backend contracts are implemented by this audit, and #202 is merged; copied-cookie revocation remains a separate unresolved decision under #216. The inclusive <=3,000ms budget measures a visible browser outcome including navigation; local Flask timings and whole-suite runtime are not deployed/browser acceptance evidence.
 
 The separate P0C-01–P0C-18 register in that review specifies **future target assertions**, not additional passing current-contract cases in the matrix below. P0C-01/02 reuse existing credential test nodes; P0C-03/04/07 browser cases are now implemented by merged #218 and mapped below; the other proposed redirect/revocation/timing assertions remain pending. All existing case IDs and unrelated pending cases below are retained.
 
@@ -150,7 +155,7 @@ The existing lecturer routes/template now provide useful HTML errors, recovery l
 | M5-L01 / M5-L02 / P0C-07 | Lecturer logs in, opens assigned feedback, reloads, returns and signs out; phone/laptop + keyboard | Correct counts, ratings/comments; draft/foreign feedback absent; persisted output; logout reaches login and protected requests are 401. Long/HTML-like comments wrap and remain escaped text. |
 | M5-L03 | Assigned evaluation with zero responses, then no assignments | Distinct helpful empty states, count 0, working refresh and assignment guidance. |
 | M5-L04 | Existing unassigned evaluation / nonexistent evaluation | 403 with exact permission message / 404; no foreign feedback/title; working return-to-list link. |
-| M5-L05 | Anonymous, student and administrator open lecturer detail in browser | Safe HTML 401/403 with sign-in/account recovery; JSON page clients and APIs keep JSON denials; no feedback disclosed. |
+| M5-L05 | Anonymous, student and administrator open lecturer detail in browser | Anonymous browser redirects to login; wrong-role HTML stays 403 with account recovery; JSON page clients/APIs retain JSON 401/403; no feedback disclosed. |
 | M5-L06 | SQLite error while loading lecturer page | Safe 503 explanation with retry; no internal DB detail disclosed; retry succeeds after restoring DB. |
 
 ## 3. Automated tests
@@ -421,6 +426,30 @@ All nodes are in `tests/test_p0_browser_contracts.py`; existing mappings above a
 | M5-L06 | `test_lecturer_feedback_unavailable_retry` |
 
 2026-11-15 local command: `PLAYWRIGHT_CHROMIUM_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' P0_SCREENSHOT_DIR=/private/tmp/p0-202-screenshots python -m pytest -q` → **125 passed in 49.21s**, no skips (116 retained + 9 new variants). After a final empty-answer guidance clarification, `python -m pytest -q tests/test_lecturer_feedback.py` → **8 passed in 0.08s**. [Lecturer evidence](p0-lecturer-feedback.md) records environment, seeded-account walkthroughs, screenshots and limits. Public deployment/physical phone/timing remain pending; pytest duration is not a performance measurement. #202 introduces browser HTML error presentation at unchanged denial statuses, not #215's future redirects or #216's cookie revocation.
+
+### Backend audit: approved P0 contracts and M5 runtime
+
+P0C-01/02 reuse `tests/test_auth.py::test_login_wrong_password` and `::test_login_unknown_email` for canonical messages; no duplicate credential scenarios are added. P0C-05/06 are implemented in `tests/test_submission_workflow.py::test_duplicate_submission_canonical_message` and `::test_duplicate_questions_canonical_message`, including preserved stored answers/counts. P0C-08 is `tests/test_auth.py::test_protected_html_redirects_after_logout` with student, lecturer and administrator variants; all protected HTML follow-ups reach login while API denials remain JSON 401.
+
+Runtime/security tests are in `tests/test_backend_runtime.py`, using isolated SQLite/fixed domain clocks where applicable:
+
+| IDs | Node names | Verified behavior |
+|---|---|---|
+| BE-01 | `test_health_database_check[ready/missing/empty/corrupt]` | Real DB readiness 200/503; no replacement file created. |
+| BE-02 | `test_request_logs_exclude_user_input` | Endpoint/status/duration events omit raw URL/query/body/cookie/input markers. |
+| BE-03 | `test_feedback_aggregate_permissions` (15 endpoint/identity variants) | Three aggregate APIs: anonymous 401, student/admin/unassigned lecturer 403, assigned lecturer 200; no leaked feedback. |
+| BE-04 | `test_missing_database_is_safe_503` | DB unavailable yields actionable safe response, no private detail or new empty file. |
+| BE-05 | `test_production_config_requires_explicit_secrets_and_storage` (5 variants) | Production secret/path guards and secure cookie config. |
+| BE-06 | `test_database_transaction_closes_and_rolls_back` | Runtime FK enforcement, rollback and connection closure. |
+| BE-07/08 | `test_online_backup_and_restore_round_trip`, `test_backup_missing_source_creates_no_output` | Consistent backup/restored copy, private file permissions, no overwrite/empty-file fallback. |
+| BE-09 | `test_production_initializer_refuses_reset` | Existing production DB cannot be reset by initializer. |
+| BE-10 | `test_unexpected_errors_are_sanitized` | Safe 500 with observable exception type, no private exception input. |
+| BE-11 | `test_fresh_m5_demo_has_student_work_and_lecturer_feedback` | New opt-in demo has fresh student slot, existing submitted feedback, future deadlines and valid FKs; second initialization refused. |
+| BE-12 | `test_offset_deadlines_consistent_across_p0` (4 variants) | +07:00 ISO dates at T+86399/86400/86401 seconds and T; list/questions/submission agree, strict 24h and expiry equality retained. |
+
+Actual local verification (2026-11-15, macOS arm64 / Python 3.14.8 / Flask 3.1.2 / Playwright 1.65.2 / Chrome 157.0.8103.78): `PLAYWRIGHT_CHROMIUM_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' python -m pytest -q` → **169 passed in 54.47s**, no skips (128 retained scenarios + 41 additional variants). The duplicate tests then strengthened preserved-answer/count assertions without changing code; focused rerun → **2 passed in 0.12s**. New runtime module/test/backup/Gunicorn config Ruff checks pass; existing unrelated lint findings remain. CI verifies the final tree on Linux/Python 3.12. These durations are test execution time, not user-visible latency evidence.
+
+The M4 97-case matrix and M5 UI tables remain separate from this additional runtime register. Existing test scenarios are preserved; some intentionally change expectations under #214/#215 or authenticate aggregate tests under the new ownership requirement. No skips, production-data tests, copied-cookie revocation or deployed timing pass is introduced. Gunicorn local production-mode smoke used only temporary data and passed readiness 200→missing DB 503→restored DB 200, secure cookie headers, HTML redirect and sanitized telemetry. Hosting, persistent-volume configuration, actual log dashboard/alarms, deployment-gating/rollback and public HTTPS checks remain unverified.
 
 ## 4. What the tests found
 

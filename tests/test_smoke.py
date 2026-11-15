@@ -77,8 +77,8 @@ def test_home_route():
 def test_evaluations_route_requires_login(api_client):
     response = api_client.get("/evaluations")
 
-    assert response.status_code == 401
-    assert response.get_json()["error"]["code"] == "UNAUTHORIZED"
+    assert response.status_code == 302
+    assert response.headers["Location"] == "/login"
 
 
 def test_evaluations_route_student_access(api_client):
@@ -211,6 +211,7 @@ def test_submission_errors_have_user_facing_guidance(api_client):
 
 
 def test_grouped_feedback_response_structure(api_client):
+    login_as_lecturer(api_client)
     response = api_client.get("/api/evaluations/1/feedback/topics")
 
     assert response.status_code == 200
@@ -236,6 +237,7 @@ def test_grouped_feedback_response_structure(api_client):
 
 
 def test_grouped_feedback_excludes_other_evaluations(api_client):
+    login_as_lecturer(api_client)
     database = api_client.application.config["TEST_DATABASE"]
 
     with sqlite3.connect(database) as connection:
@@ -315,6 +317,7 @@ def test_grouped_feedback_excludes_other_evaluations(api_client):
 
 
 def test_feedback_topic_ranking_order_and_ties(api_client):
+    login_as_lecturer(api_client)
     database = api_client.application.config["TEST_DATABASE"]
 
     # The fixture already contains one Course Content comment.
@@ -373,6 +376,7 @@ def test_feedback_topic_ranking_order_and_ties(api_client):
 
 
 def test_feedback_topic_ranking_returns_all_topics(api_client):
+    login_as_lecturer(api_client)
     response = api_client.get(
         "/api/evaluations/1/feedback/topics/ranking"
     )
@@ -396,6 +400,7 @@ def test_feedback_topic_ranking_returns_all_topics(api_client):
 
 
 def test_feedback_topic_ranking_invalid_evaluation(api_client):
+    login_as_lecturer(api_client)
     response = api_client.get(
         "/api/evaluations/9999/feedback/topics/ranking"
     )
@@ -405,6 +410,7 @@ def test_feedback_topic_ranking_invalid_evaluation(api_client):
 
 
 def test_feedback_topic_ranking_excludes_other_evaluations(api_client):
+    login_as_lecturer(api_client)
     database = api_client.application.config["TEST_DATABASE"]
 
     with sqlite3.connect(database) as connection:
@@ -485,6 +491,7 @@ def test_feedback_topic_ranking_excludes_other_evaluations(api_client):
 def test_evaluation_statistics_calculates_response_count_and_averages(
     api_client,
 ):
+    login_as_lecturer(api_client)
     database = api_client.application.config["TEST_DATABASE"]
 
     with sqlite3.connect(database) as connection:
@@ -553,6 +560,7 @@ def test_evaluation_statistics_calculates_response_count_and_averages(
 
 
 def test_evaluation_statistics_handles_no_ratings(api_client):
+    login_as_lecturer(api_client)
     response = api_client.get("/api/evaluations/1/statistics")
 
     assert response.status_code == 200
@@ -566,6 +574,7 @@ def test_evaluation_statistics_handles_no_ratings(api_client):
 
 
 def test_evaluation_statistics_invalid_evaluation(api_client):
+    login_as_lecturer(api_client)
     response = api_client.get("/api/evaluations/9999/statistics")
 
     assert response.status_code == 404

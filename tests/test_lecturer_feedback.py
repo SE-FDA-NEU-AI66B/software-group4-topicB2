@@ -121,7 +121,8 @@ def test_student_cannot_access_lecturer_feedback(api_client):
 def test_feedback_page_requires_login(api_client):
     response = api_client.get("/lecturer/feedback/1")
 
-    assert response.status_code == 401
+    assert response.status_code == 302
+    assert response.headers["Location"] == "/login"
 
 
 # Additional test: nonexistent evaluation

@@ -179,6 +179,10 @@ Use the student or lecturer demo accounts documented in the setup guide.
 | [Setup Guide](docs/SETUP.md) | Installation and application setup |
 | [UI Documentation](docs/ui.md) | M3 screens, routes, wireframes, and UI states |
 
+## Backend
+
+The Flask/SQLite backend already implements the five P0 workflows in `src/app.py`. See the [file/route map and audit](docs/backend.md) and [production runtime handover](docs/backend-runtime.md) for the server flow, health checks, configuration and backup instructions.
+
 ## Testing
 
 Run the automated test suite, including the Chromium UI checks:

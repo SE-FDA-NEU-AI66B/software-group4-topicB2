@@ -254,7 +254,8 @@ def test_lecturer_feedback_click_through(browser_app, viewport):
     page.keyboard.press("Enter")
     expect(page).to_have_url(url + "/login")
     response = context.request.get(url + "/lecturer/feedback/1", headers={"Accept": "text/html"})
-    assert response.status == 401
+    assert response.status == 200
+    assert response.url == url + "/login"
     assert "Helpful examples" not in response.text()
     assert context.request.get(url + "/api/courses/1/feedback").status == 401
     context.close()
@@ -322,8 +323,12 @@ def test_lecturer_feedback_wrong_role_browser_errors(browser_app, role):
         expect(page).to_have_url(url + ("/evaluations" if role == "student" else "/account"))
     expected = 401 if role == "anonymous" else 403
     response = page.goto(url + "/lecturer/feedback/1", wait_until="domcontentloaded")
-    assert response.status == expected
-    expect(page.get_by_role("heading", name="Unable to display feedback")).to_be_visible()
+    assert response.status == (200 if role == "anonymous" else 403)
+    if role == "anonymous":
+        expect(page).to_have_url(url + "/login")
+        expect(page.locator("#login-form")).to_be_visible()
+    else:
+        expect(page.get_by_role("heading", name="Unable to display feedback")).to_be_visible()
     assert "Helpful examples" not in page.content()
     assert "Test Evaluation" not in page.content()
     denial = page.request.get(url + "/api/courses/1/feedback")
@@ -334,7 +339,6 @@ def test_lecturer_feedback_wrong_role_browser_errors(browser_app, role):
     assert legacy.headers["content-type"].startswith("application/json")
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
     if role == "anonymous":
-        page.get_by_role("link", name="Sign in to continue").click()
         expect(page).to_have_url(url + "/login")
     else:
         page.get_by_role("link", name="Return to My account", exact=True).click()
