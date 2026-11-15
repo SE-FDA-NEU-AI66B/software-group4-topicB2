@@ -1,11 +1,6 @@
 import sqlite3
 
-
-
 from src.app import app
-
-
-
 
 
 def login_as_student(client):

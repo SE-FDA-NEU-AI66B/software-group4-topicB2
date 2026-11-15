@@ -1,5 +1,18 @@
 # EduSurvey M4 Automated Testing
 
+**Latest #207 integration against main `55e81b5`: 257 passed in 76.11s**, zero
+failures/errors/skips, on Windows/Python 3.11.9. All 229 main cases plus 28
+CI/protection cases are retained. Conflicting introductions and evidence
+sections were combined without dropping historical runs; see the final #207
+integration section for the exact command and report links.
+
+**Earlier #207 CI verification (2026-11-15): 228 passed in 57.74s**, zero failures,
+errors or skips, on Windows/Python 3.11.9. This retains all 200 cases from main
+`6acf0dd` and adds 28 CI/protection cases. Whole-repository Ruff passes and is
+now blocking in CI. [CI/protection evidence](ci-production-gate.md) distinguishes
+the intentionally red, closed rehearsal PR from this green implementation,
+the actual current ruleset screenshot and the pending administrator action.
+
 **Latest #204 integration against main `83f76aa` (2026-11-15): 229 passed
 in 78.53s, zero failures/errors/skips.** Both sides of the documentation merge
 are preserved. Browser tests explicitly wait for fetched questions before
@@ -910,6 +923,60 @@ existing 190 collected cases on main 686bd9e and ten new deployment cases.
 Real hosting, paid-resource approval, CI red-test gate proof, rollback and release
 verification remain pending; a local green suite does not complete #205.
 
+## CI gate and branch protection verification — #207 / parent #200
+
+The existing dependency install, full pytest/coverage/JUnit and both security
+checks remain. Python Ruff is blocking after equivalent lint cleanup. Deploy
+depends on `CI gate`; the provider helper requires a successful gate before
+network calls. PyYAML is added to development dependencies for the workflow
+contract test, not to production runtime requirements.
+
+All new nodes are in `tests/test_ci_gate.py`:
+
+| Mapping | Real function / variants | Result / dependency |
+|---|---|---|
+| CI207-01 | `test_required_ci_job_cannot_be_bypassed` (12 combinations: detection/Python/security × failure/cancelled/skipped/empty) | Required failed or missing jobs cannot become a green gate; #205 release contract |
+| CI207-02 | `test_optional_stack_does_not_hide_failure` (6 combinations) | Optional absent Node may skip; detected failed/skipped Node and invalid detection fail closed |
+| CI207-03 | `test_deploy_rejects_non_green_gate_before_provider_call` (4 variants: None/failure/cancelled/skipped) | Actual deploy helper refuses before a provider call |
+| CI207-04 | `test_production_workflow_retains_full_suite_and_security_gate` | Parsed YAML preserves full suite/security scans/read-only token, always-run gate dependencies, main-push-only opt-in production deployment and secret isolation |
+| CI207-05 | `test_current_approval_only_rules_are_not_reported_as_ci_protection` | Existing approval-only rules do not count as required named checks |
+| CI207-06 | `test_required_checks_must_be_strict_and_from_actions` (3 variants) | Strict/up-to-date named checks require actual GitHub Actions App ID 15368 |
+| CI207-07 | `test_non_admin_cannot_apply_ruleset` | No mutating request is made without verified administrator permission |
+
+Existing `tests/test_deployment.py` nodes retain their real mount/bootstrap,
+event/config/exact-SHA/readiness checks; the fake environment adds the gate's
+success contract. Their positive fake-provider case is not a real hosted deploy.
+No existing test was deleted, skipped or xfailed. The deliberate failure exists
+only in closed, unmerged [rehearsal PR #231](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/231).
+
+Actual local execution by OpenAI Codex (AI-assisted; not a teammate review),
+Windows NT 10.0.26200.0 / Python 3.11.9 / pytest 9.2.0 / PyYAML 6.0.3 /
+Playwright 1.65.2 / Chrome 157.0.8103.51:
+
+```powershell
+$env:PLAYWRIGHT_CHROMIUM_EXECUTABLE='C:\Program Files\Google\Chrome\Application\chrome.exe'
+& .venv/m4-env/Scripts/python.exe -m pytest -v --cov --cov-report=term-missing --junitxml=docs/evidence/207/pytest.xml
+# 228 passed in 57.74s; zero failures/errors/skips
+& .venv/m4-env/Scripts/python.exe -m ruff check .
+# All checks passed!
+```
+
+[Full console](evidence/207/pytest.txt), [JUnit](evidence/207/pytest.xml).
+Focused gate/deployment run: **38 passed in 0.32s**. `git diff --check` passes.
+
+Real GitHub rehearsal: [run 43733767041](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43733767041)
+reported **1 intentionally failed, 228 passed in 34.17s**, then aggregate gate
+failure and production deploy skipped. The sole failure/node and actual job
+links/log excerpts are in [red evidence](evidence/207/red-log-summary.json).
+PR #231 is closed without merge; its red test is absent from this branch.
+
+Latest observed main CI [43731613604](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43731613604)
+at `6acf0dd` is green, **78s** from GitHub run-start to updated/completed time.
+That historical run precedes this new gate. Administrator application/read-back
+of named checks, an updated settings screenshot, independent approval and an
+actual reviewed-green-main/provider release remain required external evidence;
+local tests and the old screenshot do not certify these settings/actions.
+
 ## #190 / PR #227 merge reconciliation with main 6acf0dd
 
 Resolved conflicts in `tests/test_backend_runtime.py` and
@@ -1097,3 +1164,28 @@ failures/errors/skips. [Per-module result](evidence/210/main-e5564f7-local.json)
 [Rehearsal output](evidence/210/mutation-e5564f7.json). Script Ruff and
 `git diff --check` passed. Public URL/provider SHA, physical phone and hosted
 rollback remain unverified; local/CI results do not complete those gates.
+
+## #207 / PR #232 integration with main 55e81b5
+
+Resolved both `docs/testing.md` conflict blocks by retaining #207's gate and
+protection evidence alongside main's #190, #204, #205, #206 and #210 results.
+Main's database/browser synchronization, monitoring and P0 rehearsal changes
+are included. The full-suite/security requirements, blocking Ruff, stable
+`CI gate` and main-only deployment dependency remain unchanged.
+
+Windows/Python 3.11.9 / pytest 9.2.0, installed Chrome:
+
+```powershell
+$env:PLAYWRIGHT_CHROMIUM_EXECUTABLE='C:\Program Files\Google\Chrome\Application\chrome.exe'
+& .venv/m4-env/Scripts/python.exe -m pytest -v --cov --cov-report=term-missing --junitxml=docs/evidence/207/merge-pytest.xml
+# 257 passed in 76.11s; zero failures/errors/skips
+& .venv/m4-env/Scripts/python.exe -m ruff check .
+# All checks passed!
+```
+
+[Integrated console](evidence/207/merge-pytest.txt) and
+[JUnit](evidence/207/merge-pytest.xml) retain all 229 merged main cases plus
+28 CI/protection cases. Original 228-case reports and the closed red rehearsal
+remain historical evidence. `git diff --check` passed. This merge does not
+apply administrator rules, grant approval, certify a provider release or
+replace the outstanding administrator/release handoff.

@@ -60,10 +60,9 @@ jobs:
 
       - name: Lint
         run: ruff check . --output-format=github
-        continue-on-error: true   # Week 1-6: warn only. Remove this line from Sprint 2 onward.
 
       - name: Test
-        run: pytest -v --cov --cov-report=term-missing --junitxml=junit.xml
+        run: python -m pytest -v --cov --cov-report=term-missing --junitxml=junit.xml
 
       - name: Publish test summary
         if: always()
@@ -142,9 +141,25 @@ jobs:
           fi
           echo "Clean."
 
+  gate:
+    name: CI gate
+    if: always()
+    needs: [detect, python, node, secrets]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require successful tests and security checks
+        env:
+          DETECT_RESULT: ${{ needs.detect.result }}
+          PYTHON_RESULT: ${{ needs.python.result }}
+          SECURITY_RESULT: ${{ needs.secrets.result }}
+          NODE_DETECTED: ${{ needs.detect.outputs.node }}
+          NODE_RESULT: ${{ needs.node.result }}
+        run: python tools/ci_gate.py
+
   deploy:
     name: Deploy tested main to Render
-    needs: [python, secrets]
+    needs: [gate]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.RENDER_DEPLOY_ENABLED == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -166,6 +181,7 @@ jobs:
           test "$current_main" = "$GITHUB_SHA"
       - name: Deploy exact tested SHA and verify readiness
         env:
+          CI_GATE_RESULT: ${{ needs.gate.result }}
           RENDER_SERVICE_ID: ${{ vars.RENDER_SERVICE_ID }}
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: python tools/deploy_render.py

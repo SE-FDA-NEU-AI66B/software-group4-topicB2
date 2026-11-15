@@ -1,0 +1,341 @@
+{
+  "pr": {
+    "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/231",
+    "number": 231,
+    "sha": "2c956e014113b5e18a20c19873703ba3b8b6472a",
+    "state": "closed",
+    "merged": false
+  },
+  "runs": [
+    {
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43733767041",
+      "id": 43733767041,
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "name": "No secrets committed",
+          "id": 132871736505,
+          "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43733767041/job/132871736505",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "name": "Scan for obvious credentials",
+              "conclusion": "success"
+            },
+            {
+              "name": "No .env or database dumps",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "name": "Detect stack",
+          "id": 132871736773,
+          "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43733767041/job/132871736773",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run if ls requirements.txt pyproject.toml setup.py 2>/dev/null | grep -q .; then",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "name": "Python tests",
+          "id": 132871781285,
+          "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43733767041/job/132871781285",
+          "status": "completed",
+          "conclusion": "failure",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-python@v5",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success"
+            },
+            {
+              "name": "Lint",
+              "conclusion": "success"
+            },
+            {
+              "name": "Test",
+              "conclusion": "failure"
+            },
+            {
+              "name": "Publish test summary",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-python@v5",
+              "conclusion": "skipped"
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "name": "Node build and tests",
+          "id": 132871782981,
+          "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43733767041/job/132871782981",
+          "status": "completed",
+          "conclusion": "skipped",
+          "steps": []
+        },
+        {
+          "name": "CI gate",
+          "id": 132872061101,
+          "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43733767041/job/132872061101",
+          "status": "completed",
+          "conclusion": "failure",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "name": "Require successful tests and security checks",
+              "conclusion": "failure"
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "name": "Deploy tested main to Render",
+          "id": 132872091198,
+          "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43733767041/job/132872091198",
+          "status": "completed",
+          "conclusion": "skipped",
+          "steps": []
+        }
+      ]
+    },
+    {
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43733755657",
+      "id": 43733755657,
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "name": "No secrets committed",
+          "id": 132871701355,
+          "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43733755657/job/132871701355",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "name": "Scan for obvious credentials",
+              "conclusion": "success"
+            },
+            {
+              "name": "No .env or database dumps",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "name": "Detect stack",
+          "id": 132871701614,
+          "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43733755657/job/132871701614",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run if ls requirements.txt pyproject.toml setup.py 2>/dev/null | grep -q .; then",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "name": "Python tests",
+          "id": 132871740533,
+          "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43733755657/job/132871740533",
+          "status": "completed",
+          "conclusion": "failure",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-python@v5",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install dependencies",
+              "conclusion": "success"
+            },
+            {
+              "name": "Lint",
+              "conclusion": "success"
+            },
+            {
+              "name": "Test",
+              "conclusion": "failure"
+            },
+            {
+              "name": "Publish test summary",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-python@v5",
+              "conclusion": "skipped"
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "name": "Node build and tests",
+          "id": 132871742226,
+          "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43733755657/job/132871742226",
+          "status": "completed",
+          "conclusion": "skipped",
+          "steps": []
+        },
+        {
+          "name": "CI gate",
+          "id": 132872126246,
+          "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43733755657/job/132872126246",
+          "status": "completed",
+          "conclusion": "failure",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "name": "Require successful tests and security checks",
+              "conclusion": "failure"
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "name": "Deploy tested main to Render",
+          "id": 132872166167,
+          "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43733755657/job/132872166167",
+          "status": "completed",
+          "conclusion": "skipped",
+          "steps": []
+        }
+      ]
+    }
+  ]
+}

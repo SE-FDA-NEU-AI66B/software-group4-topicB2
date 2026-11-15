@@ -12,15 +12,16 @@ import subprocess
 import sys
 import tempfile
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from importlib.metadata import version
 from pathlib import Path
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from src import app as app_module  # noqa: E402
-from werkzeug.security import generate_password_hash  # noqa: E402
+from werkzeug.security import generate_password_hash
+
+from src import app as app_module
 
 NOW = datetime(2026, 11, 3, 12, 0, 0)
 FIXTURE_CREDENTIALS = {"email": "timing@example.test", "password": "PublicDemo123!"}
@@ -166,7 +167,7 @@ def main():
     if args.samples < 1 or args.warmups < 0:
         parser.error("samples must be positive and warmups non-negative")
     report = {
-        "measured_at_utc": datetime.now(timezone.utc).isoformat(),
+        "measured_at_utc": datetime.now(UTC).isoformat(),
         "application_commit": subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
         "application_sha256": hashlib.sha256((ROOT / "src/app.py").read_bytes()).hexdigest(),

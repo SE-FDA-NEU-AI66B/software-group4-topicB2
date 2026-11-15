@@ -1,6 +1,6 @@
 
 import sqlite3
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from functools import wraps
 from pathlib import Path
 
@@ -159,10 +159,7 @@ def get_student_evaluations():
             if row["is_completed"]:
                 survey_status = "Completed"
 
-            elif evaluation_status == "closed":
-                survey_status = "Closed"
-
-            elif deadline is not None and deadline <= comparison_now:
+            elif evaluation_status == "closed" or deadline is not None and deadline <= comparison_now:
                 survey_status = "Closed"
 
             elif (
@@ -1255,8 +1252,7 @@ def create_submission():
             now = datetime.now()
 
             if deadline.tzinfo is not None:
-                from datetime import timezone
-                now = datetime.now(timezone.utc).astimezone(
+                now = datetime.now(UTC).astimezone(
                     deadline.tzinfo
                 )
 
