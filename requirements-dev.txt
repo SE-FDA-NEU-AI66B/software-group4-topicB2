@@ -3,3 +3,4 @@ pytest
 pytest-cov
 ruff
 playwright==1.65.2
+PyYAML>=6.0,<7

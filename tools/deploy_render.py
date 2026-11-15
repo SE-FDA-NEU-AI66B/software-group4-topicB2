@@ -30,6 +30,8 @@ def deploy():
         raise ValueError("Invalid deployment SHA/service identifier.")
     if os.environ.get("GITHUB_EVENT_NAME") != "push" or os.environ.get("GITHUB_REF") != "refs/heads/main":
         raise RuntimeError("Only a successful main push workflow may deploy.")
+    if os.environ.get("CI_GATE_RESULT") != "success":
+        raise RuntimeError("Required CI gate must succeed before contacting the deployment provider.")
     configuration = api(f"services/{service}")
     disabled = configuration.get("autoDeployTrigger") == "off" if "autoDeployTrigger" in configuration else configuration.get("autoDeploy") == "no"
     if not disabled:

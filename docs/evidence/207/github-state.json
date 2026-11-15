@@ -1,0 +1,259 @@
+{
+  "date": "2026-11-15",
+  "actor": "lesyhuy2k6-gif",
+  "repository_permissions": {
+    "admin": false,
+    "maintain": false,
+    "push": true,
+    "triage": true,
+    "pull": true
+  },
+  "active_main_rules": [
+    {
+      "type": "deletion",
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "SE-FDA-NEU-AI66B",
+      "ruleset_id": 21540407
+    },
+    {
+      "type": "non_fast_forward",
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "SE-FDA-NEU-AI66B",
+      "ruleset_id": 21540407
+    },
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 1,
+        "dismiss_stale_reviews_on_push": false,
+        "required_reviewers": [],
+        "require_code_owner_review": false,
+        "require_last_push_approval": false,
+        "required_review_thread_resolution": false,
+        "require_extra_approval_for_unattributed_changes": true,
+        "allowed_merge_methods": [
+          "merge",
+          "squash",
+          "rebase"
+        ]
+      },
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "SE-FDA-NEU-AI66B",
+      "ruleset_id": 21540407
+    }
+  ],
+  "rulesets": [
+    {
+      "id": 21540407,
+      "name": "main-protection",
+      "target": "branch",
+      "source_type": "Organization",
+      "source": "SE-FDA-NEU-AI66B",
+      "enforcement": "active",
+      "node_id": "RRS_lACkVXNlcs4TIei4zgFIrjc",
+      "_links": {
+        "self": {
+          "href": "https://api.github.com/repos/SE-FDA-NEU-AI66B/software-group4-topicB2/rulesets/21540407"
+        },
+        "html": {
+          "href": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/rules/21540407"
+        }
+      },
+      "created_at": "2026-08-26T14:32:30.455+07:00",
+      "updated_at": "2026-08-26T14:32:30.501+07:00"
+    }
+  ],
+  "classic_protection_read": {
+    "http_error": 404,
+    "message": "{\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/branches/branch-protection#get-branch-protection\",\"status\":\"404\"}"
+  },
+  "deployment_variables_present": [],
+  "production_environment_present": false,
+  "latest_green_main": {
+    "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43731613604",
+    "head_sha": "6acf0dd42b0a8b56831deedc519c194b474a519c",
+    "conclusion": "success",
+    "run_started_at": "2026-11-15T15:45:07Z",
+    "updated_at": "2026-11-15T15:46:25Z",
+    "elapsed_seconds": 78.0,
+    "jobs": [
+      {
+        "name": "No secrets committed",
+        "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43731613604/job/132865083641",
+        "conclusion": "success",
+        "started_at": "2026-11-15T15:45:10Z",
+        "completed_at": "2026-11-15T15:45:13Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success"
+          },
+          {
+            "name": "Scan for obvious credentials",
+            "conclusion": "success"
+          },
+          {
+            "name": "No .env or database dumps",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "name": "Detect stack",
+        "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43731613604/job/132865083842",
+        "conclusion": "success",
+        "started_at": "2026-11-15T15:45:11Z",
+        "completed_at": "2026-11-15T15:45:17Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run if ls requirements.txt pyproject.toml setup.py 2>/dev/null | grep -q .; then",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "name": "Python tests",
+        "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43731613604/job/132865130422",
+        "conclusion": "success",
+        "started_at": "2026-11-15T15:45:20Z",
+        "completed_at": "2026-11-15T15:46:25Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "conclusion": "success"
+          },
+          {
+            "name": "Install dependencies",
+            "conclusion": "success"
+          },
+          {
+            "name": "Lint",
+            "conclusion": "success"
+          },
+          {
+            "name": "Test",
+            "conclusion": "success"
+          },
+          {
+            "name": "Publish test summary",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "name": "Node build and tests",
+        "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43731613604/job/132865131557",
+        "conclusion": "skipped",
+        "started_at": "2026-11-15T15:45:17Z",
+        "completed_at": "2026-11-15T15:45:17Z",
+        "steps": []
+      },
+      {
+        "name": "Deploy tested main to Render",
+        "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43731613604/job/132865463872",
+        "conclusion": "skipped",
+        "started_at": "2026-11-15T15:46:25Z",
+        "completed_at": "2026-11-15T15:46:25Z",
+        "steps": []
+      }
+    ],
+    "actions_app_ids": [
+      15368
+    ]
+  },
+  "sprint5_pr_register": [
+    {
+      "number": 225,
+      "title": "[#203] Prepare UI before/after evidence and identify missing M3 sources",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/225",
+      "author": "tlduongducanh281-jpg",
+      "state": "closed",
+      "merged_at": "2026-11-15T15:37:19Z",
+      "head_sha": "c6faca556d235319deb477aceadfe4b3e55544bc"
+    },
+    {
+      "number": 226,
+      "title": "[#205] Prepare persistent Render deployment and green-gated releases",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/226",
+      "author": "tlduongducanh281-jpg",
+      "state": "closed",
+      "merged_at": "2026-11-15T15:45:05Z",
+      "head_sha": "c92a17176cd2f25d904eb56ec9b4df0ccfafaaa4"
+    },
+    {
+      "number": 228,
+      "title": "[#206] Add database readiness and sanitized request monitoring",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/228",
+      "author": "tlduongducanh281-jpg",
+      "state": "open",
+      "merged_at": null,
+      "head_sha": "4d4df851b3be9f1451c8a2a2f769675d230bf32b"
+    },
+    {
+      "number": 229,
+      "title": "[#204] Prepare safe production SQLite and verified backup recovery",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/229",
+      "author": "lesyhuy2k6-gif",
+      "state": "open",
+      "merged_at": null,
+      "head_sha": "71d6212faf7535c16272047ee371ec15b1f4d9ed"
+    },
+    {
+      "number": 230,
+      "title": "[#210] Record P0 verification and safe M4 mutation rehearsal",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/230",
+      "author": "tlduongducanh281-jpg",
+      "state": "open",
+      "merged_at": null,
+      "head_sha": "60a8d9f60a384eed27e01698f34c94ca0234e806"
+    }
+  ]
+}

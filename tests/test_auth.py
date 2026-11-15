@@ -247,22 +247,21 @@ def test_logout_without_login(client):
 def test_users_email_unique_constraint(client):
     database = app_module.DATABASE
 
-    with sqlite3.connect(database) as connection:
-        with pytest.raises(sqlite3.IntegrityError):
-            connection.execute(
-                """
-                INSERT INTO users (
-                    email, password_hash, full_name, role
-                )
-                VALUES (?, ?, ?, ?)
-                """,
-                (
-                    "student1@edusurvey.edu",
-                    "some-hash",
-                    "Another Student",
-                    "student",
-                ),
+    with sqlite3.connect(database) as connection, pytest.raises(sqlite3.IntegrityError):
+        connection.execute(
+            """
+            INSERT INTO users (
+                email, password_hash, full_name, role
             )
+            VALUES (?, ?, ?, ?)
+            """,
+            (
+                "student1@edusurvey.edu",
+                "some-hash",
+                "Another Student",
+                "student",
+            ),
+        )
 
 
 @pytest.fixture

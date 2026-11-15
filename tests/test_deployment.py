@@ -54,6 +54,7 @@ def render_environment(monkeypatch):
     monkeypatch.setenv("GITHUB_SHA", "a" * 40)
     monkeypatch.setenv("GITHUB_EVENT_NAME", "push")
     monkeypatch.setenv("GITHUB_REF", "refs/heads/main")
+    monkeypatch.setenv("CI_GATE_RESULT", "success")
     monkeypatch.setenv("RENDER_SERVICE_ID", "srv-synthetic")
     return monkeypatch
 

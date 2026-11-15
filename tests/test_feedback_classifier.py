@@ -2,8 +2,8 @@
 from src.feedback_classifier import (
     TOPICS,
     classify_feedback,
-    group_feedback,
     count_topics,
+    group_feedback,
 )
 
 

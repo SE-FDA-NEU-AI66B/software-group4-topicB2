@@ -1,11 +1,6 @@
 import sqlite3
 
 
-
-
-
-
-
 def login_as_student(client):
     with client.session_transaction() as session:
         session["user_id"] = 1

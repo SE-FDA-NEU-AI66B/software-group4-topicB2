@@ -135,3 +135,16 @@ PLAYWRIGHT_CHROMIUM_EXECUTABLE): `python -m pytest -q --junitxml=junit.xml` ->
 **279 passed in 163.46s**, zero failures/errors/skips (229 retained + 50 US12).
 [Per-module evidence](evidence/195/local-tests.json). No production migration or
 administrator UI verification is implied by this local backend result.
+
+### Final #195 integration with main 9c5d55c
+
+Merged #207's CI/lint/protection updates, retaining both documentation sections
+and the isolated home smoke. New main removes the previously recorded baseline
+app lint findings; `python -m ruff check . --output-format concise` now passes.
+Windows/Python 3.12.6 with installed Chrome:
+`python -m pytest -q --junitxml=junit.xml` -> **307 passed in 163.11s**, zero
+failures/errors/skips (257 retained main cases + 50 US12 variants).
+[Latest per-module evidence](evidence/195/local-tests-9c5d55c.json). The earlier
+279-case result remains historical evidence for base 55e81b5. `git diff --check`
+passed. Formal PO/#196 approval and independent review remain merge gates;
+no deployment or production migration was executed.

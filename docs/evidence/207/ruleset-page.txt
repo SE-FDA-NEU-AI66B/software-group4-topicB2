@@ -1,0 +1,67 @@
+Skip to content
+Navigation Menu
+Products
+Developers
+Businesses
+Resources
+Pricing
+Search
+/
+Sign in
+Sign up
+SE-FDA-NEU-AI66B
+software-group4-topicB2
+Repository navigation
+Code
+Issues
+39
+ (39)
+Pull requests
+4
+ (4)
+Actions
+Projects
+Security and quality
+Insights
+Rulesets
+/
+main-protection
+Active
+Name
+main-protection
+Enforcement status
+Active - This ruleset will be enforced
+Target branches
+Branch targeting criteria
+Include:
+Default
+Rules
+Which rules should be applied?
+Branch rules
+Restrict deletions
+Only allow users with bypass permissions to delete matching refs.
+Require a pull request before merging
+Require all commits be made to a non-target branch and submitted via a pull request before they can be merged.
+Hide additional settings
+Required approvals: 1
+The number of approving reviews that are required before a pull request can be merged.
+Require an additional approval for unattributed Copilot pull requests
+When Copilot opens a pull request without a human collaborator, require one more approving review if a non-zero approval count is required.
+Allowed merge methods: Merge, Squash, Rebase
+When merging pull requests, you can allow any combination of merge commits, squashing, or rebasing. At least one option must be enabled.
+Block force pushes
+Prevent users with push access from force pushing to refs.
+Restrictions
+No restrictions have been added
+Footer
+© 2026 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Community
+Docs
+Contact
+Manage cookies
+Do not share my personal information
