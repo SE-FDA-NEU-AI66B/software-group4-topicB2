@@ -1,236 +1,160 @@
-# EduSurvey – University Course Evaluation System
+# EduSurvey — M5 demo access
 
-EduSurvey is an online survey and evaluation system for universities. The system helps training departments collect student feedback about courses and lecturers, analyze evaluation results, and support improvements in education quality.
+[![CI](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/workflows/ci.yml?query=branch%3Amain+event%3Apush)
 
-## Milestone 3 – P0 User Stories and Entry Points
+**Public HTTPS entry point: not yet verified.** No running application URL was
+found in connected repository/deployment metadata. #205/#209 must supply and
+verify it before this README can be a final public-demo entry point. No guessed
+host or localhost address is presented as the released application.
 
-The following table provides the starting screen, route, and navigation path for each P0 user story.
+EduSurvey collects university course evaluations and lets assigned lecturers
+review submitted feedback. The instructions below describe the implemented UI.
+Public testers will need only the verified URL and a private browser, not an install.
 
-| User Story | Description | Starting Screen | Route / Entry Point | Status |
-|---|---|---|---|---|
-| US01 | User Login and Authentication | Login | `/login` | Implemented |
-| US02 | View Available Course Evaluations | My Evaluations | `/evaluations` | Implemented |
-| US03 | Complete and Submit Course Evaluation | My Evaluations | `/evaluations/<evaluation_id>/complete` | Implemented; verify backend persistence |
-| US04 | Review Submitted Student Feedback | Lecturer authentication | `GET /api/courses/<course_id>/feedback` | Backend implemented; frontend pending |
-| US11 | User Sign Out | Authenticated session | `POST /api/auth/logout` | Backend implemented; visible UI control pending |
+## Disposable demo accounts
 
-### 1. US01 – User Login and Authentication
+These are **public synthetic seed credentials**, not real university accounts
+or infrastructure secrets. They match the canonical seed and are checked locally;
+their availability on an actual deployment is still unverified.
 
-**Starting screen:** Login
+| Role | Email | Demo password | After Sign in |
+|---|---|---|---|
+| Student | `student1@edusurvey.edu` | `Password123!` | My Evaluations |
+| Lecturer | `lecturer1@edusurvey.edu` | `Password123!` | Student Feedback Review |
+| Administrator | `admin@edusurvey.edu` | `Password123!` | My account; administrator CRUD is outside this P0 release |
 
-**Route:** `/login`
+Use fake feedback only. Shared accounts share saved responses: a submitted
+evaluation stays Completed and cannot be submitted twice. If every assigned
+evaluation is completed/closed, ask the operator for a fresh synthetic evaluation;
+**do not reset a live database**. Never reuse this demo password elsewhere.
 
-**Purpose:** Allow registered university users to authenticate and access the system according to their roles.
+## Five P0 stories — click from the first page
 
-**Navigation:**
-1. Open EduSurvey.
-2. Navigate to the Login screen.
-3. Enter university email and password.
-4. Click **Sign in**.
-5. After successful authentication, access the appropriate user workflow.
+Until the real public origin is verified, these links open README walkthroughs;
+the route column describes app pages, not GitHub-relative application links.
+Final publication must add tested absolute UI links using that actual origin.
 
-### 2. US02 – View Available Course Evaluations
-
-**Starting screen:** My Evaluations
-
-**Route:** `/evaluations`
-
-**API:** `GET /api/evaluations`
-
-**Purpose:** Allow students to view assigned course evaluations, check deadlines, and monitor submission status.
-
-**Navigation:**
-1. Log in using a student account.
-2. Open **My Evaluations**.
-3. Browse available evaluation cards.
-4. Use search and status filters to find an evaluation.
-5. Select **Start Evaluation** to begin an available evaluation.
-
-Each evaluation displays five key details:
-- Survey title
-- Course name
-- Lecturer name
-- Submission deadline
-- Survey status
-
-Supported statuses:
-- Active
-- Due soon
-- Completed
-- Closed
-
-### 3. US03 – Complete and Submit Course Evaluation
-
-**Starting screen:** My Evaluations
-
-**Route:** `/evaluations/<evaluation_id>/complete`
-
-**APIs:**
-- `GET /api/evaluations/<evaluation_id>/questions`
-- `POST /api/submissions`
-
-**Purpose:** Allow students to answer evaluation questions and submit their feedback.
-
-**Navigation:**
-1. Log in using a student account.
-2. Open **My Evaluations**.
-3. Select an available evaluation.
-4. Click **Start Evaluation**.
-5. Answer the rating-based and text-based questions.
-6. Complete all required questions.
-7. Click **Review Answers**.
-8. Review the responses and click **Submit Evaluation**.
-
-The system validates required answers and prevents invalid or duplicate submissions according to the backend business rules.
-
-### 4. US04 – Review Submitted Student Feedback
-
-**Starting point:** Lecturer authentication.
-
-**Backend API:** `GET /api/courses/<course_id>/feedback`
-
-**Parent Story:** #50
-
-**Task:** #51
-
-**Purpose:** Allow lecturers to retrieve submitted student feedback for courses they are assigned to teach.
-
-**Workflow:**
-1. Authenticate using a lecturer account.
-2. Identify the course assigned to the lecturer.
-3. Request the course feedback through the lecturer feedback API.
-4. The backend verifies lecturer course ownership.
-5. Authorized lecturers receive submitted ratings, written comments, and completed evaluation counts.
-
-**Access restriction:**
-
-Lecturers cannot retrieve feedback for courses they are not assigned to teach. Unauthorized requests return HTTP 403 with the following message:
-
-`You do not have permission to view this course feedback.`
-
-**Implementation note:** The backend API is implemented. A dedicated lecturer-facing frontend screen is not yet available in the documented implementation.
-
-### 5. US11 – User Sign Out
-
-**Starting point:** Authenticated session.
-
-**API:** `POST /api/auth/logout`
-
-**Purpose:** Allow users to terminate their authenticated session securely.
-
-**Expected workflow:**
-1. The authenticated user selects Sign out.
-2. The frontend sends a POST request to the logout API.
-3. The backend clears the current session.
-4. The user is redirected to the Login screen.
-
-**Implementation note:** The logout API is available. A visible Sign out control in the frontend is pending implementation.
-
----
-
-## Project Setup
-
-For complete installation, database initialization, configuration, and execution instructions, refer to:
-
-**[Project Setup Guide – docs/SETUP.md](docs/SETUP.md)**
-
-### Clone the Repository
-
-```bash
-git clone https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2.git
-
-cd software-group4-topicB2
-```
-
-### Run the Application
-
-Follow the environment setup and database initialization instructions in [docs/SETUP.md](docs/SETUP.md).
-
-After completing the setup, run:
-
-```bash
-python -m flask --app src.app run --debug --port 5004
-```
-
-Open the application in your browser:
-
-`http://127.0.0.1:5004`
-
-Use the student or lecturer demo accounts documented in the setup guide.
-
----
+| Story | Click path in the application | App page | Walkthrough |
+|---|---|---|---|
+| US01 Sign in | First page → Try a demo account → enter credentials → Sign in | `/` or `/login` | [Sign in](#us01-sign-in) |
+| US02 View evaluations | Student sign-in → My Evaluations → search/status filters | `/evaluations` | [Find work](#us02-view-evaluations) |
+| US03 Submit evaluation | Active/Due soon card → Start evaluation → Review answers → Submit evaluation | `/evaluations/<id>/complete` | [Submit and reload](#us03-submit-and-reload) |
+| US04 Review feedback | Lecturer sign-in → assigned evaluation → Review feedback | `/lecturer/feedback` → selected evaluation | [Review feedback](#us04-review-feedback) |
+| US11 Sign out | Account controls → Sign out → Login | Visible Sign out button on authenticated pages | [Sign out](#us11-sign-out) |
 
 ## Team
 
-| Name | GitHub | Role |
-|---|---|---|
-| Le Sy Huy | lesyhuy2k6-gif | Scrum Master (Sprint 1) |
-| Khuat Dinh Trung | khuatnhatminhcfpro-cmyk | Product Owner (PO) |
-| Duong Duc Anh | tlduongducanh281-jpg | Scrum Master (Sprint 2) |
-
-## Project Board
-
-[EduSurvey Sprint Board](https://github.com/orgs/SE-FDA-NEU-AI66B/projects/4/views/1)
-
-## Documentation
-
-| Document | Description |
+| Member | GitHub |
 |---|---|
-| [Setup Guide](docs/SETUP.md) | Installation and application setup |
-| [UI Documentation](docs/ui.md) | M3 screens, routes, wireframes, and UI states |
-| [Deployment handover](docs/deployment.md) | Proposed Render setup, green gate, costs and pending public-release evidence |
-| [Health and monitoring operations](docs/operations.md) | Database readiness, sanitized logs, metric calculations and pending live evidence |
+| Le Sy Huy | [@lesyhuy2k6-gif](https://github.com/lesyhuy2k6-gif) |
+| Khuat Dinh Trung | [@khuatnhatminhcfpro-cmyk](https://github.com/khuatnhatminhcfpro-cmyk) |
+| Duong Duc Anh | [@tlduongducanh281-jpg](https://github.com/tlduongducanh281-jpg) |
 
-## Backend
+## Private-browser walkthrough
 
-The Flask/SQLite backend already implements the five P0 workflows in `src/app.py`. See the [file/route map and audit](docs/backend.md) and [production runtime handover](docs/backend-runtime.md) for the server flow, health checks, configuration and backup instructions.
+### US01 Sign in
 
-## M5 database and demo storage
+Once the actual public link is published, open it in a new private/incognito
+window. The first page is Login. Expand **Try a demo account** if needed, enter
+the student email/password above, and click **Sign in**. Expect **My Evaluations**.
+A lecturer reaches **Student Feedback Review**; an administrator reaches
+**My account**. If credentials fail, contact the demo operator; do not try real
+university passwords.
 
-The #204 target is SQLite on a **paid Render service with a persistent disk**,
-using `EDUSURVEY_DATABASE=/var/data/edusurvey.db`; hosting is not provisioned by
-this repository change. Render Free loses local SQLite on restart/redeploy/idle
-spin-down, so it must not be described as durable production storage. Startup
-reseeding on ephemeral storage is not the selected mode. See the
-[storage decision, current hosting terms and backup/recovery runbook](docs/database-operations.md).
+### US02 View evaluations
 
-On a confirmed new volume, `python -m src.init_db --m5-demo` seeds upcoming
-student work and existing lecturer feedback. It refuses every existing target
-instead of resetting data; never run the schema/seed directly on a live database.
-Public synthetic accounts are `student1@edusurvey.edu` (student),
-`lecturer1@edusurvey.edu` (lecturer), and `admin@edusurvey.edu` (administrator),
-all with demo password `Password123!`. Use only fake data. Local reload/process
-restart and isolated backup restore are tested; real host restart/redeploy,
-off-host backup storage and independent review remain release checks.
+On My Evaluations, use search and the status filter. An Active/Due soon card
+offers **Start evaluation**. Completed/Closed cards cannot be newly submitted.
+The canonical fresh M5 seed leaves the Software Engineering evaluation available
+to student1, while other completed feedback is already present.
 
-## Testing
+### US03 Submit and reload
 
-Production releases require the full CI test/security gate. The #207
-[CI/protection evidence](docs/ci-production-gate.md) records the actual red-PR
-rehearsal, latest green main run/duration and current ruleset screenshot.
-Enforced named-check protection still requires the
-[administrator handoff](docs/main-protection-admin.md); passing CI is not a
-substitute for an independent PR approval or a verified live deployment.
+Click **Start evaluation** on an available card. Wait for the questions, choose
+a rating for every required question and optionally enter a synthetic comment.
+Click **Review answers**, then **Submit evaluation**. Expect the success message.
+Reload: completion must remain. Use **Back to My Evaluations** to see Completed.
+This writes shared demo data; a reload/restart is not permission to submit again.
 
-Run the automated test suite, including the Chromium UI checks:
+### US04 Review feedback
+
+Click **Sign out**, then sign in as the lecturer. The assigned-evaluation list
+already contains submitted seed feedback. Click **Review feedback** for an
+assigned evaluation to see completed counts, ratings and comments. The Software
+Engineering evaluation includes the new student submission after the previous
+step. Draft answers are excluded. Use **All evaluations** to return; no API client
+or developer tools are needed.
+
+### US11 Sign out
+
+Click the visible **Sign out** button in the account controls. Expect Login;
+protected pages must require sign-in again. Sign out between roles and close
+the private window afterward. Administrator sign-in can be checked through
+**My account**; it does not demonstrate unimplemented administrator management UI.
+
+## Storage, availability and safe retries
+
+The repository proposes **paid Render with a persistent disk** and one app
+instance; actual platform/plan/mount and public cold-start behavior are not yet
+verified. Only files under the confirmed mount are durable. The database setting
+is `EDUSURVEY_DATABASE=/var/data/edusurvey.db`; a path alone proves no durability.
+
+If the operator instead uses Render Free, its documented idle spin-down occurs
+after 15 minutes, waking takes about a minute, and local SQLite is lost on
+restart/redeploy/spin-down. Free cannot attach a persistent disk. This is a
+conditional platform limitation, **not the confirmed deployment mode or a
+measured delay for EduSurvey**. [Official Free limits](https://render.com/docs/free),
+[persistent disk terms](https://render.com/docs/disks).
+
+Production startup preserves existing data and refuses to silently reseed a
+previously provisioned missing database. New `--m5-demo` data has open deadlines
+seven days after first initialization; restarting does not extend them. Existing
+files are never reset by the initializer. Contact the operator for unavailable
+accounts, expired work or outages. [Storage/backup runbook](docs/database-operations.md).
+
+## Optional local development — not the public deployment
+
+Public testers should not need these steps. For contributors, see
+[the complete setup guide](docs/SETUP.md). From a cloned checkout and activated
+virtual environment:
+
+Use a development shell without production settings, not the hosted service.
 
 ```bash
 python -m pip install -r requirements-dev.txt
+python tools/run_student_demo.py
+```
+
+Open the **local address printed by that tool**. This disposable demo has the
+same sample accounts, an available student evaluation and lecturer feedback.
+Data survives browser reload during that process and is removed when it stops;
+starting a new process starts a new disposable database. It never resets the
+production database. Do not present its loopback URL as a public release link.
+
+## Testing, evidence and handover
+
+```bash
 python -m playwright install chromium
 python -m pytest -v
 ```
 
-For the disposable local student walkthrough and browser prerequisites, see [P0 UI verification](docs/p0-student-navigation.md).
+Linux browser setup may also require Playwright system dependencies; see
+[setup](docs/SETUP.md). The CI badge above targets this repository's real
+`ci.yml`, **main push** runs; it is not an uptime badge or approval evidence.
+Production releases require the full CI/security gate; required named-check
+protection needs verified administrator configuration, not just a green badge.
 
-Lecturer navigation, recovery flows and local verification: [P0 lecturer feedback](docs/p0-lecturer-feedback.md).
+| Reference | Purpose |
+|---|---|
+| [README access evidence](docs/evidence/209/README.md) | Actual local private-context walkthrough, account checks, badge/link audit and outstanding public verification |
+| [P0 student UI](docs/p0-student-navigation.md) / [lecturer UI](docs/p0-lecturer-feedback.md) | Implemented routes, screenshots and earlier verification scope |
+| [Backend map](docs/backend.md) / [runtime](docs/backend-runtime.md) | Server routes, environment and readiness behavior |
+| [Deployment](docs/deployment.md) / [CI gate](docs/ci-production-gate.md) | Main-only green releases, rollback and protection evidence |
+| [Operations](docs/operations.md) / [database](docs/database-operations.md) | Health/logs/monitoring and backup/recovery policy; live-provider evidence remains required |
+| [Sprint Board](https://github.com/orgs/SE-FDA-NEU-AI66B/projects/4/views/1) | Team planning; merged code does not by itself certify a hosted release |
 
-## Definition of Done
-
-A task is considered Done when:
-
-- The work required by the issue is completed.
-- The acceptance criteria of the issue are satisfied.
-- The changes are committed and pushed to the repository.
-- Required pull request reviews are completed and the pull request is approved.
-- All required checks pass.
-- The related issue is updated and moved to Done.
+The Definition of Done requires satisfied acceptance, green checks, independent
+review/approval and verified evidence. [#209](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/209)
+must remain open until the actual running HTTPS URL is the first line, absolute
+UI links work, and a fresh private-browser tester verifies the deployed accounts
+and all P0 flows. No placeholder URL or local-only result substitutes for that.
