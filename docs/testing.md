@@ -387,7 +387,7 @@ Latest #217 integration verification against main `2b644c7` after #213/#218 merg
 
 - #165 completed: authentication fixtures load the real schema into a per-test temporary database; the three demo identities/password match `src/init_db.py`. They do not run the initializer or access the application database. TESTING and SECRET_KEY changes are restored by monkeypatch. TC-01–TC-04 and US01-A01–A12 verify all three roles, credentials, exact credential-error messages, anonymous page/API restrictions, session persistence/isolation/replacement and deleted-account invalidation. Unsupported-role login is not tested because the actual schema rejects unsupported roles; performance and the requirement-message discrepancy remain outside this task.
 - #166 completed: the list fixture loads the real schema into a fresh `tmp_path` SQLite database, freezes the application clock before seeding, supplies explicit fixture timestamps, and restores Flask configuration with monkeypatch. Twenty individually traceable items cover retrieval, anonymous/role denial, disjoint enrollment and query impersonation attempts, personal completion status, empty lists, all four display statuses, draft states, completion precedence, and both exact time boundaries. Authentication is injected through `session_transaction()` to isolate US02; credential login remains US01. The retrieval case checks three total evaluations including closed, not three active evaluations.
-- #167 integrated: successful persistence, rejection without writes, duplicate immutability and exact deadline boundaries now have real workflow tests and frozen time. Rating/text numerical boundaries and the five-required-question acceptance example are covered by #184; transaction-failure injection remains pending. Existing smoke rejection tests remain intact.
+- #167 integrated: successful persistence, rejection without writes, duplicate immutability and exact deadline boundaries now have real workflow tests and frozen time. Rating/text numerical boundaries and the five-required-question acceptance example are covered by #184; new/draft submission rollback after an injected second-answer failure is covered by #189 (see audit below). Existing smoke rejection tests remain intact.
 - #168 integrated: retain all eight lecturer-page tests, including ownership denial for an existing evaluation (403), nonexistent evaluation (404), anonymous/student restrictions, draft exclusion, submitted ratings/comments and completed counts. Existing course-feedback API tests remain intact. The 19/20/21-response acceptance examples are covered by #185; broader statistics/topic access control remains outside these tests.
 - #169 integrated: retain logout success, session clearing, post-logout `/api/auth/me` denial, anonymous logout and duplicate-email coverage and all nine legacy IDs. TC-39/40/41 (#186) now verify role-specific current-session denial and repeated anonymous logout. Server HTML redirects and saved-cookie replay remain separate pending contracts; browser logout navigation has #201 evidence. Flask uses a signed client-side cookie and logout calls `session.clear()`; server-side revocation of a copied old cookie is not demonstrated. Shared app configuration is changed by fixtures without comprehensive restoration; centralize isolated fixtures and freeze both Python time and SQL timestamps where assertions depend on time.
 
@@ -556,3 +556,113 @@ Windows/Python 3.12.6, same Chrome executable setting above:
 `python -m ruff check tests/test_lecturer_feedback.py tests/test_submission_workflow.py`
 and `git diff --check` passed. This merge resolution changes documentation only;
 both task implementations and all existing tests are retained.
+
+## Database fixture and transaction audit - #189 (2026-11-15)
+
+Parent US11 #183 / refinement #163 owns this audit. Cross-story dependencies are
+US03 #22 for response/answer integrity and submission atomicity, and US04 #50
+for submitted-only feedback queries. These audit IDs are separate from the
+97 story-case matrix above; reused schema tests are not duplicated.
+
+| Audit ID | Real pytest node | Dependency / verified decision |
+|---|---|---|
+| DB-189-01 | `tests/test_database_integrity.py::test_schema_rejects_orphans[evaluation]` | US03 #22: missing response evaluation rejected with FK ON |
+| DB-189-02 | `tests/test_database_integrity.py::test_schema_rejects_orphans[student]` | US03 #22: missing response student rejected with FK ON |
+| DB-189-03 | `tests/test_database_integrity.py::test_schema_rejects_orphans[response]` | US03 #22: missing answer response rejected with FK ON |
+| DB-189-04 | `tests/test_database_integrity.py::test_schema_rejects_orphans[question]` | US03 #22: missing answer question rejected with FK ON |
+| DB-189-05 | `tests/test_response_schema.py::ResponseSchemaTests::test_student_cannot_have_duplicate_response` | Reused: UNIQUE(evaluation_id, student_id) |
+| DB-189-06 | `tests/test_response_schema.py::ResponseSchemaTests::test_question_cannot_have_duplicate_answer_in_response` | Reused: UNIQUE(response_id, question_id) |
+| DB-189-07 | `tests/test_database_integrity.py::test_submission_write_failure_rolls_back[new]` | US03 #22: no partial response/answer after write failure; retry succeeds |
+| DB-189-08 | `tests/test_database_integrity.py::test_submission_write_failure_rolls_back[draft]` | US03 #22: exact draft response/answers restored after deletion and partial replacement; retry succeeds |
+| DB-189-F01 | `tests/test_database_integrity.py::test_runtime_foreign_keys_finding` | Diagnostic finding: production factory returns FK OFF; orphan accepted, then explicitly rolled back |
+| DB-189-09 | `tests/test_response_schema.py::ResponseSchemaTests::test_submission_status_and_timestamp_are_stored` | Reused explicit timestamp/status persistence assertion |
+
+All ten mappings passed in the focused run below (seven new variants plus three
+retained schema tests). The four rejection tests use a fresh temporary connection,
+assert FK=1 before writes, check the seed for violations and preserve both table
+counts. The runtime diagnostic uses two fresh connections from the unmodified
+production factory, both pointing at the monkeypatched temporary database. It
+asserts FK=0, demonstrates an orphan and `foreign_key_check` violation, rolls it
+back, and verifies a clean database from a second connection. A passing diagnostic
+records the defect; it does not mean production FK enforcement is working. If
+production is fixed separately, this characterization test must be updated.
+
+Rollback tests use Flask `POST /api/submissions` with the real connection factory
+and transaction context. A test-only SQLite BEFORE INSERT trigger raises ABORT
+on question 2 only after question 1 with rating 5 exists in the same transaction.
+ABORT cancels only the failing statement, so exact snapshots from a fresh
+connection establish rollback of prior response creation, draft answer deletion
+and the first answer write. Removing only the trigger permits a successful retry
+with exact persisted answers. TESTING propagates IntegrityError: safe production
+500/error recovery presentation is not established by these tests. Commit-time
+I/O failures and concurrent writes remain outside this injection coverage.
+
+### Fixture and query review
+
+- `tests/conftest.py`: each fixture uses tmp_path, monkeypatch restores DATABASE,
+  TESTING, SECRET_KEY and TEST_DATABASE (including removal if originally absent).
+  Seed connections now close explicitly using `closing`; both test clients use
+  context managers. No initializer or real data database is opened by new tests.
+- The shared API fixture uses frozen T=2026-11-04T12:00:00 for submitted_at and
+  normalizes created/enrollment/assignment timestamps explicitly. Python's clock
+  does not control SQLite: rollback tests register a test-only current_timestamp
+  function on runtime connections to make exact retry timestamp assertions stable.
+- `tests/test_response_schema.py`: retained all three existing tests; added an
+  explicit FK=1 assertion on their in-memory connection. Schema loading's PRAGMA
+  applies only to that connection, not connections opened later by the app.
+- `src/schema.sql`: foreign keys cover both response parents and both answer
+  parents; both requested UNIQUE constraints already exist. It does not enforce
+  question.evaluation_id == response.evaluation_id through a composite FK.
+- `src/response_queries.sql`: reference statements use bound named parameters,
+  uniqueness-based draft/upsert handling, and CURRENT_TIMESTAMP for submission.
+  They do not wrap the multi-statement workflow in a transaction themselves;
+  callers must supply ownership, type, deadline checks and a transaction. The
+  current Flask submission route uses inline SQL in a connection context instead.
+- `src/feedback_queries.sql` and `src/feedback_queries.py`: submitted-only filters
+  and same-evaluation question joins are present; ownership is a caller
+  responsibility. Static review here does not claim every reference SQL statement
+  was independently executed. Existing API/lecturer tests retain runtime coverage.
+
+### Findings and unresolved work
+
+**DB-189-F01:** `src/app.py::get_db_connection` does not enable per-connection FK
+checks. Orphan acceptance was reproduced only on a temporary database. No
+production/schema setting is changed in this PR. A separately reviewed production
+fix must reference #189 / DB-189-F01 and re-run the integration suite, including
+existing fixtures that intentionally contain inconsistent data.
+
+**DB-189-F02:** legacy reduced-schema login fixtures, SQL CURRENT_TIMESTAMP in
+smoke helpers and other fixture defaults, and some SQLite connections relying on
+implicit cleanup remain. This PR improves shared fixture cleanup/time control;
+it does not claim a repository-wide deterministic SQL clock or closed-connection
+audit. Python datetime freezing alone never establishes SQLite timestamp control.
+
+The initial focused run had 2 failed / 8 passed because retry timestamp assertions
+assumed SQL time followed the frozen Python clock. Test-only SQL clock control
+corrected that assumption; production timestamp behavior was not changed.
+
+Actual Windows / Python 3.12.6 / pytest 9.0.2 execution:
+
+```text
+python -m pytest -v tests/test_database_integrity.py tests/test_response_schema.py
+10 passed in 0.88s
+
+python -m ruff check tests/conftest.py tests/test_database_integrity.py tests/test_response_schema.py
+All checks passed!
+```
+
+No failing tests are skipped. Broader production remediation and independent
+teammate review remain pending; local execution is not deployed performance evidence.
+
+Full-suite verification on main `dff0de8` plus #189 (Windows/Python 3.12.6):
+
+```powershell
+$env:PLAYWRIGHT_CHROMIUM_EXECUTABLE = 'C:\Program Files\Google\Chrome\Application\chrome.exe'
+python -m pytest -q --junitxml=junit.xml
+# 149 passed in 122.47s (0:02:02)
+```
+
+JUnit confirms 149 tests, zero errors/failures/skips (142 retained + 7 new audit
+variants). Existing browser, authentication/logout, feedback, uniqueness and
+submission/deadline cases are retained. No schema, production route or SQL helper
+was changed. CI verification is separate from this local result.

@@ -2,6 +2,7 @@
 
 import sqlite3
 import sys
+from contextlib import closing
 from datetime import datetime
 from pathlib import Path
 
@@ -12,7 +13,7 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from src import app as app_module  # noqa: E402
+from src import app as app_module
 
 
 @pytest.fixture
@@ -21,7 +22,7 @@ def client(tmp_path, monkeypatch):
     database = tmp_path / "test_edusurvey.db"
     monkeypatch.setattr(app_module, "DATABASE", database)
 
-    with sqlite3.connect(database) as connection:
+    with closing(sqlite3.connect(database)) as connection, connection:
         connection.execute(
             """
             CREATE TABLE users (
@@ -73,7 +74,7 @@ def api_client(tmp_path, monkeypatch, fixed_app_clock):
     database = tmp_path / "test_edusurvey.db"
     schema_path = ROOT_DIR / "src" / "schema.sql"
 
-    with sqlite3.connect(database) as connection:
+    with closing(sqlite3.connect(database)) as connection, connection:
         connection.executescript(
             schema_path.read_text(encoding="utf-8")
         )
@@ -160,8 +161,9 @@ def api_client(tmp_path, monkeypatch, fixed_app_clock):
             """
             INSERT INTO responses
                 (evaluation_id, student_id, submitted_at, status)
-            VALUES (1, 1, CURRENT_TIMESTAMP, 'submitted')
-            """
+            VALUES (1, 1, ?, 'submitted')
+            """,
+            (fixed_app_clock.isoformat(),),
         )
 
         response_id = connection.execute(
@@ -203,11 +205,18 @@ def api_client(tmp_path, monkeypatch, fixed_app_clock):
             ),
         )
 
+        # Python's frozen datetime does not freeze SQLite CURRENT_TIMESTAMP.
+        timestamp = fixed_app_clock.isoformat()
+        for table in ("users", "courses", "evaluations"):
+            connection.execute(f"UPDATE {table} SET created_at = ?", (timestamp,))
+        connection.execute("UPDATE course_enrollments SET enrolled_at = ?", (timestamp,))
+        connection.execute("UPDATE course_lecturers SET assigned_at = ?", (timestamp,))
+
     # Redirect the application to the temporary database.
     monkeypatch.setattr("src.app.DATABASE", database)
     monkeypatch.setitem(app_module.app.config, "TEST_DATABASE", str(database))
     monkeypatch.setitem(app_module.app.config, "TESTING", True)
     monkeypatch.setitem(app_module.app.config, "SECRET_KEY", "test-secret")
 
-    client = app_module.app.test_client()
-    yield client
+    with app_module.app.test_client() as client:
+        yield client
