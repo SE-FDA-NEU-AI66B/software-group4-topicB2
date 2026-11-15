@@ -455,6 +455,219 @@ def get_lecturer_course_feedback(course_id):
         connection.close()
 
 
+@app.route("/lecturer/feedback")
+@login_required(roles=["lecturer"])
+def lecturer_feedback_list():
+    """List evaluations belonging to courses assigned to this lecturer."""
+    lecturer_id = session["user_id"]
+
+    with get_db_connection() as connection:
+        rows = connection.execute(
+            """
+            SELECT
+                e.id,
+                e.title,
+                e.deadline,
+                e.status,
+                c.id AS course_id,
+                c.course_code,
+                c.course_name,
+                COUNT(
+                    DISTINCT CASE
+                        WHEN r.status = 'submitted' THEN r.id
+                    END
+                ) AS completed_responses
+            FROM evaluations AS e
+            JOIN courses AS c ON c.id = e.course_id
+            JOIN course_lecturers AS cl
+              ON cl.course_id = c.id
+             AND cl.lecturer_id = ?
+            LEFT JOIN responses AS r
+              ON r.evaluation_id = e.id
+            GROUP BY e.id, c.id
+            ORDER BY e.created_at DESC, e.id DESC
+            """,
+            (lecturer_id,),
+        ).fetchall()
+
+    return render_template(
+        "lecturer_feedback.html",
+        evaluations=rows,
+        selected_evaluation=None,
+        completed_responses=0,
+        average_rating=None,
+        rating_count=0,
+        ratings=[],
+        comments=[],
+        error_message=None,
+    )
+
+@app.route("/lecturer/feedback/<int:evaluation_id>")
+@login_required(roles=["lecturer"])
+def lecturer_feedback_detail(evaluation_id):
+    """Show submitted ratings and written feedback for an assigned course."""
+    lecturer_id = session["user_id"]
+
+    with get_db_connection() as connection:
+        evaluation = connection.execute(
+            """
+            SELECT
+                e.id,
+                e.title,
+                e.deadline,
+                e.status,
+                c.id AS course_id,
+                c.course_code,
+                c.course_name
+            FROM evaluations AS e
+            JOIN courses AS c ON c.id = e.course_id
+            JOIN course_lecturers AS cl
+              ON cl.course_id = c.id
+             AND cl.lecturer_id = ?
+            WHERE e.id = ?
+            """,
+            (lecturer_id, evaluation_id),
+        ).fetchone()
+
+        # Return 404 for nonexistent evaluations and evaluations
+        # belonging to courses the lecturer is not assigned to.
+        if evaluation is None:
+            return (
+                render_template(
+                    "lecturer_feedback.html",
+                    evaluations=[],
+                    selected_evaluation=None,
+                    completed_responses=0,
+                    average_rating=None,
+                    rating_count=0,
+                    ratings=[],
+                    comments=[],
+                    error_message=(
+                        "Evaluation not found or you do not have "
+                        "permission to view it."
+                    ),
+                ),
+                404,
+            )
+
+        completed_responses = connection.execute(
+            """
+            SELECT COUNT(*) AS total
+            FROM responses
+            WHERE evaluation_id = ?
+              AND status = 'submitted'
+            """,
+            (evaluation_id,),
+        ).fetchone()["total"]
+
+        ratings = connection.execute(
+            """
+            SELECT
+                q.question_text,
+                ra.rating_value,
+                r.submitted_at
+            FROM questions AS q
+            JOIN response_answers AS ra
+              ON ra.question_id = q.id
+            JOIN responses AS r
+              ON r.id = ra.response_id
+            WHERE q.evaluation_id = ?
+              AND q.question_type = 'rating'
+              AND r.evaluation_id = q.evaluation_id
+              AND r.status = 'submitted'
+              AND ra.rating_value BETWEEN 1 AND 5
+            ORDER BY r.submitted_at DESC, r.id DESC, q.question_order
+            """,
+            (evaluation_id,),
+        ).fetchall()
+
+        comments = connection.execute(
+            """
+            SELECT
+                q.question_text,
+                ra.text_value,
+                r.submitted_at
+            FROM questions AS q
+            JOIN response_answers AS ra
+              ON ra.question_id = q.id
+            JOIN responses AS r
+              ON r.id = ra.response_id
+            WHERE q.evaluation_id = ?
+              AND q.question_type = 'text'
+              AND r.evaluation_id = q.evaluation_id
+              AND r.status = 'submitted'
+              AND ra.text_value IS NOT NULL
+              AND TRIM(ra.text_value) != ''
+            ORDER BY r.submitted_at DESC, r.id DESC, q.question_order
+            """,
+            (evaluation_id,),
+        ).fetchall()
+
+        rating_summary = connection.execute(
+            """
+            SELECT
+                COUNT(ra.rating_value) AS rating_count,
+                AVG(ra.rating_value) AS average_rating
+            FROM questions AS q
+            JOIN response_answers AS ra
+              ON ra.question_id = q.id
+            JOIN responses AS r
+              ON r.id = ra.response_id
+            WHERE q.evaluation_id = ?
+              AND q.question_type = 'rating'
+              AND r.evaluation_id = q.evaluation_id
+              AND r.status = 'submitted'
+              AND ra.rating_value BETWEEN 1 AND 5
+            """,
+            (evaluation_id,),
+        ).fetchone()
+
+    average_rating = rating_summary["average_rating"]
+
+    # Include only evaluations belonging to courses assigned to this lecturer.
+    with get_db_connection() as connection:
+        evaluations_list = connection.execute(
+            """
+            SELECT
+                e.id,
+                e.title,
+                e.deadline,
+                e.status,
+                c.course_code,
+                c.course_name,
+                COUNT(
+                    DISTINCT CASE
+                        WHEN r.status = 'submitted' THEN r.id
+                    END
+                ) AS completed_responses
+            FROM evaluations AS e
+            JOIN courses AS c ON c.id = e.course_id
+            JOIN course_lecturers AS cl
+              ON cl.course_id = c.id
+             AND cl.lecturer_id = ?
+            LEFT JOIN responses AS r ON r.evaluation_id = e.id
+            GROUP BY e.id, c.id
+            ORDER BY e.created_at DESC, e.id DESC
+            """,
+            (lecturer_id,),
+        ).fetchall()
+
+    return render_template(
+        "lecturer_feedback.html",
+        evaluations=evaluations_list,
+        selected_evaluation=evaluation,
+        completed_responses=completed_responses,
+        average_rating=(
+            round(average_rating, 2)
+            if average_rating is not None else None
+        ),
+        rating_count=rating_summary["rating_count"],
+        ratings=ratings,
+        comments=comments,
+        error_message=None,
+    )
+
+
 @app.route("/api/evaluations/<int:evaluation_id>/feedback/topics", methods=["GET"])
 def grouped_feedback_by_topic(evaluation_id):
     with get_db_connection() as connection:

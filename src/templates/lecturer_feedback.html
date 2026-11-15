@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EduSurvey - Lecturer Feedback</title>
+    <style>
+        :root {
+            font-family: Arial, sans-serif;
+            color: #1f2937;
+            background: #f5f7fb;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+
+        a { color: #2563eb; }
+
+        .muted { color: #64748b; }
+
+        .panel, .evaluation, .feedback-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .evaluation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .evaluation h2 { margin-top: 0; }
+
+        .button {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .stat {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 28px;
+            margin-top: 8px;
+        }
+
+        .feedback-card h3 { margin-top: 0; }
+
+        .rating {
+            color: #b45309;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 36px 20px;
+            background: white;
+            border: 1px dashed #cbd5e1;
+            border-radius: 12px;
+        }
+
+        .error {
+            color: #b91c1c;
+            background: #fef2f2;
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 650px) {
+            .stats { grid-template-columns: 1fr; }
+            .evaluation {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <p class="muted">EDUSURVEY / LECTURER</p>
+        <h1>Student Feedback Review</h1>
+        <p class="muted">
+            Review submitted course evaluations, ratings, and comments.
+        </p>
+        <a href="/evaluations">View all evaluations</a>
+    </header>
+
+    {% if error_message %}
+        <p class="error" role="alert">{{ error_message }}</p>
+    {% elif selected_evaluation %}
+        <p><a href="/lecturer/feedback">&larr; All evaluations</a></p>
+
+        <section class="panel">
+            <p class="muted">
+                {{ selected_evaluation["course_code"] }}
+                &mdash;
+                {{ selected_evaluation["course_name"] }}
+            </p>
+            <h2>{{ selected_evaluation["title"] }}</h2>
+            <p>
+                <strong>Deadline:</strong>
+                {{ selected_evaluation["deadline"] }}
+            </p>
+            <p>
+                <strong>Status:</strong>
+                {{ selected_evaluation["status"] }}
+            </p>
+        </section>
+
+        <section class="stats" aria-label="Feedback summary">
+            <div class="stat">
+                <span class="muted">Completed evaluations</span>
+                <strong>{{ completed_responses }}</strong>
+            </div>
+            <div class="stat">
+                <span class="muted">Average rating</span>
+                <strong>
+                    {% if average_rating is not none %}
+                        {{ average_rating }} / 5
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </strong>
+            </div>
+            <div class="stat">
+                <span class="muted">Rating answers</span>
+                <strong>{{ rating_count }}</strong>
+            </div>
+        </section>
+
+        {% if completed_responses == 0 %}
+            <section class="empty">
+                <h2>No feedback submitted yet</h2>
+                <p class="muted">
+                    Submitted student ratings and comments will appear here.
+                </p>
+            </section>
+        {% else %}
+            <section>
+                <h2>Student ratings</h2>
+                {% if ratings %}
+                    {% for item in ratings %}
+                        <article class="feedback-card">
+                            <h3>{{ item["question_text"] }}</h3>
+                            <p class="rating">
+                                {{ item["rating_value"] }} / 5
+                            </p>
+                            <p class="muted">
+                                Submitted:
+                                {{ item["submitted_at"] or "Date unavailable" }}
+                            </p>
+                        </article>
+                    {% endfor %}
+                {% else %}
+                    <p class="muted">
+                        No rating answers are available.
+                    </p>
+                {% endif %}
+            </section>
+
+            <section>
+                <h2>Written comments</h2>
+                {% if comments %}
+                    {% for item in comments %}
+                        <article class="feedback-card">
+                            <h3>{{ item["question_text"] }}</h3>
+                            <p>{{ item["text_value"] }}</p>
+                            <p class="muted">
+                                Submitted:
+                                {{ item["submitted_at"] or "Date unavailable" }}
+                            </p>
+                        </article>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty">
+                        <h3>No written comments</h3>
+                        <p class="muted">
+                            No written feedback has been submitted for this
+                            evaluation.
+                        </p>
+                    </div>
+                {% endif %}
+            </section>
+        {% endif %}
+    {% else %}
+        <section>
+            <h2>Your course evaluations</h2>
+
+            {% if evaluations %}
+                {% for item in evaluations %}
+                    <article class="evaluation">
+                        <div>
+                            <p class="muted">
+                                {{ item["course_code"] }}
+                                &mdash;
+                                {{ item["course_name"] }}
+                            </p>
+                            <h2>{{ item["title"] }}</h2>
+                            <p>
+                                Completed responses:
+                                <strong>{{ item["completed_responses"] }}</strong>
+                            </p>
+                            <p class="muted">
+                                Deadline: {{ item["deadline"] }}
+                            </p>
+                        </div>
+                        <a class="button"
+                           href="/lecturer/feedback/{{ item['id'] }}">
+                            Review feedback
+                        </a>
+                    </article>
+                {% endfor %}
+            {% else %}
+                <div class="empty">
+                    <h2>No evaluations available</h2>
+                    <p class="muted">
+                        Evaluations for your assigned courses will appear here.
+                    </p>
+                </div>
+            {% endif %}
+        </section>
+    {% endif %}
+</body>
+</html>
