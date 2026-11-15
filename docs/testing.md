@@ -117,6 +117,7 @@ For new tests, use a separate temporary SQLite database per case, load `src/sche
 | TC-US04-05 | US04 | Add draft response/comment DRAFT_ONLY_COMMENT alongside seeded submitted response | 200; draft comment absent, seeded submitted comment present | Normal |
 | TC-US04-06 | US04 | Add rating=5 to the seeded submitted response; GET feedback | 200; Student ratings, 5 / 5, Written comments and actual comment displayed | Normal |
 | TC-US04-07 | US04 | One seeded submitted response plus one new submitted response and one draft | 200; completed count=2; new submitted comment visible, draft absent | Normal |
+| US02-L12 | US02 | Student 1; frozen T=2026-11-03T12:00:00; enrolled evaluations 1/2/3 open with deadlines T+2/3/4 days and no responses; student 3 alone enrolled in a second course with open evaluation 4 | 200; count=3; only IDs 1/2/3; each has exact title, course name, lecturer name, deadline and Active status | Normal |
 
 The US02 fixture freezes the route clock before creating data at T=2026-11-03T12:00:00. The Due soon rule is strictly less than 24 hours; tests now check 86399, 86400 and 86401 seconds remaining separately. Deadline equality is Closed; additional tests check T-1s, T and T+1s. Rating boundaries and submission examples below belong to pending US03 work. Five required answers and 20 completed responses are acceptance examples, not implementation maxima.
 
@@ -242,13 +243,14 @@ All existing mappings below are API integration tests using temporary SQLite dat
 | TC-US04-05 | `test_draft_responses_are_excluded_from_feedback` | `tests/test_lecturer_feedback.py` | Flask rendering / SQLite integration | Expected as Section 2; verification below | #168 |
 | TC-US04-06 | `test_feedback_displays_submitted_ratings_and_comments` | `tests/test_lecturer_feedback.py` | Flask rendering / SQLite integration | Expected as Section 2; verification below | #168 |
 | TC-US04-07 | `test_completed_count_includes_only_submitted_responses` | `tests/test_lecturer_feedback.py` | Flask rendering / SQLite integration | Expected as Section 2; verification below | #168 |
+| US02-L12 | `test_student_evaluations_three_active` | `tests/test_student_evaluations.py` | API / SQLite integration | Section 2 expectation; PASS in verified #187 run below | #187 |
 
-Traceability totals: **94 cases; 79 mapped to existing tests; 15 NOT IMPLEMENTED**. The US02 matrix maps one documented case to each of its 20 collected pytest items. US01 mappings include #181, and the nine original US11 IDs are preserved.
+Traceability totals: **95 cases; 80 mapped to existing tests; 15 NOT IMPLEMENTED**. The US02 matrix maps one documented case to each of its 21 collected pytest items, including the three-active-evaluation acceptance example. US01 mappings include #181, and the nine original US11 IDs are preserved.
 
 | Story | Documented cases | Existing mappings | Pending |
 |---|---:|---:|---:|
 | US01 | 16 | 16 | 0 |
-| US02 | 20 | 20 | 0 |
+| US02 | 21 | 21 | 0 |
 | US03 | 28 | 17 | 11 |
 | US04 | 17 | 16 | 1 |
 | US11 | 13 | 10 | 3 |
@@ -304,10 +306,27 @@ US03/shared API fixtures now freeze application time before use and restore conf
 
 **PR #173 integration verification (2026-11-15):** `python -m pytest -v` → **106 passed in 2.83s**; `python -m pytest -v tests/test_lecturer_feedback.py` → **8 passed in 0.06s**. This branch contains the resolved #172 dependency and all current main tests. The lecturer detail route first distinguishes a nonexistent evaluation (404) from an existing evaluation in an unassigned course (403), preserving the required permission message before querying any ratings or comments. All seven original TC-US04 IDs are retained and the eighth test covers nonexistent evaluations. No authentication, enrollment, submission or deadline rule is weakened.
 
+**Issue #187 verification (2026-11-15):** uses the existing per-test `tmp_path` SQLite fixture and application clock frozen at 2026-11-03T12:00:00 before seeding. US02-L12 makes all three enrolled evaluations open with deadlines 48/72/96 hours ahead, seeds another student's course with a valid open evaluation and lecturer assignment, and verifies there are no responses. The Flask-client request must return exactly the three enrolled IDs and all five exact display details with Active status; the other-course record cannot appear. Existing status/boundary tests and production code are unchanged.
+
+Actual local execution on macOS / Python 3.12.4 / pytest 7.4.4 (exit 0):
+
+```text
+python -m pytest -v tests/test_student_evaluations.py::test_student_evaluations_three_active
+1 passed in 0.04s
+
+python -m pytest -v tests/test_student_evaluations.py
+21 passed in 0.15s
+
+python -m pytest -v
+107 passed in 2.94s
+```
+
+Only this acceptance example is newly automated. All 15 unrelated pending cases remain NOT IMPLEMENTED, and historical run/mutation evidence is retained.
+
 **Fixture and assertion audit / remaining work:**
 
 - #165 completed: authentication fixtures load the real schema into a per-test temporary database; the three demo identities/password match `src/init_db.py`. They do not run the initializer or access the application database. TESTING and SECRET_KEY changes are restored by monkeypatch. TC-01–TC-04 and US01-A01–A12 verify all three roles, credentials, exact credential-error messages, anonymous page/API restrictions, session persistence/isolation/replacement and deleted-account invalidation. Unsupported-role login is not tested because the actual schema rejects unsupported roles; performance and the requirement-message discrepancy remain outside this task.
-- #166 completed: the list fixture loads the real schema into a fresh `tmp_path` SQLite database, freezes the application clock before seeding, supplies explicit fixture timestamps, and restores Flask configuration with monkeypatch. Twenty individually traceable items cover retrieval, anonymous/role denial, disjoint enrollment and query impersonation attempts, personal completion status, empty lists, all four display statuses, draft states, completion precedence, and both exact time boundaries. Authentication is injected through `session_transaction()` to isolate US02; credential login remains US01. The retrieval case checks three total evaluations including closed, not three active evaluations.
+- #166 completed: the list fixture loads the real schema into a fresh `tmp_path` SQLite database, freezes the application clock before seeding, supplies explicit fixture timestamps, and restores Flask configuration with monkeypatch. Twenty individually traceable items cover retrieval, anonymous/role denial, disjoint enrollment and query impersonation attempts, personal completion status, empty lists, all four display statuses, draft states, completion precedence, and both exact time boundaries. Authentication is injected through `session_transaction()` to isolate US02; credential login remains US01. The original retrieval case checks three total evaluations including closed; US02-L12 (#187) now separately verifies exactly three active evaluations.
 - #167 integrated: successful persistence, rejection without writes, duplicate immutability and exact deadline boundaries now have real workflow tests and frozen time. Rating/text numerical boundaries, five-required-question acceptance examples and transaction-failure injection remain pending. Existing smoke rejection tests remain intact.
 - #168 integrated: retain all eight lecturer-page tests, including ownership denial for an existing evaluation (403), nonexistent evaluation (404), anonymous/student restrictions, draft exclusion, submitted ratings/comments and completed counts. Existing course-feedback API tests remain intact. The exactly-20-response acceptance example and broader statistics/topic access control are not established by these tests.
 - #169 integrated: retain logout success, session clearing, post-logout `/api/auth/me` denial, anonymous logout and duplicate-email coverage and all nine legacy IDs. Redirects, role-specific post-logout denial, repeated anonymous logout and saved-cookie replay remain unverified. Flask uses a signed client-side cookie and logout calls `session.clear()`; server-side revocation of a copied old cookie is not demonstrated. Shared app configuration is changed by fixtures without comprehensive restoration; centralize isolated fixtures and freeze both Python time and SQL timestamps where assertions depend on time.

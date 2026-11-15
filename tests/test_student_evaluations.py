@@ -105,6 +105,60 @@ def test_student_evaluations_success(client):
     }
 
 
+def test_student_evaluations_three_active(client):
+    """US02-L12: return exactly three active evaluations for the current student."""
+    expected = {
+        evaluation_id: {
+            "id": evaluation_id,
+            "survey_title": f"Active Evaluation {evaluation_id}",
+            "course_name": "Software Engineering",
+            "lecturer_name": "Lecturer One",
+            "submission_deadline": (NOW + timedelta(days=evaluation_id + 1)).isoformat(),
+            "survey_status": "Active",
+        }
+        for evaluation_id in (1, 2, 3)
+    }
+    with sqlite3.connect(app_module.DATABASE) as connection:
+        connection.executemany(
+            "UPDATE evaluations SET title = ?, deadline = ?, status = 'open' WHERE id = ?",
+            [
+                (item["survey_title"], item["submission_deadline"], evaluation_id)
+                for evaluation_id, item in expected.items()
+            ],
+        )
+        connection.execute(
+            "INSERT INTO courses (id, course_code, course_name, created_at) "
+            "VALUES (2, 'OTHER101', 'Other Student Course', ?)",
+            (NOW.isoformat(),),
+        )
+        connection.execute(
+            "INSERT INTO course_enrollments (student_id, course_id, enrolled_at) "
+            "VALUES (3, 2, ?)",
+            (NOW.isoformat(),),
+        )
+        connection.execute(
+            "INSERT INTO course_lecturers (lecturer_id, course_id, assigned_at) "
+            "VALUES (2, 2, ?)",
+            (NOW.isoformat(),),
+        )
+        connection.execute(
+            "INSERT INTO evaluations "
+            "(id, course_id, created_by, title, deadline, status, created_at) "
+            "VALUES (4, 2, 2, 'Other Student Evaluation', ?, 'open', ?)",
+            ((NOW + timedelta(days=5)).isoformat(), NOW.isoformat()),
+        )
+        assert connection.execute("SELECT COUNT(*) FROM responses").fetchone()[0] == 0
+
+    login_as(client)
+    response = client.get("/api/evaluations")
+
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data["count"] == 3
+    assert len(data["evaluations"]) == 3
+    assert {item["id"]: item for item in data["evaluations"]} == expected
+
+
 def test_student_evaluations_due_soon(client):
     """US02-L01: an unfinished open evaluation with 12h left is Due soon."""
     login_as(client)
