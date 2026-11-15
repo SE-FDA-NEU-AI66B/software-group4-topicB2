@@ -101,6 +101,7 @@
             }
         }
     </style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/session.css') }}">
 </head>
 <body>
     <header>
@@ -109,7 +110,7 @@
         <p class="muted">
             Review submitted course evaluations, ratings, and comments.
         </p>
-        <a href="/evaluations">View all evaluations</a>
+        {% include "session_controls.html" %}
     </header>
 
     {% if error_message %}
@@ -247,5 +248,6 @@
             {% endif %}
         </section>
     {% endif %}
+<script src="{{ url_for('static', filename='js/session.js') }}" defer></script>
 </body>
 </html>

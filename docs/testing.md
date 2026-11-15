@@ -9,7 +9,7 @@ Evidence reviewed on 2026-11-15: original M4 documentation (#164), US01 tests (#
 | Services / business logic | Status precedence, deadlines, topic classification; submission validation inside route functions | Unit tests in `test_status.py` and `test_feedback_classifier.py`; equivalence partitions and boundary analysis through API tests | Most business logic remains in `src/app.py`, rather than separate service classes. The standalone status helper and route duplicate logic, so both require coverage. |
 | Repository / database | Response and answer uniqueness, submission timestamp storage, queries excluding drafts and unrelated evaluations | In-memory SQLite schema tests; integration tests against `tmp_path` databases | Protects integrity and feedback accuracy. SQL is primarily inline in routes; no general repository abstraction exists. Foreign keys are enabled in schema tests; production `get_db_connection()` does not explicitly enable them, so full runtime FK enforcement is not established. |
 | Flask routes / API | Authentication, student role/enrollment, required answers, deadlines, duplicates, lecturer ownership and logout | Flask test client; temporary databases; positive/negative partitions and fixed-time boundary tests where implemented | Exercises request, session, validation and SQL together without starting a server. Successful submission persistence and exact expiry boundaries are now covered by the US03 workflow tests; rating/text numerical boundaries remain pending. |
-| User interface | Basic HTML rendering and student page role restrictions | Flask rendering smoke tests; manual browser review still needed | No browser automation exists for JavaScript validation, redirects, accessibility or responsive layout. Lecturer feedback has rendering/access tests from the integrated PR; sign-out UI and interactive browser behavior still need browser validation. |
+| User interface | HTML roles plus student P0 navigation, persisted completion and visible sign-out | Flask rendering tests and real Playwright Chromium checks at phone/laptop widths | #201 adds 9 browser variants on isolated SQLite and a fixed app clock; see [P0 UI evidence](p0-student-navigation.md). Public deployment timing, full accessibility and copied-cookie revocation remain pending. |
 
 Authentication and authorization receive priority because a role or course-ownership error could expose student feedback. Submission validation, exact deadlines and duplicate prevention protect irreversible response data; database constraints and lecturer filtering provide additional safeguards. A green suite demonstrates only its assertions, not complete acceptance-criteria coverage.
 
@@ -125,6 +125,20 @@ The US02 fixture freezes the route clock before creating data at T=2026-11-03T12
 
 Requirements differ from the current contract: login expects "Invalid email or password." while code returns "Email or password is incorrect."; duplicate submission expects "You have already completed this evaluation." while code says "You have already submitted this evaluation."; requirements capitalize "Due Soon" while code returns "Due soon". Logout returns JSON and protected pages return 401 JSON, rather than the specified redirect. These are unresolved acceptance gaps, not approved requirement changes. The three-second response-time requirement has no automated performance test; suite elapsed time is not latency evidence. Boundary performance measurements require a controlled load/environment and an agreed timing contract.
 
+### M5 #201 browser cases (additional to the M4 matrix)
+
+All browser cases below use isolated SQLite data and fixed application time. They exercise the real HTTP/JS interface; the login-message case intercepts one rejected API response to check presentation rather than duplicating API credential partition tests.
+
+| Case ID | Parent / contract | Scenario and expected result |
+|---|---|---|
+| M5-UI01 | US01 #14, US02 #18, US03 #22 | Public home → login → list → answer/review/submit → reload; server-persisted completion is visible without typing another URL. Phone and laptop layouts have no measured horizontal overflow on login/list/receipt. |
+| M5-UI02 / P0C-07 | US11 #183, #188 | Visible keyboard-operated Sign out → `/login`; current session protected API/HTML access returns 401. No copied-cookie revocation or server redirect claim. |
+| P0C-03 | US01 #14, #188 | Rejected login displays canonical error plus recovery guidance, button re-enabled. |
+| P0C-04 | US02 #18, #188 | T+23h59m59s displays Due soon and is filterable; T+24h displays Active and is excluded by that filter. |
+| M5-UI03 | US01 #14, US11 #183 | Lecturer/admin login reaches a valid role page, student API is 403, visible logout works at phone width. |
+| M5-UI04 | US03 #22, US11 #183 | Expiry at exactly T after opening rejects submit without writes; failed logout explains recovery and can be retried. |
+| M5-UI05 | US02 #18, US03 #22 | Closed/unenrolled evaluation cannot be opened after a stale list; UI explains failure and provides a working list link. |
+
 ## 3. Automated tests
 
 From the repository root, use Python 3.12 (the CI version; the setup guide currently suggests 3.14):
@@ -133,12 +147,12 @@ From the repository root, use Python 3.12 (the CI version; the setup guide curre
 python -m venv .venv
 source .venv/bin/activate
 # Windows activation: .venv\Scripts\activate
-python -m pip install -r requirements.txt
-python -m pip install pytest==7.4.4
+python -m pip install -r requirements-dev.txt
+python -m playwright install chromium
 python -m pytest -v
 ```
 
-`requirements.txt` pins Flask 3.1.2 but does not include pytest. CI installs pytest separately and invokes coverage; no Flask process or database initialization command is needed to run these tests. Dependency installation from a new clone was not executed in this review.
+`requirements.txt` pins Flask 3.1.2; `requirements-dev.txt` supplies pytest, coverage, Ruff and Playwright. On Linux use `python -m playwright install --with-deps chromium` for browser system dependencies, as CI does. API tests use the Flask test client; #201 browser fixtures start their own ephemeral loopback server. No manually started Flask process or production database initialization is needed. #201 installed dependencies into a fresh temporary virtual environment; CI provides the separate clean-checkout result.
 
 For a single mapping below, run `python -m pytest -v path/to/test_file.py::test_function`; for example:
 
@@ -341,7 +355,24 @@ Only this acceptance example is newly automated. All 17 unrelated pending cases 
 
 Schema tests explicitly enable foreign keys on `:memory:` SQLite. Smoke tests load the real schema into `tmp_path`; other fixtures create reduced schemas, so they cannot establish all production constraints. Some smoke fixture rows use SQLite `CURRENT_TIMESTAMP`, which Python clock patching does not control. Current tests avoid the real application database, but the suite does **not yet satisfy** the stricter requirement to avoid uncontrolled current dates everywhere. Issue #166 changes only this documentation and `tests/test_student_evaluations.py`; no production logic is changed. Authentication fixtures now include PR #181 and the main US11 assertions; all distinct tests are preserved.
 
+### #201 browser mapping and actual result
+
+All nodes below are in `tests/test_p0_browser_contracts.py`:
+
+| Case ID | Actual pytest node suffix |
+|---|---|
+| M5-UI01, M5-UI02, P0C-07 | `test_logout_navigates_to_login[laptop]`, `test_logout_navigates_to_login[phone]` |
+| P0C-03 | `test_login_error_visible_message` |
+| P0C-04 | `test_due_soon_label_and_filter` |
+| M5-UI03 | `test_role_landing_and_logout[lecturer@test.com-/lecturer/feedback]`, `test_role_landing_and_logout[admin@test.com-/account]` |
+| M5-UI04 | `test_submission_deadline_race_and_retryable_logout` |
+| M5-UI05 | `test_open_evaluation_error_explains_next_action[closed]`, `test_open_evaluation_error_explains_next_action[unenrolled]` |
+
+Local 2026-11-15: `PLAYWRIGHT_CHROMIUM_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' python -m pytest -q --cov --cov-report=term --junitxml=/private/tmp/201-junit.xml` → **115 passed, 214 warnings in 29.67s**, no skips. Existing 106 tests are preserved. SQLite ResourceWarnings on Python 3.14 and pre-existing app lint findings are not resolved by this frontend task. The successful run preceded a node-only rename of the combined walkthrough to the approved P0C-07 proposal `test_logout_navigates_to_login`; assertions are unchanged. CI verifies the final node names separately. See [setup, environment, screenshots and limits](p0-student-navigation.md). Pytest elapsed time is not acceptance timing evidence; public browser timing, redirects #215 and replay revocation #216 retain their pending status.
+
 ## 4. What the tests found
+
+#201 source review found lecturer/admin login destinations with no routes and submission UI text claiming saving was unavailable after the backend already persisted responses. The branch fixes those integration gaps, adds session controls and verifies the corrected workflow in Chromium. An initial browser attempt targeted the visually overlaid radio input and timed out; the test was corrected to use the visible label and then keyboard activation. Another new test selected two identically named Back links; scoping it to the error panel fixed the test selector. Neither test-authoring issue was hidden by a skip. Existing baseline and mutation evidence below remains historical.
 
 No previously unknown production defect was established by the baseline run: all 63 tests passed. The requirement discrepancies and coverage risks above are source-review findings, not fabricated failing-test results. To demonstrate actual defect detection, a controlled mutation was executed against a disposable copy of `src/` and `tests/` created with Python `tempfile.TemporaryDirectory`; the repository's application code and real database were untouched.
 

@@ -1,0 +1,10 @@
+.session-controls { display:flex; align-items:center; gap:12px; flex-wrap:wrap; font-size:14px; }
+.session-controls button { font:inherit; cursor:pointer; padding:10px 14px; border:1px solid #b9c8db; border-radius:8px; background:white; color:#102b50; min-height:44px; }
+.session-controls a { color:#204f92; padding:10px 0; }
+:focus-visible { outline:3px solid #2563eb; outline-offset:3px; }
+.session-controls [role=status] { max-width:230px; }
+.demo-access { margin-top:20px; font-size:14px; line-height:1.6; overflow-wrap:anywhere; }
+.demo-access summary { cursor:pointer; min-height:44px; padding:10px 0; }
+#submissionSuccess { background:#eefaf3; border:1px solid #4b9469; border-radius:14px; padding:24px; margin:20px 0; }
+#submissionSuccess[hidden] { display:none; }
+@media(max-width:600px) { .topbar { flex-wrap:wrap; gap:12px; height:auto; padding:16px; } .portal-indicator { display:none; } .breadcrumb { display:none; } .session-controls { gap:10px; } }

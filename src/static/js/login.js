@@ -9,11 +9,11 @@ const togglePassword = document.getElementById("toggle-password");
 const formError = document.getElementById("form-error");
 
 // Redirect after successful authentication.
-// Final routes must be confirmed with the backend developer.
+// Use existing role-specific pages; administration is outside P0 scope.
 const roleRoutes = {
     student: "/evaluations",
-    lecturer: "/lecturer",
-    administrator: "/admin"
+    lecturer: "/lecturer/feedback",
+    administrator: "/account"
 };
 
 function setFieldError(field, message) {
@@ -90,6 +90,7 @@ form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     if (!validateForm()) {
+        document.querySelector('[aria-invalid="true"]')?.focus();
         return;
     }
 
@@ -121,7 +122,7 @@ form.addEventListener("submit", async function (event) {
 
         if (!response.ok) {
             if (response.status === 401) {
-                showFormError("Invalid email or password.");
+                showFormError("Invalid email or password. Check your credentials and try again.");
             } else if (response.status === 404) {
                 showFormError(
                     "The login service is currently unavailable. Please try again later."

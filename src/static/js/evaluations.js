@@ -107,6 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Unable to retrieve your evaluations.";
 
                 if (response.status === 401) {
+                    window.location.replace("/login");
                     throw new Error(
                         "Your session has expired. Please sign in again."
                     );
@@ -114,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (response.status === 403) {
                     throw new Error(
-                        "You do not have permission to view these evaluations."
+                        "This account cannot view student evaluations. Open My account to access your role workspace."
                     );
                 }
 
