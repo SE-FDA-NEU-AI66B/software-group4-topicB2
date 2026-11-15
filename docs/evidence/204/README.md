@@ -17,3 +17,17 @@ storage limits and remaining hosting verification.
 The operator was OpenAI Codex using Windows/Python 3.11.9, not an independent
 teammate or a live Render deployment. Hosting, backup scheduling and secure
 off-host transfer are not certified by these local artifacts.
+
+Merge with main `83f76aa`: `merge-first-pytest.txt` / `.xml` preserve the
+initial browser synchronization timeout (1 failed / 228 passed). `merge-pytest.txt`
+/ `.xml` record the full rerun after explicitly waiting for both fetched rating
+questions and checking their selected state. See testing.md for actual results.
+
+`merge-second-pytest.txt` / `.xml` retain the second run (1 failed / 228 passed)
+where the existing phone empty-answer test clicked Review before questions
+loaded. The final rerun includes explicit loaded-form preconditions in that
+test and the canonical-seed reload test; no assertions or cases are skipped.
+
+Final `merge-pytest.txt` / `.xml`: **229 passed in 78.53s**, zero failures,
+errors or skips, on main `83f76aa` plus #204 and both browser synchronization
+corrections. Earlier files remain unchanged historical evidence.

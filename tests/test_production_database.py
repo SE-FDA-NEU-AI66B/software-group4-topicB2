@@ -237,9 +237,13 @@ def test_seeded_submission_survives_browser_reload(demo_database):
                 page.get_by_role("button", name="Sign in", exact=True).click()
                 expect(page).to_have_url(url + "/evaluations")
                 page.locator('a[href="/evaluations/1/complete"]').click()
-                for rating in page.locator('input[type="radio"][value="5"]').all():
+                ratings = page.locator('input[type="radio"][value="5"]')
+                # Questions load via fetch; Locator.all() does not wait for them.
+                expect(ratings).to_have_count(2)
+                for rating in ratings.all():
                     rating.focus()
                     page.keyboard.press("Space")
+                    expect(rating).to_be_checked()
                 page.locator("textarea").fill("Synthetic persistence check #204")
                 page.locator("#reviewButton").click()
                 page.get_by_role("button", name="Submit evaluation", exact=True).click()
