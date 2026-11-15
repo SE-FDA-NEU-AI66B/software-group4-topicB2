@@ -219,7 +219,7 @@ The platform follows a role-based access model so that each user can access only
 
 - **Given** an evaluation is available to the student, **When** its information is displayed, **Then** the system shows exactly **5 details: evaluation title, course name, lecturer name, deadline, and status**.
 
-- **Given** an unfinished evaluation has less than **24 hours** remaining before its deadline, **When** the student views the evaluation list, **Then** the system displays the exact status **"Due Soon"** for that evaluation.
+- **Given** an unfinished evaluation has less than **24 hours** remaining before its deadline, **When** the student views the evaluation list, **Then** the system displays the exact status **"Due soon"** for that evaluation.
 
 - **Given** the student has already submitted an evaluation, **When** the student views the evaluation list, **Then** that evaluation displays the exact status **"Completed"** and cannot be submitted again.
 
@@ -336,6 +336,8 @@ The platform follows a role-based access model so that each user can access only
 - **Given** a user has successfully signed out, **When** the user attempts to access an authenticated page using the previous session, **Then** the system denies access and redirects the user to the login page.
 
 - **Given** a user has signed out successfully, **When** the user attempts to access Student, Lecturer, or Administrator functions without signing in again, **Then** the system does not grant access to those functions.
+
+**PO-reviewed clarification (#188, 2026-11-15):** the redirects above describe the browser experience. The logout API retains `200` JSON with `authenticated=false`, and unauthenticated APIs retain `401` JSON; browser logout/navigation and protected HTML pages must lead to `/login`. Denial for an authenticated account with the wrong role remains `403`. Current client session clearing does not establish revocation of a copied pre-logout cookie; that interpretation/design remains pending a separate decision and is not accepted as completed here.
 
 ---
 
@@ -456,6 +458,8 @@ This applies to key actions such as:
 - Sign out.
 
 Long-running background operations such as scheduled reminders or large-scale feedback analysis may be processed asynchronously.
+
+**PO-reviewed measurement clarification (#188, 2026-11-15):** “within 3 seconds” is inclusive (`duration <= 3,000ms`). Measure from the user action until the required outcome is visible/usable, including navigation where required. Record normal environment, device/browser, network, load and warm/cold state before acceptance measurements. A local Flask test-client request duration or total pytest duration does not establish this browser/deployed requirement. Cold-start observations must be reported explicitly according to the milestone's conditions. See `docs/p0-acceptance-review.md` for the protocol, evidence limits and pending implementation tests.
 
 ---
 
