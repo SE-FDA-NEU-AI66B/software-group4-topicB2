@@ -1,5 +1,9 @@
 
+import re
 import sqlite3
+from datetime import timedelta
+
+import pytest
 
 import src.app as app_module
 
@@ -265,3 +269,72 @@ def test_completed_count_includes_only_submitted_responses(api_client):
     assert (
         '<strong>2</strong>' in html
     )
+
+
+@pytest.mark.parametrize("count", [19, 20, 21], ids=lambda n: f"count-{n}")
+def test_feedback_completed_count(api_client, fixed_app_clock, count):
+    """#185 / US04 #50: TC-US04-08, TC-37, TC-US04-09; 20 is no cap."""
+    submitted_at = (fixed_app_clock - timedelta(hours=2)).isoformat()
+    created_at = (fixed_app_clock - timedelta(days=1)).isoformat()
+    with sqlite3.connect(app_module.DATABASE) as connection:
+        connection.execute("PRAGMA foreign_keys = ON")
+        # Remove the shared fixture's response so N is the entire submitted set.
+        connection.execute("DELETE FROM response_answers")
+        connection.execute("DELETE FROM responses")
+        # SQL CURRENT_TIMESTAMP is independent of the frozen Python clock.
+        for table in ("users", "courses", "evaluations"):
+            connection.execute(f"UPDATE {table} SET created_at = ?", (created_at,))
+        connection.execute("UPDATE course_enrollments SET enrolled_at = ?", (created_at,))
+        connection.execute("UPDATE course_lecturers SET assigned_at = ?", (created_at,))
+        connection.execute(
+            "UPDATE evaluations SET created_by = 2, deadline = ? WHERE id = 1",
+            ((fixed_app_clock + timedelta(days=2)).isoformat(),),
+        )
+        for index in range(count + 1):
+            student_id = connection.execute(
+                "INSERT INTO users (email, password_hash, full_name, role, created_at) "
+                "VALUES (?, ?, ?, 'student', ?)",
+                (f"count-{index}@test.com", "test-hash", f"Count Student {index}", created_at),
+            ).lastrowid
+            connection.execute(
+                "INSERT INTO course_enrollments (student_id, course_id, enrolled_at) "
+                "VALUES (?, 1, ?)",
+                (student_id, created_at),
+            )
+            response_id = connection.execute(
+                "INSERT INTO responses (evaluation_id, student_id, submitted_at, status) "
+                "VALUES (1, ?, ?, ?)",
+                (student_id, submitted_at if index < count else None,
+                 "submitted" if index < count else "draft"),
+            ).lastrowid
+            connection.execute(
+                "INSERT INTO response_answers (response_id, question_id, rating_value) "
+                "VALUES (?, 1, 4)",
+                (response_id,),
+            )
+            connection.execute(
+                "INSERT INTO response_answers (response_id, question_id, text_value) "
+                "VALUES (?, 2, ?)",
+                (response_id, f"Submitted comment {index}" if index < count else "COUNT_DRAFT_ONLY"),
+            )
+        assert connection.execute(
+            "SELECT status, COUNT(*) FROM responses GROUP BY status ORDER BY status"
+        ).fetchall() == [("draft", 1), ("submitted", count)]
+
+    login_as(api_client, 2, "lecturer")
+    response = api_client.get("/api/courses/1/feedback")
+    assert response.status_code == 200
+    assert response.get_json()["completed_evaluations"] == count
+    assert len(response.get_json()["feedback"]) == count
+    assert "COUNT_DRAFT_ONLY" not in response.get_data(as_text=True)
+
+    page = api_client.get("/lecturer/feedback/1")
+    assert page.status_code == 200
+    assert "COUNT_DRAFT_ONLY" not in page.get_data(as_text=True)
+    # Bind the number to its label so a rating or unrelated summary cannot match.
+    match = re.search(
+        r'<span class="muted">Completed evaluations</span>\s*<strong>(\d+)</strong>',
+        page.get_data(as_text=True),
+    )
+    assert match is not None
+    assert int(match.group(1)) == response.get_json()["completed_evaluations"]

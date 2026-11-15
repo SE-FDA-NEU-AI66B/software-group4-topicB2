@@ -59,7 +59,7 @@ For new tests, use a separate temporary SQLite database per case, load `src/sche
 | TC-34 | US04 | Student session; GET /api/courses/1/feedback | 403; FORBIDDEN | Error |
 | TC-35 | US04 | Anonymous GET /api/courses/1/feedback | 401; UNAUTHORIZED | Error |
 | TC-36 | US04 | Assigned lecturer; course 1 has one submitted and one draft response | 200; completed_evaluations=1; draft excluded | Normal |
-| TC-37 | US04 | Assigned lecturer; 20 distinct students each have one submitted response in course 1 | 200; completed_evaluations=20; 20 responses | Normal |
+| TC-37 | US04 | Assigned lecturer; 20 distinct enrolled students each have one submitted response in course 1, plus one enrolled draft student; frozen time | 200; completed_evaluations=20; 20 responses; draft excluded; consistent HTML count | Normal |
 | TC-38 | US11 | Login with student1@edusurvey.edu / Password123!; POST /api/auth/logout; GET /api/auth/me using the same client | GET returns 401 after logout; logout implementation returns 200, authenticated=false | Normal |
 | TC-39 | US11 | Student logs out; GET /api/evaluations using the now-cleared client session | 401; UNAUTHORIZED; no evaluation data | Error |
 | TC-40 | US11 | Lecturer logs out; GET /api/courses/1/feedback with cleared session | 401; UNAUTHORIZED; no feedback | Error |
@@ -203,7 +203,7 @@ All existing mappings below are API integration tests using temporary SQLite dat
 | TC-34 | `test_student_cannot_access_lecturer_feedback` | `tests/test_smoke.py` | API integration / error | Section 2 expectation; existing assertions PASS | #168 |
 | TC-35 | `test_course_feedback_requires_login` | `tests/test_smoke.py` | API integration / error | Section 2 expectation; existing assertions PASS | #168 |
 | TC-36 | `test_course_feedback_count_excludes_draft_responses` | `tests/test_smoke.py` | API integration / normal | Section 2 expectation; existing assertions PASS | #168 |
-| TC-37 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_lecturer_feedback.py::test_feedback_completed_count[count-20]` (proposed, not an existing function) | #185 |
+| TC-37 | `test_feedback_completed_count[count-20]` | `tests/test_lecturer_feedback.py` | API / HTML / SQLite integration | Section 2 expectation; PASS in verified #185 run below | #185 / parent US04 #50 |
 | TC-38 | `test_protected_resource_after_logout_returns_401` | `tests/test_auth.py` | API integration / normal | Section 2 expectation; existing assertions PASS | #169 |
 | TC-39 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_auth.py::test_student_page_denied_after_logout` (proposed, not an existing function) | #186 |
 | TC-40 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_auth.py::test_lecturer_feedback_denied_after_logout` (proposed, not an existing function) | #186 |
@@ -262,17 +262,17 @@ All existing mappings below are API integration tests using temporary SQLite dat
 | TC-US04-06 | `test_feedback_displays_submitted_ratings_and_comments` | `tests/test_lecturer_feedback.py` | Flask rendering / SQLite integration | Expected as Section 2; verification below | #168 |
 | TC-US04-07 | `test_completed_count_includes_only_submitted_responses` | `tests/test_lecturer_feedback.py` | Flask rendering / SQLite integration | Expected as Section 2; verification below | #168 |
 | US02-L12 | `test_student_evaluations_three_active` | `tests/test_student_evaluations.py` | API / SQLite integration | Section 2 expectation; PASS in verified #187 run below | #187 |
-| TC-US04-08 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_lecturer_feedback.py::test_feedback_completed_count[count-19]` (proposed, not an existing function) | #185 |
-| TC-US04-09 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_lecturer_feedback.py::test_feedback_completed_count[count-21]` (proposed, not an existing function) | #185 |
+| TC-US04-08 | `test_feedback_completed_count[count-19]` | `tests/test_lecturer_feedback.py` | API / HTML / SQLite integration | Section 2 expectation; PASS in verified #185 run below | #185 / parent US04 #50 |
+| TC-US04-09 | `test_feedback_completed_count[count-21]` | `tests/test_lecturer_feedback.py` | API / HTML / SQLite integration | Section 2 expectation; PASS in verified #185 run below | #185 / parent US04 #50 |
 
-Traceability totals: **97 cases; 80 mapped to existing tests; 17 NOT IMPLEMENTED**. The US02 matrix maps its 21 collected pytest items, including the implemented three-active-evaluation acceptance case. US01 mappings include #181, and the nine original US11 IDs are preserved.
+Traceability totals: **97 cases; 83 mapped to existing tests; 14 NOT IMPLEMENTED**. The US02 matrix maps its 21 collected pytest items, including the implemented three-active-evaluation acceptance case. US01 mappings include #181, and the nine original US11 IDs are preserved.
 
 | Story | Documented cases | Existing mappings | Pending |
 |---|---:|---:|---:|
 | US01 | 16 | 16 | 0 |
 | US02 | 21 | 21 | 0 |
 | US03 | 28 | 17 | 11 |
-| US04 | 19 | 16 | 3 |
+| US04 | 19 | 19 | 0 |
 | US11 | 13 | 10 | 3 |
 
 **Historical #164 baseline execution, 2026-11-15:** `python -m pytest -v` on macOS, Python 3.12.4, pytest 7.4.4, anyio 4.2.0; exit 0:
@@ -358,7 +358,7 @@ Latest #217 integration verification against main `2b644c7` after #213/#218 merg
 - #165 completed: authentication fixtures load the real schema into a per-test temporary database; the three demo identities/password match `src/init_db.py`. They do not run the initializer or access the application database. TESTING and SECRET_KEY changes are restored by monkeypatch. TC-01–TC-04 and US01-A01–A12 verify all three roles, credentials, exact credential-error messages, anonymous page/API restrictions, session persistence/isolation/replacement and deleted-account invalidation. Unsupported-role login is not tested because the actual schema rejects unsupported roles; performance and the requirement-message discrepancy remain outside this task.
 - #166 completed: the list fixture loads the real schema into a fresh `tmp_path` SQLite database, freezes the application clock before seeding, supplies explicit fixture timestamps, and restores Flask configuration with monkeypatch. Twenty individually traceable items cover retrieval, anonymous/role denial, disjoint enrollment and query impersonation attempts, personal completion status, empty lists, all four display statuses, draft states, completion precedence, and both exact time boundaries. Authentication is injected through `session_transaction()` to isolate US02; credential login remains US01. The retrieval case checks three total evaluations including closed, not three active evaluations.
 - #167 integrated: successful persistence, rejection without writes, duplicate immutability and exact deadline boundaries now have real workflow tests and frozen time. Rating/text numerical boundaries, five-required-question acceptance examples and transaction-failure injection remain pending. Existing smoke rejection tests remain intact.
-- #168 integrated: retain all eight lecturer-page tests, including ownership denial for an existing evaluation (403), nonexistent evaluation (404), anonymous/student restrictions, draft exclusion, submitted ratings/comments and completed counts. Existing course-feedback API tests remain intact. The exactly-20-response acceptance example and broader statistics/topic access control are not established by these tests.
+- #168 integrated: retain all eight lecturer-page tests, including ownership denial for an existing evaluation (403), nonexistent evaluation (404), anonymous/student restrictions, draft exclusion, submitted ratings/comments and completed counts. Existing course-feedback API tests remain intact. The 19/20/21-response acceptance examples are covered by #185; broader statistics/topic access control remains outside these tests.
 - #169 integrated: retain logout success, session clearing, post-logout `/api/auth/me` denial, anonymous logout and duplicate-email coverage and all nine legacy IDs. Redirects, role-specific post-logout denial, repeated anonymous logout and saved-cookie replay remain unverified. Flask uses a signed client-side cookie and logout calls `session.clear()`; server-side revocation of a copied old cookie is not demonstrated. Shared app configuration is changed by fixtures without comprehensive restoration; centralize isolated fixtures and freeze both Python time and SQL timestamps where assertions depend on time.
 
 Schema tests explicitly enable foreign keys on `:memory:` SQLite. Smoke tests load the real schema into `tmp_path`; other fixtures create reduced schemas, so they cannot establish all production constraints. Some smoke fixture rows use SQLite `CURRENT_TIMESTAMP`, which Python clock patching does not control. Current tests avoid the real application database, but the suite does **not yet satisfy** the stricter requirement to avoid uncontrolled current dates everywhere. Issue #166 changes only this documentation and `tests/test_student_evaluations.py`; no production logic is changed. Authentication fixtures now include PR #181 and the main US11 assertions; all distinct tests are preserved.
@@ -398,3 +398,46 @@ No previously unknown production defect was established by the baseline run: all
 | Cleanup | Temporary copy removed automatically. Original `src/app.py` remained unchanged throughout. No intentionally broken code is included. |
 
 This proves the existing boundary test detects this specific mutation; it is not a claim of a production bug fix or comprehensive mutation coverage. Completion still requires the pending tests assigned to #165–#169, resolution of the requirements/implementation discrepancies, controlled-time fixture improvements, browser/performance evidence where required, and independent teammate review. Passing baseline tests alone does not close these acceptance gaps.
+
+## US04 completed-count verification - #185 (2026-11-15)
+
+TC-US04-08/count-19, TC-37/count-20 and TC-US04-09/count-21 trace to parent
+US04 #50 through #185. Twenty is an acceptance example, not a maximum or an
+access boundary: all three cases return 200 and exactly N completed evaluations.
+The existing access-denial tests are retained without duplication.
+
+Each parameter uses the Flask client and a fresh temporary SQLite database from
+`api_client`, with the route clock frozen at T=2026-11-04T12:00:00 by
+`fixed_app_clock`. The fixture's original response is removed before seeding N
+distinct enrolled submitted students and one additional enrolled draft student.
+Lecturer 2 remains assigned to course 1. Seed timestamps are explicit: creation,
+enrollment and assignment at T-1 day, submissions at T-2 hours, deadline T+2 days;
+the draft has NULL submitted_at. Foreign keys are enabled while seeding.
+
+Every response has a rating and text answer. Assertions verify the API count,
+exactly N returned feedback entries, draft comment exclusion from both API and
+HTML, and the number attached to the HTML Completed evaluations label. Thus the
+count is checked against responses rather than answer rows.
+
+Actual local execution: Windows / Python 3.12.6 / pytest 9.0.2:
+
+```text
+python -m pytest -v tests/test_lecturer_feedback.py
+11 passed in 1.44s
+
+python -m ruff check tests/test_lecturer_feedback.py
+All checks passed!
+
+# PowerShell; installed Google Chrome used for existing browser tests
+$env:PLAYWRIGHT_CHROMIUM_EXECUTABLE = 'C:\Program Files\Google\Chrome\Application\chrome.exe'
+python -m pytest -q --cov --cov-report=term --junitxml=junit.xml
+119 passed in 75.81s (0:01:15)
+```
+
+The focused run includes three new parameter variants and all eight existing
+lecturer tests. Production code is unchanged. Results here are local execution,
+not a claimed CI result or deployed performance measurement.
+The full run on main `2cb2b05` plus this task had zero failures/errors/skips,
+including the existing access-denial, browser, 24-hour and deadline-equality
+tests. Coverage was 95% overall (including tests) and 88% for `src/app.py`.
+The separate #184 submission-boundary PR is not included in this branch.
