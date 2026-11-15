@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import sqlite3
+import stat
 from contextlib import closing
 from datetime import UTC
 
@@ -121,8 +122,13 @@ def test_online_backup_and_restore_round_trip(api_client, tmp_path, monkeypatch)
     monkeypatch.setattr(os, "open", recorded_open)
     backup_database(source, backup)
     assert creation_modes == [0o600]
-    if os.name == "posix":
-        assert backup.stat().st_mode & 0o077 == 0
+    mode = backup.stat().st_mode
+    if os.name == "nt":
+        # Windows exposes read/write attributes, not POSIX group/other permissions.
+        # This does not claim to audit Windows ACLs.
+        assert mode & stat.S_IREAD and mode & stat.S_IWRITE
+    else:
+        assert mode & 0o077 == 0
     with app_module.get_db_connection() as connection:
         connection.execute("UPDATE courses SET course_name='CHANGED' WHERE id=1")
     backup_database(backup, restored)

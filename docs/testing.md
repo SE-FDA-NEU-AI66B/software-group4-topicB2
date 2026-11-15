@@ -1,5 +1,56 @@
 # EduSurvey M4 Automated Testing
 
+**Baseline #190 audit (2026-11-15, main `686bd9e`):** fresh clone + new Python
+3.11.9/Windows environment installed `requirements-dev.txt` successfully.
+`python -m pytest -v --junitxml=junit.xml` returned **185 passed, 5 failed,
+0 skipped**. All **97 story mappings resolve and pass**; failures are additional
+runtime/database audit nodes. Runtime FK enforcement from #223 supersedes the
+earlier FK-OFF finding, and the old #189 characterization/rollback assumptions
+now fail. Historical runs below remain dated evidence. Current baseline CI is
+red; current Board access and several substantive reviews remain unresolved.
+See [commands, exact failing nodes, CI/review links and sign-off blockers](m4-review-evidence.md)
+and [machine-readable mapping check](evidence/190/mapping-audit.json).
+
+### #190 CI remediation after the baseline audit
+
+Both failed Python checks on PR #227 reproduced the same three obsolete #189
+assumptions on Linux: [PR run](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43729674333)
+and [push run](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43729613376).
+The latter reported **3 failed, 187 passed in 45.57s**. This is distinct from
+the five-failure Windows baseline archived above.
+
+The user authorized remediation of the failing checks. Production code and CI
+gates are unchanged. Real node names and their story dependencies are preserved:
+
+| Retained node / mapping | Updated verification of the #223 runtime contract |
+|---|---|
+| `tests/test_database_integrity.py::test_runtime_foreign_keys_finding` / DB-189-F01 / US11 #183, US03 #22 | Two independent runtime connections enforce FK=1; orphan insert raises IntegrityError; clean FK check and exact unchanged snapshot |
+| `tests/test_database_integrity.py::test_submission_write_failure_rolls_back[new]` / DB-189-07 / US03 #22 | Test-only trigger callback proves answer 2 fails after answer 1 was written; sanitized 503/DATABASE_UNAVAILABLE; exact snapshot rollback; normal retry persists both answers and controlled timestamp |
+| `tests/test_database_integrity.py::test_submission_write_failure_rolls_back[draft]` / DB-189-08 / US03 #22 | Same injection/503/retry checks, preserving the original draft response and answers after failure |
+| `tests/test_backend_runtime.py::test_production_config_requires_explicit_secrets_and_storage` / BE-05 / #223 | Valid absolute fixture uses tmp_path on each OS; missing/relative storage and missing/short secrets remain rejected |
+| `tests/test_backend_runtime.py::test_online_backup_and_restore_round_trip` / BE-07 / #223 | POSIX still requires private mode bits; Windows verifies exposed read/write attributes, without claiming ACL validation. Both platforms execute the entire snapshot/restore/no-overwrite workflow |
+
+No test is skipped, xfailed or removed. `python -m pytest -q
+tests/test_database_integrity.py tests/test_backend_runtime.py` returned
+**43 passed in 0.95s** on Windows/Python 3.11.9. Changed-module Ruff passed.
+The first focused attempt returned 41 passed / 2 failed because its expected
+generic 500 was incorrect: SQLite errors have the more specific sanitized
+503 handler. The final assertions retain that verified production behavior.
+
+Full local rerun (same Windows/Python 3.11.9 environment, existing Chrome):
+
+```powershell
+$env:PLAYWRIGHT_CHROMIUM_EXECUTABLE = 'C:\Program Files\Google\Chrome\Application\chrome.exe'
+& .venv/m4-env/Scripts/python.exe -m pytest -v --cov --cov-report=term-missing --junitxml=docs/evidence/190/remediation-pytest.xml
+# 190 passed in 51.40s; exit 0; zero failures/errors/skips
+```
+
+[Full rerun console](evidence/190/remediation-pytest.txt) and
+[JUnit](evidence/190/remediation-pytest.xml) are separate from the unmodified
+failing clean-clone baseline. This rerun used the working branch, not a second
+fresh environment or an independent human tester. Current PR CI must be read
+separately; the historical red-main result is not rewritten.
+
 **Backend audit contract update — 2026-11-15.**
 
 Current behavior supersedes earlier dated 401-HTML/old-message snapshots below: approved #214 uses canonical API messages, and #215 redirects anonymous protected HTML navigation to `/login` while APIs/JSON clients retain JSON 401. Existing denial scenarios and all old test IDs are retained; their HTML-only assertions are deliberately updated. Topic/ranking/statistics APIs now require assigned lecturer access. [Backend file/route map](backend.md) and [runtime handover](backend-runtime.md) explain the implementation and remaining deployment/security limits.
@@ -754,3 +805,25 @@ PLAYWRIGHT_CHROMIUM_EXECUTABLE): `python -m pytest -q --junitxml=junit.xml` ->
 existing 190 collected cases on main 686bd9e and ten new deployment cases.
 Real hosting, paid-resource approval, CI red-test gate proof, rollback and release
 verification remain pending; a local green suite does not complete #205.
+
+## #190 / PR #227 merge reconciliation with main 6acf0dd
+
+Resolved conflicts in `tests/test_backend_runtime.py` and
+`tests/test_database_integrity.py` while preserving the #205 integration and
+both sets of assertions. Backup tests retain main's requested mode-0600 check,
+POSIX effective permissions and Windows read/write attributes, plus the full
+restore/no-overwrite workflow. FK tests retain both the immediate and fresh
+connection checks and the exact unchanged snapshot. Rollback tests retain the
+trigger callback, sanitized 503, exact draft/new snapshot restoration and retry.
+No test node, production behavior or approval policy is removed or bypassed.
+
+Focused Windows/Python 3.11.9 verification:
+`python -m pytest -q tests/test_backend_runtime.py tests/test_database_integrity.py`
+returned **43 passed in 1.23s**; Ruff on both files and `git diff --check` passed.
+
+Full run with the same installed Chrome override:
+`python -m pytest -v --junitxml=docs/evidence/190/merge-pytest.xml` returned
+**200 passed in 62.73s**, zero failures/errors/skips (190 retained + 10 merged
+deployment cases). [Console](evidence/190/merge-pytest.txt) and
+[JUnit](evidence/190/merge-pytest.xml) retain this integration result separately
+from both earlier 190-case remediation and the original failing baseline.
