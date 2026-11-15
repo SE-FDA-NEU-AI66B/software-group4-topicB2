@@ -179,7 +179,8 @@ Use the student or lecturer demo accounts documented in the setup guide.
 | [Setup Guide](docs/SETUP.md) | Installation and application setup |
 | [UI Documentation](docs/ui.md) | M3 screens, routes, wireframes, and UI states |
 | [Deployment handover](docs/deployment.md) | Proposed Render setup, green gate, costs and pending public-release evidence |
-| [Health and monitoring operations](docs/operations.md) | Database readiness, sanitized logs, metric calculations and pending live evidence |
+| [M5 operations handover](docs/operations.md) | Six-section release, CI, monitoring, risks, maintenance and lessons; outstanding sign-off clearly marked |
+| [Detailed health and monitoring contract](docs/monitoring.md) | Preserved #206 log schema, metric calculations and historical local evidence |
 
 ## Backend
 
