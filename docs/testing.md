@@ -8,7 +8,7 @@ Evidence reviewed on 2026-11-15: original M4 documentation (#164), US01 tests (#
 |---|---|---|---|
 | Services / business logic | Status precedence, deadlines, topic classification; submission validation inside route functions | Unit tests in `test_status.py` and `test_feedback_classifier.py`; equivalence partitions and boundary analysis through API tests | Most business logic remains in `src/app.py`, rather than separate service classes. The standalone status helper and route duplicate logic, so both require coverage. |
 | Repository / database | Response and answer uniqueness, submission timestamp storage, queries excluding drafts and unrelated evaluations | In-memory SQLite schema tests; integration tests against `tmp_path` databases | Protects integrity and feedback accuracy. SQL is primarily inline in routes; no general repository abstraction exists. Foreign keys are enabled in schema tests; production `get_db_connection()` does not explicitly enable them, so full runtime FK enforcement is not established. |
-| Flask routes / API | Authentication, student role/enrollment, required answers, deadlines, duplicates, lecturer ownership and logout | Flask test client; temporary databases; positive/negative partitions and fixed-time boundary tests where implemented | Exercises request, session, validation and SQL together without starting a server. Successful submission persistence and exact expiry boundaries are now covered by the US03 workflow tests; rating/text numerical boundaries remain pending. |
+| Flask routes / API | Authentication, student role/enrollment, required answers, deadlines, duplicates, lecturer ownership and logout | Flask test client; temporary databases; positive/negative partitions and fixed-time boundary tests where implemented | Exercises request, session, validation and SQL together without starting a server. Successful submission persistence and exact expiry boundaries are now covered by the US03 workflow tests; rating/text numerical boundaries are covered by #184. |
 | User interface | HTML roles plus student P0 navigation, persisted completion and visible sign-out | Flask rendering tests and real Playwright Chromium checks at phone/laptop widths | #201 adds 9 browser variants on isolated SQLite and a fixed app clock; see [P0 UI evidence](p0-student-navigation.md). Public deployment timing, full accessibility and copied-cookie revocation remain pending. |
 
 Authentication and authorization receive priority because a role or course-ownership error could expose student feedback. Submission validation, exact deadlines and duplicate prevention protect irreversible response data; database constraints and lecturer filtering provide additional safeguards. A green suite demonstrates only its assertions, not complete acceptance-criteria coverage.
@@ -49,9 +49,9 @@ For new tests, use a separate temporary SQLite database per case, load `src/sche
 | TC-24 | US03 | Fresh response; open evaluation; frozen T; deadline=T+2 days; required rating_value=4 | 201; rating persisted unchanged | Boundary |
 | TC-25 | US03 | Fresh response; open evaluation; frozen T; deadline=T+2 days; required rating_value=5 | 201; rating persisted unchanged | Boundary |
 | TC-26 | US03 | Fresh response; open evaluation; frozen T; deadline=T+2 days; required rating_value=6 | 400; INVALID_RATING; "Rating must be an integer between 1 and 5." | Boundary |
-| TC-27 | US03 | Fresh response; required rating=5; optional text question 2; text_value="a" repeated 1999 times; future deadline at frozen T | 201; text of length 1999 persisted | Boundary |
-| TC-28 | US03 | Fresh response; required rating=5; optional text question 2; text_value="a" repeated 2000 times; future deadline at frozen T | 201; text of length 2000 persisted | Boundary |
-| TC-29 | US03 | Fresh response; required rating=5; optional text question 2; text_value="a" repeated 2001 times; future deadline at frozen T | 400; TEXT_TOO_LONG; "Text answers cannot exceed 2000 characters." | Boundary |
+| TC-27 | US03 | Fresh response; required rating=5; optional text question 2; text_value=whitespace + "a" repeated 1999 times + whitespace; future deadline at frozen T | 201; text of length 1999 persisted | Boundary |
+| TC-28 | US03 | Fresh response; required rating=5; optional text question 2; text_value=whitespace + "a" repeated 2000 times + whitespace; future deadline at frozen T | 201; text of length 2000 persisted | Boundary |
+| TC-29 | US03 | Fresh response; required rating=5; optional text question 2; text_value=whitespace + "a" repeated 2001 times + whitespace; future deadline at frozen T | 400; TEXT_TOO_LONG; "Text answers cannot exceed 2000 characters." | Boundary |
 | TC-30 | US03 | Exactly 5 required rating questions; answer 4 with rating=3; fresh response; deadline=T+2 days at frozen T | 400; MISSING_REQUIRED_ANSWERS; no response persisted | Error |
 | TC-31 | US03 | Exactly 5 required rating questions; answer 5 with rating=3; fresh response; deadline=T+2 days at frozen T | 201; exactly one submitted response with 5 answers | Normal |
 | TC-32 | US04 | Lecturer 2 assigned to course 1; GET /api/courses/1/feedback; one submitted response, rating=5 and comment="The course content was very useful." | 200; completed_evaluations=1; returned rating and text match | Normal |
@@ -121,7 +121,7 @@ For new tests, use a separate temporary SQLite database per case, load `src/sche
 | TC-US04-08 | US04 | Assigned lecturer; 19 distinct submitted responses and one draft; frozen time | 200; completed_evaluations=19; draft excluded; consistent HTML count | Normal |
 | TC-US04-09 | US04 | Assigned lecturer; 21 distinct submitted responses and one draft; frozen time | 200; completed_evaluations=21; draft excluded; consistent HTML count | Normal |
 
-The US02 fixture freezes the route clock before creating data at T=2026-11-03T12:00:00. The Due soon rule is strictly less than 24 hours; tests now check 86399, 86400 and 86401 seconds remaining separately. Deadline equality is Closed; additional tests check T-1s, T and T+1s. Rating boundaries and submission examples below belong to pending US03 work. Five required answers and 20 completed responses are acceptance examples, not implementation maxima.
+The US02 fixture freezes the route clock before creating data at T=2026-11-03T12:00:00. The Due soon rule is strictly less than 24 hours; tests now check 86399, 86400 and 86401 seconds remaining separately. Deadline equality is Closed; additional tests check T-1s, T and T+1s. Rating boundaries and the five-required-answer submission example below are covered by #184. Five required answers and 20 completed responses are acceptance examples, not implementation maxima.
 
 [The PO-reviewed #188 contract matrix](p0-acceptance-review.md) records the comparison, approved targets, exact future test IDs/nodes, responsible owners, dependencies and diagnostic evidence. Login/duplicate messages must retain the requirements' canonical wording in a future implementation; only the `Due soon` documentation spelling is normalized here after explicit PO approval. Browser logout/protected-HTML navigation must lead to login while APIs retain 200/401 JSON. Browser controls/navigation from #201 are now merged via #218; backend changes #214/#215 and the remaining lecturer work #202 are separate; copied-cookie revocation remains a separate unresolved decision under #216. The inclusive <=3,000ms budget measures a visible browser outcome including navigation; local Flask timings and whole-suite runtime are not deployed/browser acceptance evidence.
 
@@ -199,17 +199,17 @@ All existing mappings below are API integration tests using temporary SQLite dat
 | TC-18 | `test_submission_deadline_boundary[TC-US03-09-after]` | `tests/test_submission_workflow.py` | API / SQLite integration | Expected as Section 2; PASS in verified #172 run below | #167 |
 | TC-19 | `test_submission_deadline_boundary[TC-US03-08-at]` | `tests/test_submission_workflow.py` | API / SQLite integration | Expected as Section 2; PASS in verified #172 run below | #167 |
 | TC-20 | `test_submission_deadline_boundary[TC-US03-07-before]` | `tests/test_submission_workflow.py` | API / SQLite integration | Expected as Section 2; PASS in verified #172 run below | #167 |
-| TC-21 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-0]` (proposed, not an existing function) | #184 |
-| TC-22 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-1]` (proposed, not an existing function) | #184 |
-| TC-23 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-2]` (proposed, not an existing function) | #184 |
-| TC-24 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-4]` (proposed, not an existing function) | #184 |
-| TC-25 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-5]` (proposed, not an existing function) | #184 |
-| TC-26 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-6]` (proposed, not an existing function) | #184 |
-| TC-27 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_text_length_boundaries[length-1999]` (proposed, not an existing function) | #184 |
-| TC-28 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_text_length_boundaries[length-2000]` (proposed, not an existing function) | #184 |
-| TC-29 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_text_length_boundaries[length-2001]` (proposed, not an existing function) | #184 |
-| TC-30 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_required_question_count[answered-4]` (proposed, not an existing function) | #184 |
-| TC-31 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_required_question_count[answered-5]` (proposed, not an existing function) | #184 |
+| TC-21 | `test_submission_rating_boundaries[rating-0]` | `tests/test_submission_workflow.py` | API / SQLite integration | Section 2 expectation; PASS in verified #184 run below | #184 / parent US03 #22 |
+| TC-22 | `test_submission_rating_boundaries[rating-1]` | `tests/test_submission_workflow.py` | API / SQLite integration | Section 2 expectation; PASS in verified #184 run below | #184 / parent US03 #22 |
+| TC-23 | `test_submission_rating_boundaries[rating-2]` | `tests/test_submission_workflow.py` | API / SQLite integration | Section 2 expectation; PASS in verified #184 run below | #184 / parent US03 #22 |
+| TC-24 | `test_submission_rating_boundaries[rating-4]` | `tests/test_submission_workflow.py` | API / SQLite integration | Section 2 expectation; PASS in verified #184 run below | #184 / parent US03 #22 |
+| TC-25 | `test_submission_rating_boundaries[rating-5]` | `tests/test_submission_workflow.py` | API / SQLite integration | Section 2 expectation; PASS in verified #184 run below | #184 / parent US03 #22 |
+| TC-26 | `test_submission_rating_boundaries[rating-6]` | `tests/test_submission_workflow.py` | API / SQLite integration | Section 2 expectation; PASS in verified #184 run below | #184 / parent US03 #22 |
+| TC-27 | `test_submission_text_length_boundaries[length-1999]` | `tests/test_submission_workflow.py` | API / SQLite integration | Section 2 expectation; PASS in verified #184 run below | #184 / parent US03 #22 |
+| TC-28 | `test_submission_text_length_boundaries[length-2000]` | `tests/test_submission_workflow.py` | API / SQLite integration | Section 2 expectation; PASS in verified #184 run below | #184 / parent US03 #22 |
+| TC-29 | `test_submission_text_length_boundaries[length-2001]` | `tests/test_submission_workflow.py` | API / SQLite integration | Section 2 expectation; PASS in verified #184 run below | #184 / parent US03 #22 |
+| TC-30 | `test_submission_required_question_count[answered-4]` | `tests/test_submission_workflow.py` | API / SQLite integration | Section 2 expectation; PASS in verified #184 run below | #184 / parent US03 #22 |
+| TC-31 | `test_submission_required_question_count[answered-5]` | `tests/test_submission_workflow.py` | API / SQLite integration | Section 2 expectation; PASS in verified #184 run below | #184 / parent US03 #22 |
 | TC-32 | `test_lecturer_can_retrieve_course_feedback` | `tests/test_smoke.py` | API integration / normal | Section 2 expectation; existing assertions PASS | #168 |
 | TC-33 | `test_lecturer_cannot_access_unassigned_course` | `tests/test_smoke.py` | API integration / error | Section 2 expectation; existing assertions PASS | #168 |
 | TC-34 | `test_student_cannot_access_lecturer_feedback` | `tests/test_smoke.py` | API integration / error | Section 2 expectation; existing assertions PASS | #168 |
@@ -277,13 +277,13 @@ All existing mappings below are API integration tests using temporary SQLite dat
 | TC-US04-08 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_lecturer_feedback.py::test_feedback_completed_count[count-19]` (proposed, not an existing function) | #185 |
 | TC-US04-09 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_lecturer_feedback.py::test_feedback_completed_count[count-21]` (proposed, not an existing function) | #185 |
 
-Traceability totals: **97 cases; 83 mapped to existing tests; 14 NOT IMPLEMENTED**. The US02 matrix maps its 21 collected pytest items, including the implemented three-active-evaluation acceptance case. US01 mappings include #181, and the nine original US11 IDs are preserved.
+Traceability totals: **97 cases; 94 mapped to existing tests; 3 NOT IMPLEMENTED**. The US02 matrix maps its 21 collected pytest items, including the implemented three-active-evaluation acceptance case. US01 mappings include #181, and the nine original US11 IDs are preserved.
 
 | Story | Documented cases | Existing mappings | Pending |
 |---|---:|---:|---:|
 | US01 | 16 | 16 | 0 |
 | US02 | 21 | 21 | 0 |
-| US03 | 28 | 17 | 11 |
+| US03 | 28 | 28 | 0 |
 | US04 | 19 | 16 | 3 |
 | US11 | 13 | 13 | 0 |
 
@@ -387,7 +387,7 @@ Latest #217 integration verification against main `2b644c7` after #213/#218 merg
 
 - #165 completed: authentication fixtures load the real schema into a per-test temporary database; the three demo identities/password match `src/init_db.py`. They do not run the initializer or access the application database. TESTING and SECRET_KEY changes are restored by monkeypatch. TC-01–TC-04 and US01-A01–A12 verify all three roles, credentials, exact credential-error messages, anonymous page/API restrictions, session persistence/isolation/replacement and deleted-account invalidation. Unsupported-role login is not tested because the actual schema rejects unsupported roles; performance and the requirement-message discrepancy remain outside this task.
 - #166 completed: the list fixture loads the real schema into a fresh `tmp_path` SQLite database, freezes the application clock before seeding, supplies explicit fixture timestamps, and restores Flask configuration with monkeypatch. Twenty individually traceable items cover retrieval, anonymous/role denial, disjoint enrollment and query impersonation attempts, personal completion status, empty lists, all four display statuses, draft states, completion precedence, and both exact time boundaries. Authentication is injected through `session_transaction()` to isolate US02; credential login remains US01. The retrieval case checks three total evaluations including closed, not three active evaluations.
-- #167 integrated: successful persistence, rejection without writes, duplicate immutability and exact deadline boundaries now have real workflow tests and frozen time. Rating/text numerical boundaries, five-required-question acceptance examples and transaction-failure injection remain pending. Existing smoke rejection tests remain intact.
+- #167 integrated: successful persistence, rejection without writes, duplicate immutability and exact deadline boundaries now have real workflow tests and frozen time. Rating/text numerical boundaries and the five-required-question acceptance example are covered by #184; transaction-failure injection remains pending. Existing smoke rejection tests remain intact.
 - #168 integrated: retain all eight lecturer-page tests, including ownership denial for an existing evaluation (403), nonexistent evaluation (404), anonymous/student restrictions, draft exclusion, submitted ratings/comments and completed counts. Existing course-feedback API tests remain intact. The exactly-20-response acceptance example and broader statistics/topic access control are not established by these tests.
 - #169 integrated: retain logout success, session clearing, post-logout `/api/auth/me` denial, anonymous logout and duplicate-email coverage and all nine legacy IDs. TC-39/40/41 (#186) now verify role-specific current-session denial and repeated anonymous logout. Server HTML redirects and saved-cookie replay remain separate pending contracts; browser logout navigation has #201 evidence. Flask uses a signed client-side cookie and logout calls `session.clear()`; server-side revocation of a copied old cookie is not demonstrated. Shared app configuration is changed by fixtures without comprehensive restoration; centralize isolated fixtures and freeze both Python time and SQL timestamps where assertions depend on time.
 
@@ -442,3 +442,50 @@ No previously unknown production defect was established by the baseline run: all
 | Cleanup | Temporary copy removed automatically. Original `src/app.py` remained unchanged throughout. No intentionally broken code is included. |
 
 This proves the existing boundary test detects this specific mutation; it is not a claim of a production bug fix or comprehensive mutation coverage. Completion still requires the pending tests assigned to #165–#169, resolution of the requirements/implementation discrepancies, controlled-time fixture improvements, browser/performance evidence where required, and independent teammate review. Passing baseline tests alone does not close these acceptance gaps.
+
+## US03 boundary verification - #184 (2026-11-15)
+
+TC-21 through TC-31 trace to parent US03 #22 through #184. They extend the existing
+#167 persistence/deadline baseline without duplicating those tests. Each parameter
+uses a fresh temporary SQLite database, an enrolled student, an open evaluation,
+frozen T=2026-11-03T12:00:00 and deadline T+2 days. Text cases use an optional
+text question with surrounding whitespace; assertions verify the exact trimmed
+text at 1999/2000 characters. Rejected rating/text/missing-answer cases preserve
+both response and answer counts. The five-question cases seed exactly five
+required ratings; the successful case verifies one submitted response and all
+five exact answers. Five is an acceptance example, not a maximum.
+
+Actual local execution: Windows, Python 3.12.6, pytest 9.0.2:
+
+```text
+python -m pytest -v tests/test_submission_workflow.py
+20 passed in 2.66s
+
+python -m ruff check tests/test_submission_workflow.py
+All checks passed!
+
+# PowerShell; installed Google Chrome used for the existing browser tests
+$env:PLAYWRIGHT_CHROMIUM_EXECUTABLE = 'C:\Program Files\Google\Chrome\Application\chrome.exe'
+python -m pytest -q --cov --cov-report=term --junitxml=junit.xml
+127 passed in 79.87s (0:01:19)
+```
+
+The workflow run includes all 11 new parameter variants and all 9 existing
+workflow cases, including rejection at deadline equality. The initial sandboxed
+attempt could not access pytest's temporary directory and produced 20 setup
+errors; the successful run above used normal access to the temporary directory.
+No failing tests were skipped and production code was unchanged.
+The full run had zero failures/errors/skips and preserved the existing US02
+24-hour boundaries and US03 deadline-equality behavior. Coverage reported 95%
+overall (including tests) and 89% for `src/app.py`; this is local execution,
+not a claimed CI result or deployed performance measurement.
+
+### #184 merge verification against main 33cc07d
+
+Preserved the #202 lecturer UI evidence and #186 logout mappings while retaining
+all 11 US03 boundary variants. Traceability totals include #184 and #186; the
+separate #185 PR is not included. Windows/Python 3.12.6, same Chrome executable
+setting above: `python -m pytest -q --junitxml=junit.xml` ->
+**139 passed in 131.68s**, no skips. Changed-module Ruff and `git diff --check`
+passed. No production code or submission/deadline assertions were changed by
+this conflict resolution.
