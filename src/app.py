@@ -3,7 +3,7 @@ from pathlib import Path
 import sqlite3
 from datetime import datetime, timedelta
 
-from flask import Flask, render_template, jsonify, request, session
+from flask import Flask, render_template, jsonify, request, session, make_response
 from werkzeug.security import check_password_hash
 from functools import wraps
 import os
@@ -469,7 +469,40 @@ def get_lecturer_course_feedback(course_id):
         connection.close()
 
 
+def lecturer_page_response(view):
+    """Present lecturer-page errors as HTML to browsers, retaining HTTP/API contracts."""
+    @wraps(view)
+    def wrapped(*args, **kwargs):
+        wants_html = (
+            request.accept_mimetypes.best_match(["text/html", "application/json"]) == "text/html"
+            and "text/html" in request.headers.get("Accept", "")
+        )
+        try:
+            response = make_response(view(*args, **kwargs))
+        except sqlite3.Error:
+            if not wants_html:
+                raise
+            app.logger.exception("Unable to load lecturer feedback")
+            response = make_response(render_template(
+                "lecturer_feedback.html",
+                error_message="Feedback is temporarily unavailable.",
+                error_kind="unavailable",
+            ), 503)
+        if wants_html and response.is_json and response.status_code in (401, 403):
+            error = response.get_json()["error"]
+            response.set_data(render_template(
+                "lecturer_feedback.html",
+                error_message=error["message"],
+                error_kind="sign-in" if response.status_code == 401 else "role",
+            ))
+            response.content_type = "text/html; charset=utf-8"
+        response.headers["Cache-Control"] = "no-store"
+        return response
+    return wrapped
+
+
 @app.route("/lecturer/feedback")
+@lecturer_page_response
 @login_required(roles=["lecturer"])
 def lecturer_feedback_list():
     """List evaluations belonging to courses assigned to this lecturer."""
@@ -517,6 +550,7 @@ def lecturer_feedback_list():
     )
 
 @app.route("/lecturer/feedback/<int:evaluation_id>")
+@lecturer_page_response
 @login_required(roles=["lecturer"])
 def lecturer_feedback_detail(evaluation_id):
     """Show submitted ratings and written feedback for an assigned course."""

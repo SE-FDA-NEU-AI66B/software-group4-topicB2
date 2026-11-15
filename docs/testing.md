@@ -141,6 +141,18 @@ All browser cases below use isolated SQLite data and fixed application time. The
 | M5-UI04 | US03 #22, US11 #183 | Expiry at exactly T after opening rejects submit without writes; failed logout explains recovery and can be retried. |
 | M5-UI05 | US02 #18, US03 #22 | Closed/unenrolled evaluation cannot be opened after a stale list; UI explains failure and provides a working list link. |
 
+### M5 #202 lecturer browser cases (US04 #50)
+
+The existing lecturer routes/template now provide useful HTML errors, recovery links, empty states and responsive feedback navigation. APIs retain JSON denials and ownership/submitted-only SQL rules. New cases use the same isolated browser fixture as #201, with frozen domain time.
+
+| Case ID | Scenario | Expected result |
+|---|---|---|
+| M5-L01 / M5-L02 / P0C-07 | Lecturer logs in, opens assigned feedback, reloads, returns and signs out; phone/laptop + keyboard | Correct counts, ratings/comments; draft/foreign feedback absent; persisted output; logout reaches login and protected requests are 401. Long/HTML-like comments wrap and remain escaped text. |
+| M5-L03 | Assigned evaluation with zero responses, then no assignments | Distinct helpful empty states, count 0, working refresh and assignment guidance. |
+| M5-L04 | Existing unassigned evaluation / nonexistent evaluation | 403 with exact permission message / 404; no foreign feedback/title; working return-to-list link. |
+| M5-L05 | Anonymous, student and administrator open lecturer detail in browser | Safe HTML 401/403 with sign-in/account recovery; JSON page clients and APIs keep JSON denials; no feedback disclosed. |
+| M5-L06 | SQLite error while loading lecturer page | Safe 503 explanation with retry; no internal DB detail disclosed; retry succeeds after restoring DB. |
+
 ## 3. Automated tests
 
 From the repository root, use Python 3.12 (the CI version; the setup guide currently suggests 3.14):
@@ -377,6 +389,20 @@ All nodes below are in `tests/test_p0_browser_contracts.py`:
 | M5-UI05 | `test_open_evaluation_error_explains_next_action[closed]`, `test_open_evaluation_error_explains_next_action[unenrolled]` |
 
 Local 2026-11-15: `PLAYWRIGHT_CHROMIUM_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' python -m pytest -q --cov --cov-report=term --junitxml=/private/tmp/201-junit.xml` → **115 passed, 214 warnings in 29.67s**, no skips. Existing 106 tests are preserved. SQLite ResourceWarnings on Python 3.14 and pre-existing app lint findings are not resolved by this frontend task. The successful run preceded a node-only rename of the combined walkthrough to the approved P0C-07 proposal `test_logout_navigates_to_login`; assertions are unchanged. CI verifies the final node names separately. See [setup, environment, screenshots and limits](p0-student-navigation.md). Pytest elapsed time is not acceptance timing evidence; public browser timing, redirects #215 and replay revocation #216 retain their pending status.
+
+### #202 mapping and verified execution
+
+All nodes are in `tests/test_p0_browser_contracts.py`; existing mappings above are unchanged.
+
+| Case IDs | Actual node suffixes |
+|---|---|
+| M5-L01, M5-L02, P0C-07 | `test_lecturer_feedback_click_through[laptop]`, `[phone]` |
+| M5-L03 | `test_lecturer_feedback_empty_states` |
+| M5-L04 | `test_lecturer_feedback_access_error_recovery[/lecturer/feedback/2-403]`, `[/lecturer/feedback/999-404]` |
+| M5-L05 | `test_lecturer_feedback_wrong_role_browser_errors[anonymous]`, `[student]`, `[administrator]` |
+| M5-L06 | `test_lecturer_feedback_unavailable_retry` |
+
+2026-11-15 local command: `PLAYWRIGHT_CHROMIUM_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' P0_SCREENSHOT_DIR=/private/tmp/p0-202-screenshots python -m pytest -q` → **125 passed in 49.21s**, no skips (116 retained + 9 new variants). After a final empty-answer guidance clarification, `python -m pytest -q tests/test_lecturer_feedback.py` → **8 passed in 0.08s**. [Lecturer evidence](p0-lecturer-feedback.md) records environment, seeded-account walkthroughs, screenshots and limits. Public deployment/physical phone/timing remain pending; pytest duration is not a performance measurement. #202 introduces browser HTML error presentation at unchanged denial statuses, not #215's future redirects or #216's cookie revocation.
 
 ## 4. What the tests found
 
