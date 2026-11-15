@@ -1189,3 +1189,31 @@ $env:PLAYWRIGHT_CHROMIUM_EXECUTABLE='C:\Program Files\Google\Chrome\Application\
 remain historical evidence. `git diff --check` passed. This merge does not
 apply administrator rules, grant approval, certify a provider release or
 replace the outstanding administrator/release handoff.
+
+## US05 grouped feedback interface — #27 (2026-11-16)
+
+Parent story #26; frontend integration reuses the existing lecturer detail and authorized topic API. This P1 register is separate from the P0/M4 matrix above; no prior case IDs/results are renumbered or removed. Fixtures use the shared real Chromium/Flask loopback server, temporary SQLite and fixed application clock `2026-11-04T12:00:00`. New seeded data has five submitted written answers in four categories (two Course Content), plus draft and foreign-evaluation comments that must be excluded. An optional sixth unclassified, long/HTML-like answer exercises Other and safe text rendering.
+
+All new nodes are in `tests/test_p0_browser_contracts.py`:
+
+| Case ID | Actual node | Expected and verified outcome |
+|---|---|---|
+| US05-UI01/02 | `test_grouped_feedback_four_topics[laptop]`, `[phone]` | Real login/list/detail navigation; exactly 4 populated topic cards, 5 comments total, Content count 2 / 40%, all 4 categories' comments; keyboard expand/collapse, reload persistence and no horizontal overflow. No draft/foreign comments. |
+| US05-UI03 | `test_grouped_feedback_other_is_safe_text` | Other preserves the unmatched comment, total 6 comments/5 groups; long/HTML-like text remains escaped and wraps. |
+| US05-UI04 | `test_grouped_feedback_empty` | No submitted comments gives 0 groups, exact 0 comments/0 topics and useful empty guidance; existing US04 empty state remains. |
+| US05-UI05 | `test_grouped_feedback_error_and_retry[network]`, `[invalid-data]`, `[forbidden]` | Network/payload failures never masquerade as empty success. The forbidden variant deletes the real lecturer assignment before the API request, verifies the actual 403 message, then restores assignment; retry loads four real groups with correct totals. |
+| US05-UI06 | `test_grouped_feedback_expired_session` | Intercepted API 401 verifies component navigation to login with no groups. Actual API authentication/ownership remains covered by existing backend cases. |
+
+Local verification: macOS arm64, Python 3.14.8, Flask 3.1.2, Playwright 1.65.2, Chrome 157.0.8103.78; phone 390×844 and laptop 1440×900. Based on main `9c5d55c`.
+
+```text
+PLAYWRIGHT_CHROMIUM_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' P0_SCREENSHOT_DIR=/private/tmp/us05-27-screenshots python -m pytest -qx tests/test_p0_browser_contracts.py -k grouped_feedback
+8 passed, 18 deselected in 25.18s
+
+PLAYWRIGHT_CHROMIUM_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' python -m pytest -q
+265 passed in 80.57s
+```
+
+The forbidden variant was then strengthened from a presentation-only 403 interception to real assignment loss/restoration; focused rerun: **1 passed in 3.38s**. CI verifies the final tree. Whole-repository `ruff check .` and `git diff --check` pass. There are 257 retained baseline items plus 8 added variants, no skips. The existing US04 script-injection assertion now checks that no inline script exists rather than hard-coding one script tag, since the topic component introduces a second legitimate external script. The original XSS, ownership, filtering, session, P0 and operations scenarios are retained.
+
+The first full collection attempt identified missing PyYAML in the reused local venv; installing the current committed requirements resolved it. No test was skipped to bypass the dependency. Screenshots in [ui.md](ui.md) were captured through real local interactions and visually inspected. Public deployment/physical mobile, browser timing, classification accuracy, copied-cookie revocation and a full accessibility audit are not established by these checks.
