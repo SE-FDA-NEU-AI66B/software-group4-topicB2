@@ -1,0 +1,26 @@
+[
+  {
+    "file": "student-before-laptop.png",
+    "commit": "5a52af698d4ddf1662af0516f86a1878e35c2fd6",
+    "route": "/evaluations",
+    "status": 200,
+    "viewport": [
+      1440,
+      900
+    ],
+    "horizontal_overflow": false,
+    "sha256": "7e8421ecd40a3bbb8a77e3fa98f8aac4966f04db34b0e9e314f19bdc1393bda3"
+  },
+  {
+    "file": "student-before-phone.png",
+    "commit": "5a52af698d4ddf1662af0516f86a1878e35c2fd6",
+    "route": "/evaluations",
+    "status": 200,
+    "viewport": [
+      390,
+      844
+    ],
+    "horizontal_overflow": false,
+    "sha256": "e7d4bbda054b9f757ba83c6f0a8d0a3b497f7960d843bcff7584fd0c8a55b1ea"
+  }
+]
