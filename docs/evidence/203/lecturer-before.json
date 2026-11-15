@@ -1,0 +1,26 @@
+[
+  {
+    "file": "lecturer-before-laptop.png",
+    "commit": "2cb2b05496444858ae712db6ac98f4c88803a0e7",
+    "route": "/lecturer/feedback/2",
+    "status": 403,
+    "viewport": [
+      1440,
+      900
+    ],
+    "horizontal_overflow": false,
+    "sha256": "056d75918a801c5f20456e40a691354fbd22894349358f1986054011c6d6eb03"
+  },
+  {
+    "file": "lecturer-before-phone.png",
+    "commit": "2cb2b05496444858ae712db6ac98f4c88803a0e7",
+    "route": "/lecturer/feedback/2",
+    "status": 403,
+    "viewport": [
+      390,
+      844
+    ],
+    "horizontal_overflow": false,
+    "sha256": "895c54f7784c3e5236aa4b01680b44624d9f87cf690bc21b1554c1a2fc20869f"
+  }
+]
