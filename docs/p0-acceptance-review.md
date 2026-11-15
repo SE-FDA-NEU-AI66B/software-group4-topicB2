@@ -35,15 +35,15 @@ Two measurements must never be substituted for each other:
 
 No production service, transport profile or browser run is assumed to exist yet. Instrumentation under #206 and deployment under #205 precede the final browser measurements. Do not change runtime authentication, reduce password hashing, loosen deadlines or skip validation to improve timing.
 
-## Future test register
+## Target test register
 
-All **target assertions below remain NOT IMPLEMENTED / NOT RUN**. P0C-01/02 name existing functional nodes whose current message expectations must be updated in a future implementation PR; all other named functions are proposed. Reuse those existing credential cases rather than duplicate them. Select browser tooling in a separate implementation task; a proposed browser file does not imply a dependency is installed. Fixed-time and SQLite isolation apply to functional tests; real latency uses the monotonic performance clock, not a mocked duration asserted as observed speed.
+At the original review baseline, all target assertions below were **NOT IMPLEMENTED / NOT RUN**. Integration update after #218: **P0C-03, P0C-04 and P0C-07 are now implemented** in `tests/test_p0_browser_contracts.py` and verified through real local Chromium; see [the current browser mappings and results](testing.md). These functional checks do not establish deployed timing, server HTML redirects or cookie replay revocation. All remaining target assertions below retain their pending status. P0C-01/02 name existing functional nodes whose current message expectations must be updated in a future implementation PR; other named functions remain proposed except the three implemented browser nodes identified above. Reuse those existing credential cases rather than duplicate them. Select browser tooling in a separate implementation task; a proposed browser file does not imply a dependency is installed. Fixed-time and SQLite isolation apply to functional tests; real latency uses the monotonic performance clock, not a mocked duration asserted as observed speed.
 
 | New ID | Proposed exact pytest node | Expected behavior after approval | Owner / dependency |
 |---|---|---|---|
 | P0C-01 | `tests/test_auth.py::test_login_wrong_password` (existing node; target assertion pending) | 401 / INVALID_CREDENTIALS and exact `Invalid email or password.`; no authenticated session | Duc Anh; #214 |
 | P0C-02 | `tests/test_auth.py::test_login_unknown_email` (existing node; target assertion pending) | Same response as P0C-01; no email enumeration | Duc Anh; #214 |
-| P0C-03 | `tests/test_p0_browser_contracts.py::test_login_error_visible_message` | Wrong credentials visibly show exact required message | Trung; current JS supports text, browser test absent; #201 |
+| P0C-03 | `tests/test_p0_browser_contracts.py::test_login_error_visible_message` | Wrong credentials visibly show exact required message | Trung; implemented by #201 / merged #218; current mapping in testing.md |
 | P0C-04 | `tests/test_p0_browser_contracts.py::test_due_soon_label_and_filter` | API/card/filter/counter use `Due soon`; existing 24h API boundary tests remain | Trung; approved D02 / #201 |
 | P0C-05 | `tests/test_submission_workflow.py::test_duplicate_submission_canonical_message` | 409 / DUPLICATE_SUBMISSION and exact required completed message; saved response/answers unchanged | Duc Anh; #214 |
 | P0C-06 | `tests/test_submission_workflow.py::test_duplicate_questions_canonical_message` | Reopening a submitted evaluation's questions returns matching 409/code/message | Duc Anh; #214 |
@@ -99,3 +99,7 @@ Execution dependencies and single responsible owners:
 - #205/#206/#210: deployment/instrumentation and real browser evidence; no final host/device/network acceptance profile is fabricated.
 
 The review/planning work is ready for independent review: five contract discrepancies are documented, PO decisions are explicit, exact future test IDs/nodes and owner/dependencies exist, and local evidence is reproducible. Runtime implementation, revocation policy and deployed timing remain visibly pending in their own tasks; closing the review issue does not close those implementation/security criteria.
+
+## Integration with merged M5 UI
+
+Main `2b644c7` includes #213 and #218. The source-only navigation findings above describe the original diagnostic baseline: #218 has since corrected role landings, added persisted submission receipts and visible logout navigation. P0C-03/04/07 now have real browser nodes. Preserve the original latency samples and copied-cookie observation as dated evidence; no measurement is silently regenerated, and #214/#215/#216 plus deployment timing remain separate.

@@ -14,6 +14,7 @@
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/evaluations.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/session.css') }}">
 </head>
 
 <body>
@@ -74,6 +75,7 @@
                 </div>
 
                 <div class="topbar-right">
+                    {% include "session_controls.html" %}
                     <span class="portal-indicator">
                         <span class="online-dot"></span>
                         Student Portal
@@ -255,5 +257,6 @@
         src="{{ url_for('static', filename='js/evaluations.js') }}"
         defer
     ></script>
+<script src="{{ url_for('static', filename='js/session.js') }}" defer></script>
 </body>
 </html>

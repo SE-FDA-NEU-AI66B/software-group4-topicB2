@@ -216,3 +216,22 @@ After activating the virtual environment, install the development and testing de
 
 ```bash
 python -m pip install -r requirements-dev.txt
+
+python -m playwright install chromium
+```
+
+On Linux, install browser system dependencies with `python -m playwright install --with-deps chromium` (requires system package permissions). CI runs this automatically. Browser tests start their own loopback server and temporary SQLite database; do not run the application or initialize the real database for pytest.
+
+```bash
+python -m pytest -v
+```
+
+To use an existing Chromium/Chrome installation instead of downloading a browser, set `PLAYWRIGHT_CHROMIUM_EXECUTABLE` to its executable path. This is optional; CI uses Playwright's managed Chromium.
+
+### 10.2 Disposable student demo
+
+```bash
+python tools/run_student_demo.py
+```
+
+Open `http://127.0.0.1:5000/`. The sign-in page documents the seeded student, lecturer and administrator accounts. This tool creates a temporary database, opens one evaluation for seven days, and removes that data when stopped with Ctrl+C. Responses persist across navigation/reloads while that process runs. It never writes `data/edusurvey.db`; it is a local development demo, not the public deployment/production database configuration. See [the walkthrough and verification evidence](p0-student-navigation.md).

@@ -181,11 +181,15 @@ Use the student or lecturer demo accounts documented in the setup guide.
 
 ## Testing
 
-Run the automated test suite:
+Run the automated test suite, including the Chromium UI checks:
 
 ```bash
+python -m pip install -r requirements-dev.txt
+python -m playwright install chromium
 python -m pytest -v
 ```
+
+For the disposable local student walkthrough and browser prerequisites, see [P0 UI verification](docs/p0-student-navigation.md).
 
 ## Definition of Done
 

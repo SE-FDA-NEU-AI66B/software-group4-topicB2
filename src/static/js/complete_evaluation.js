@@ -10,7 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
         evaluation: null,
         questions: [],
         answers: {},
-        submitting: false
+        submitting: false,
+        submitted: false
     };
 
     const elements = {
@@ -90,6 +91,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updateProgress() {
+        if (state.submitted) {
+            elements.progressLabel.textContent = "Evaluation completed";
+            elements.progressPercent.textContent = "100%";
+            elements.progressBar.style.width = "100%";
+            elements.sideAnswered.textContent = "Saved";
+            elements.requiredRemaining.textContent = "0";
+            elements.reviewButton.disabled = true;
+            elements.reviewButtonMobile.disabled = true;
+            return;
+        }
         const total = state.questions.length;
 
         const answered = state.questions.filter(
@@ -122,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
         elements.requiredRemaining.textContent =
             String(missing);
 
-        const canReview = total > 0 && !state.submitting;
+        const canReview = total > 0 && !state.submitting && !state.submitted;
 
         elements.reviewButton.disabled = !canReview;
         elements.reviewButtonMobile.disabled = !canReview;
@@ -185,7 +196,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             <div class="rating-options"
                  role="radiogroup"
-                 aria-label="Rating for question ${index + 1}">
+                 aria-label="Rating for question ${index + 1}"
+                 aria-required="${required}"
+                 aria-describedby="error-${question.id}">
 
                 ${options}
 
@@ -259,6 +272,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 maxlength="2000"
                 placeholder="Share your feedback..."
                 aria-label="${escapeHTML(question.question_text)}"
+                aria-required="${required}"
+                aria-describedby="error-${question.id}"
             >${escapeHTML(answer)}</textarea>
 
             <div class="answer-hint">
@@ -316,6 +331,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (card) {
             card.classList.remove("invalid");
+            card.querySelectorAll("input, textarea").forEach(control => control.removeAttribute("aria-invalid"));
         }
 
         if (error) {
@@ -342,6 +358,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (card) {
                 card.classList.add("invalid");
+                card.querySelectorAll("input, textarea").forEach(control => control.setAttribute("aria-invalid", "true"));
             }
 
             if (error) {
@@ -357,6 +374,7 @@ document.addEventListener("DOMContentLoaded", () => {
             block: "center"
         });
 
+        $(`#question-${firstMissing.id}`).querySelector("input, textarea")?.focus({preventScroll: true});
         return true;
     }
 
@@ -388,7 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function openReview() {
-        if (state.submitting) {
+        if (state.submitting || state.submitted) {
             return;
         }
 
@@ -403,6 +421,36 @@ document.addEventListener("DOMContentLoaded", () => {
         elements.submitFeedback.textContent = "";
 
         elements.reviewDialog.showModal();
+    }
+
+    function completeSubmission(alreadyCompleted = false) {
+        state.submitted = true;
+        if (alreadyCompleted) {
+            elements.title.textContent = "Completed evaluation";
+            elements.courseMeta.textContent = "Your response is already saved.";
+            elements.deadline.textContent = "No further submission is needed.";
+            document.querySelector("#submissionSuccess h2").textContent = "You have already completed this evaluation.";
+        }
+        elements.reviewDialog.close();
+        elements.loading.classList.add("hidden");
+        elements.error.classList.add("hidden");
+        elements.questionsList.hidden = true;
+        elements.validation.classList.add("hidden");
+        const success = document.getElementById("submissionSuccess");
+        success.hidden = false;
+        success.focus();
+        updateProgress();
+    }
+
+    function apiError(response, data) {
+        if (response.status === 401) {
+            window.location.replace("/login");
+            return "Your session has expired. Sign in again to continue.";
+        }
+        const message = data?.error?.code === "DUPLICATE_SUBMISSION"
+            ? "You have already completed this evaluation."
+            : data?.error?.message || "The request could not be completed.";
+        return `${message} ${data?.error?.action || "Return to My Evaluations and refresh the list before trying again."}`;
     }
 
     function showError(message) {
@@ -435,10 +483,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(
-                    data?.error?.message ||
-                    "Unable to load this evaluation."
-                );
+                if (data?.error?.code === "DUPLICATE_SUBMISSION") {
+                    completeSubmission(true);
+                    return;
+                }
+                throw new Error(apiError(response, data));
             }
 
             state.evaluation = data.evaluation;
@@ -503,7 +552,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function submitEvaluation() {
-        if (state.submitting) {
+        if (state.submitting || state.submitted) {
             return;
         }
 
@@ -535,41 +584,24 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(
-                    data?.error?.message ||
-                    "Your evaluation could not be submitted."
-                );
+                if (data?.error?.code === "DUPLICATE_SUBMISSION") {
+                    completeSubmission(true);
+                    return;
+                }
+                throw new Error(apiError(response, data));
             }
-
-            /*
-             * IMPORTANT:
-             * The current backend implementation only validates
-             * the payload and does not save the answers.
-             * Do not display a false submission-success message.
-             */
-
-            const message = data.message || "";
-
-            if (
-                message.includes("not implemented yet") ||
-                message.includes("not implemented")
-            ) {
-                elements.submitFeedback.textContent =
-                    "Your answers passed validation, but submission is not available yet. The backend saving functionality must be completed first.";
-
-                return;
+            if (response.status !== 201 || data.status !== "submitted") {
+                throw new Error("The server did not confirm a saved response. Return to My Evaluations and refresh before retrying.");
             }
-
-            elements.submitFeedback.textContent =
-                "The server accepted your submission request. Please verify the saved submission before leaving this page.";
+            completeSubmission();
 
         } catch (error) {
-            elements.submitFeedback.textContent = error.message;
+            elements.submitFeedback.textContent = `${error.message} If the connection failed, refresh My Evaluations to check whether your response was saved before retrying.`;
 
         } finally {
             state.submitting = false;
 
-            elements.confirmSubmit.disabled = false;
+            elements.confirmSubmit.disabled = state.submitted;
 
             elements.confirmSubmit.textContent =
                 "Submit evaluation";
