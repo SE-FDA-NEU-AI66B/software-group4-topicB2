@@ -191,6 +191,8 @@ python -m pytest -v
 
 For the disposable local student walkthrough and browser prerequisites, see [P0 UI verification](docs/p0-student-navigation.md).
 
+Lecturer navigation, recovery flows and local verification: [P0 lecturer feedback](docs/p0-lecturer-feedback.md).
+
 ## Definition of Done
 
 A task is considered Done when:
