@@ -1,17 +1,74 @@
+"""Shared pytest fixtures for isolated application tests."""
+
 import sqlite3
 import sys
+from datetime import datetime
 from pathlib import Path
 
 import pytest
+from werkzeug.security import generate_password_hash
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT_DIR))
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
 
-from src.app import app
+from src import app as app_module  # noqa: E402
 
 
 @pytest.fixture
-def api_client(tmp_path, monkeypatch):
+def client(tmp_path, monkeypatch):
+    """Provide a Flask test client backed by a temporary SQLite database."""
+    database = tmp_path / "test_edusurvey.db"
+    monkeypatch.setattr(app_module, "DATABASE", database)
+
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            """
+            CREATE TABLE users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                email TEXT NOT NULL UNIQUE,
+                password_hash TEXT NOT NULL,
+                full_name TEXT NOT NULL,
+                role TEXT NOT NULL
+            )
+            """
+        )
+        connection.execute(
+            """
+            INSERT INTO users (email, password_hash, full_name, role)
+            VALUES (?, ?, ?, ?)
+            """,
+            (
+                "student1@edusurvey.edu",
+                generate_password_hash("Password123!"),
+                "Minh Nguyen",
+                "student",
+            ),
+        )
+
+    monkeypatch.setitem(app_module.app.config, "TESTING", True)
+    monkeypatch.setitem(app_module.app.config, "SECRET_KEY", "test-secret")
+
+    with app_module.app.test_client() as test_client:
+        yield test_client
+
+
+@pytest.fixture
+def fixed_app_clock(monkeypatch):
+    """Freeze the application clock before seeding time-sensitive fixtures."""
+    instant = datetime(2026, 11, 4, 12, 0, 0)
+
+    class FixedDateTime(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return instant if tz is None else instant.replace(tzinfo=tz)
+
+    monkeypatch.setattr(app_module, "datetime", FixedDateTime)
+    return instant
+
+
+@pytest.fixture
+def api_client(tmp_path, monkeypatch, fixed_app_clock):
     # Create an isolated database for each test.
     database = tmp_path / "test_edusurvey.db"
     schema_path = ROOT_DIR / "src" / "schema.sql"
@@ -148,10 +205,9 @@ def api_client(tmp_path, monkeypatch):
 
     # Redirect the application to the temporary database.
     monkeypatch.setattr("src.app.DATABASE", database)
-    app.config["TEST_DATABASE"] = str(database)
-    app.config.update(TESTING=True)
+    monkeypatch.setitem(app_module.app.config, "TEST_DATABASE", str(database))
+    monkeypatch.setitem(app_module.app.config, "TESTING", True)
+    monkeypatch.setitem(app_module.app.config, "SECRET_KEY", "test-secret")
 
-    client = app.test_client()
+    client = app_module.app.test_client()
     yield client
-
-    app.config.update(TESTING=False)

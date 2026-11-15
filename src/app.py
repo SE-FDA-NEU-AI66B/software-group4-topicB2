@@ -72,7 +72,6 @@ def login_required(roles=None):
 
     return decorator
 
-
 @app.route("/api/evaluations", methods=["GET"])
 @login_required(roles=["student"])
 def get_student_evaluations():
@@ -140,7 +139,7 @@ def get_student_evaluations():
 
             elif (
                 deadline is not None
-                and deadline <= now + timedelta(days=3)
+                and deadline < now + timedelta(hours=24)
             ):
                 survey_status = "Due soon"
 
@@ -148,6 +147,7 @@ def get_student_evaluations():
                 survey_status = "Active"
 
             evaluations.append({
+                "id": row["id"],
                 "survey_title": row["survey_title"],
                 "course_name": row["course_name"],
                 "lecturer_name": row["lecturer_name"],
@@ -162,236 +162,6 @@ def get_student_evaluations():
 
     finally:
         connection.close()
-
-
-@app.route("/api/evaluations", methods=["POST"])
-def create_evaluation():
-    data = request.get_json(silent=True)
-
-    if not isinstance(data, dict):
-        return api_error(
-            400,
-            "INVALID_REQUEST",
-            "A JSON object is required.",
-            "Send the evaluation details as JSON.",
-        )
-
-    deadline_value = data.get("deadline")
-
-    if not isinstance(deadline_value, str) or not deadline_value.strip():
-        return api_error(
-            400,
-            "MISSING_DEADLINE",
-            "An evaluation deadline is required.",
-            "Provide a valid deadline.",
-        )
-
-    deadline_value = deadline_value.strip()
-
-    try:
-        parsed_deadline = datetime.fromisoformat(
-            deadline_value.replace("Z", "+00:00")
-        )
-    except (ValueError, TypeError):
-        return api_error(
-            400,
-            "INVALID_DEADLINE",
-            "The evaluation deadline is invalid.",
-            "Use an ISO 8601 date and time.",
-        )
-
-    # Store a consistent ISO timestamp, preserving timezone if supplied.
-    deadline_to_store = parsed_deadline.isoformat()
-
-    course_id = data.get("course_id")
-    title = data.get("title")
-    questions = data.get("questions")
-
-    if (
-        isinstance(course_id, bool)
-        or not isinstance(course_id, int)
-        or course_id <= 0
-    ):
-        return api_error(
-            400,
-            "INVALID_COURSE",
-            "A valid course ID is required.",
-            "Select a valid course.",
-        )
-
-    if not isinstance(title, str) or not title.strip():
-        return api_error(
-            400,
-            "INVALID_TITLE",
-            "An evaluation title is required.",
-            "Provide a title.",
-        )
-
-    if not isinstance(questions, list) or not questions:
-        return api_error(
-            400,
-            "INVALID_QUESTIONS",
-            "At least one question is required.",
-            "Add one or more questions.",
-        )
-
-    for question in questions:
-        if not isinstance(question, dict):
-            return api_error(
-                400,
-                "INVALID_QUESTION",
-                "Each question must be an object.",
-                "Check the question data.",
-            )
-
-        question_text = question.get("question_text")
-        question_type = question.get("question_type")
-        is_required = question.get("is_required", False)
-
-        if not isinstance(question_text, str) or not question_text.strip():
-            return api_error(
-                400,
-                "INVALID_QUESTION",
-                "Question text is required.",
-                "Provide text for every question.",
-            )
-
-        if question_type not in ("rating", "text"):
-            return api_error(
-                400,
-                "INVALID_QUESTION_TYPE",
-                "The question type is invalid.",
-                "Use 'rating' or 'text'.",
-            )
-
-        if not isinstance(is_required, bool):
-            return api_error(
-                400,
-                "INVALID_QUESTION",
-                "is_required must be a boolean.",
-                "Use true or false for is_required.",
-            )
-
-    user_id = session.get("user_id")
-
-    if not user_id:
-        return api_error(
-            401,
-            "UNAUTHORIZED",
-            "You must be logged in.",
-            "Log in and try again.",
-        )
-
-    try:
-        with get_db_connection() as connection:
-            user = connection.execute(
-                "SELECT role FROM users WHERE id = ?",
-                (user_id,),
-            ).fetchone()
-
-            if user is None:
-                return api_error(
-                    401,
-                    "UNAUTHORIZED",
-                    "The logged-in user does not exist.",
-                    "Log in again.",
-                )
-
-            if user["role"] != "lecturer":
-                return api_error(
-                    403,
-                    "FORBIDDEN",
-                    "Only lecturers can create evaluations.",
-                    "Log in with a lecturer account.",
-                )
-
-            course = connection.execute(
-                "SELECT id FROM courses WHERE id = ?",
-                (course_id,),
-            ).fetchone()
-
-            if course is None:
-                return api_error(
-                    404,
-                    "COURSE_NOT_FOUND",
-                    "The course does not exist.",
-                    "Select an existing course.",
-                )
-
-            assignment = connection.execute(
-                """
-                SELECT 1
-                FROM course_lecturers
-                WHERE lecturer_id = ? AND course_id = ?
-                """,
-                (user_id, course_id),
-            ).fetchone()
-
-            if assignment is None:
-                return api_error(
-                    403,
-                    "FORBIDDEN",
-                    "You are not assigned to this course.",
-                    "Choose a course assigned to you.",
-                )
-
-            # Create the evaluation and its questions in one transaction.
-            connection.execute("BEGIN")
-
-            cursor = connection.execute(
-                """
-                INSERT INTO evaluations
-                    (course_id, created_by, title, deadline, status)
-                VALUES (?, ?, ?, ?, ?)
-                """,
-                (
-                    course_id,
-                    session["user_id"],
-                    title.strip(),
-                    deadline_to_store,
-                    "draft",
-                ),
-            )
-            evaluation_id = cursor.lastrowid
-
-            for index, question in enumerate(questions, start=1):
-                connection.execute(
-                    """
-                    INSERT INTO questions (
-                        evaluation_id,
-                        question_text,
-                        question_type,
-                        is_required,
-                        question_order
-                    )
-                    VALUES (?, ?, ?, ?, ?)
-                    """,
-                    (
-                        evaluation_id,
-                        question["question_text"].strip(),
-                        question["question_type"],
-                        int(question.get("is_required", False)),
-                        index,
-                    ),
-                )
-
-            connection.commit()
-
-    except sqlite3.Error:
-        app.logger.exception("Failed to create evaluation")
-        return api_error(
-            500,
-            "EVALUATION_CREATION_FAILED",
-            "The evaluation could not be created.",
-            "Please try again later.",
-        )
-
-    return jsonify({
-        "message": "Evaluation created successfully.",
-        "evaluation_id": evaluation_id,
-        "questions_created": len(questions),
-        "status": "open",
-    }), 201
 
 @app.route("/api/auth/login", methods=["POST"])
 def login():
@@ -524,30 +294,165 @@ def classify_feedback(comment):
     return "Other"
 
 
+@app.route("/login", methods=["GET"])
+def login_page():
+    return render_template("login.html")
+
+
 @app.route("/")
 def home():
     return '<h1>EduSurvey</h1><a href="/evaluations">View Evaluations</a>'
 
 
 @app.route("/evaluations")
+@login_required(roles=["student"])
 def evaluations():
-    with get_db_connection() as connection:
+    return render_template("evaluations.html")
+
+@app.route("/evaluations/<int:evaluation_id>/complete")
+@login_required(roles=["student"])
+def complete_evaluation(evaluation_id):
+    return render_template(
+        "complete_evaluation.html",
+        evaluation_id=evaluation_id,
+    )
+
+
+@app.route(
+    "/api/courses/<int:course_id>/feedback",
+    methods=["GET"],
+)
+@login_required(roles=["lecturer"])
+def get_lecturer_course_feedback(course_id):
+    """Retrieve submitted feedback for a course taught by the lecturer."""
+
+    lecturer_id = session.get("user_id")
+
+    connection = get_db_connection()
+
+    try:
+        # Check whether the selected course exists.
+        course = connection.execute(
+            """
+            SELECT id, course_code, course_name
+            FROM courses
+            WHERE id = ?
+            """,
+            (course_id,),
+        ).fetchone()
+
+        if course is None:
+            return api_error(
+                404,
+                "COURSE_NOT_FOUND",
+                "The selected course does not exist.",
+                "Select an existing course.",
+            )
+
+        # Verify lecturer ownership before retrieving any feedback.
+        ownership = connection.execute(
+            """
+            SELECT 1
+            FROM course_lecturers
+            WHERE lecturer_id = ?
+              AND course_id = ?
+            LIMIT 1
+            """,
+            (lecturer_id, course_id),
+        ).fetchone()
+
+        if ownership is None:
+            return api_error(
+                403,
+                "FORBIDDEN",
+                "You do not have permission to view this course feedback.",
+                "Contact the administrator if you believe you should have access.",
+            )
+
+        # Count submitted responses, not individual answers.
+        count_row = connection.execute(
+            """
+            SELECT COUNT(*) AS completed_evaluation_count
+            FROM evaluations AS e
+            JOIN responses AS r
+                ON r.evaluation_id = e.id
+            WHERE e.course_id = ?
+              AND r.status = 'submitted'
+            """,
+            (course_id,),
+        ).fetchone()
+
+        # Retrieve submitted ratings and written comments.
         rows = connection.execute(
             """
             SELECT
-                e.id,
-                e.title,
-                e.deadline,
-                e.status,
-                c.course_code,
-                c.course_name
+                e.id AS evaluation_id,
+                e.title AS evaluation_title,
+                r.id AS response_id,
+                r.student_id,
+                r.submitted_at,
+                q.id AS question_id,
+                q.question_text,
+                q.question_type,
+                a.rating_value,
+                a.text_value
             FROM evaluations AS e
-            JOIN courses AS c ON c.id = e.course_id
-            ORDER BY e.deadline, e.id
-            """
+            JOIN responses AS r
+                ON r.evaluation_id = e.id
+            JOIN response_answers AS a
+                ON a.response_id = r.id
+            JOIN questions AS q
+                ON q.id = a.question_id
+               AND q.evaluation_id = e.id
+            WHERE e.course_id = ?
+              AND r.status = 'submitted'
+            ORDER BY
+                e.id,
+                r.submitted_at,
+                r.id,
+                q.question_order
+            """,
+            (course_id,),
         ).fetchall()
 
-    return render_template("evaluations.html", evaluations=rows)
+        # Group answers belonging to the same submitted response.
+        feedback_by_response = {}
+
+        for row in rows:
+            response_id = row["response_id"]
+
+            if response_id not in feedback_by_response:
+                feedback_by_response[response_id] = {
+                    "evaluation_id": row["evaluation_id"],
+                    "evaluation_title": row["evaluation_title"],
+                    "response_id": response_id,
+                    "student_id": row["student_id"],
+                    "submitted_at": row["submitted_at"],
+                    "answers": [],
+                }
+
+            feedback_by_response[response_id]["answers"].append({
+                "question_id": row["question_id"],
+                "question_text": row["question_text"],
+                "question_type": row["question_type"],
+                "rating_value": row["rating_value"],
+                "text_value": row["text_value"],
+            })
+
+        return jsonify({
+            "course": {
+                "id": course["id"],
+                "course_code": course["course_code"],
+                "course_name": course["course_name"],
+            },
+            "completed_evaluations": (
+                count_row["completed_evaluation_count"]
+            ),
+            "feedback": list(feedback_by_response.values()),
+        }), 200
+
+    finally:
+        connection.close()
 
 
 @app.route("/lecturer/feedback")
@@ -596,7 +501,6 @@ def lecturer_feedback_list():
         comments=[],
         error_message=None,
     )
-
 
 @app.route("/lecturer/feedback/<int:evaluation_id>")
 @login_required(roles=["lecturer"])
@@ -1005,29 +909,157 @@ def evaluation_statistics(evaluation_id):
     }), 200
 
 
+@app.route(
+    "/api/evaluations/<int:evaluation_id>/questions",
+    methods=["GET"],
+)
+@login_required(roles=["student"])
+def get_evaluation_questions(evaluation_id):
+    """Retrieve questions for an evaluation assigned to the student."""
+
+    student_id = session.get("user_id")
+
+    with get_db_connection() as connection:
+        evaluation = connection.execute(
+            """
+            SELECT
+                e.id,
+                e.title,
+                e.deadline,
+                e.status,
+                c.course_code,
+                c.course_name,
+                (
+                    SELECT u.full_name
+                    FROM course_lecturers AS cl
+                    JOIN users AS u
+                        ON u.id = cl.lecturer_id
+                    WHERE cl.course_id = c.id
+                    ORDER BY u.id
+                    LIMIT 1
+                ) AS lecturer_name
+            FROM evaluations AS e
+            JOIN courses AS c
+                ON c.id = e.course_id
+            JOIN course_enrollments AS ce
+                ON ce.course_id = c.id
+            WHERE e.id = ?
+              AND ce.student_id = ?
+            """,
+            (evaluation_id, student_id),
+        ).fetchone()
+
+        if evaluation is None:
+            return api_error(
+                404,
+                "EVALUATION_NOT_FOUND",
+                "The evaluation does not exist or you are not enrolled in its course.",
+                "Select an evaluation assigned to one of your courses.",
+            )
+
+        if evaluation["status"].lower() != "open":
+            return api_error(
+                400,
+                "EVALUATION_CLOSED",
+                "This evaluation is not open for submissions.",
+                "Choose an available evaluation.",
+            )
+
+        if evaluation["deadline"]:
+            try:
+                deadline = datetime.fromisoformat(
+                    evaluation["deadline"]
+                )
+            except (ValueError, TypeError):
+                return api_error(
+                    500,
+                    "INVALID_DEADLINE",
+                    "The evaluation deadline is invalid.",
+                    "Contact the system administrator.",
+                )
+
+            if deadline <= datetime.now():
+                return api_error(
+                    400,
+                    "DEADLINE_EXPIRED",
+                    "The submission deadline has passed.",
+                    "Contact the lecturer if you need further assistance.",
+                )
+
+        existing = connection.execute(
+            """
+            SELECT id
+            FROM responses
+            WHERE evaluation_id = ?
+              AND student_id = ?
+              AND status = 'submitted'
+            """,
+            (evaluation_id, student_id),
+        ).fetchone()
+
+        if existing:
+            return api_error(
+                409,
+                "DUPLICATE_SUBMISSION",
+                "You have already submitted this evaluation.",
+                "Check your submission status instead.",
+            )
+
+        questions = connection.execute(
+            """
+            SELECT
+                id,
+                question_text,
+                question_type,
+                is_required,
+                question_order
+            FROM questions
+            WHERE evaluation_id = ?
+            ORDER BY question_order ASC, id ASC
+            """,
+            (evaluation_id,),
+        ).fetchall()
+
+    return jsonify({
+        "evaluation": {
+            "id": evaluation["id"],
+            "title": evaluation["title"],
+            "deadline": evaluation["deadline"],
+            "course_code": evaluation["course_code"],
+            "course_name": evaluation["course_name"],
+            "lecturer_name": evaluation["lecturer_name"],
+        },
+        "questions": [
+            {
+                "id": question["id"],
+                "question_text": question["question_text"],
+                "question_type": question["question_type"],
+                "is_required": question["is_required"],
+                "question_order": question["question_order"],
+            }
+            for question in questions
+        ],
+        "count": len(questions),
+    }), 200
+
+
 @app.route("/api/submissions", methods=["POST"])
 def create_submission():
+    """Validate and persist a student's completed evaluation."""
+
     data = request.get_json(silent=True)
 
     if not isinstance(data, dict):
         return api_error(
             400,
             "INVALID_REQUEST",
-            "A JSON object is required.",
-            "Send the evaluation ID and answers as a JSON object.",
-        )
-
-    user_id = session.get("user_id")
-    if not user_id:
-        return api_error(
-            401,
-            "UNAUTHORIZED",
-            "You must be logged in to submit an evaluation.",
-            "Log in and try again.",
+            "A valid JSON object is required.",
+            "Send evaluation_id and answers as JSON.",
         )
 
     evaluation_id = data.get("evaluation_id")
     answers = data.get("answers")
+    user_id = session.get("user_id")
 
     if (
         isinstance(evaluation_id, bool)
@@ -1038,57 +1070,70 @@ def create_submission():
             400,
             "INVALID_EVALUATION",
             "A valid evaluation ID is required.",
-            "Select an evaluation and try again.",
+            "Select an available evaluation.",
         )
 
     if not isinstance(answers, dict):
         return api_error(
             400,
-            "MISSING_REQUIRED_ANSWERS",
+            "INVALID_ANSWERS",
             "Answers must be provided as an object.",
-            "Complete all required questions and try again.",
+            "Complete the evaluation and try again.",
         )
-
+    if not answers:
+        return api_error(
+        400,
+        "MISSING_REQUIRED_ANSWERS",
+        "Please answer all required questions before submitting.",
+        "Complete all required questions and try again.",
+    )
     with get_db_connection() as connection:
-        student = connection.execute(
+
+        # Verify the authenticated user's role from the database.
+        user = connection.execute(
             "SELECT role FROM users WHERE id = ?",
             (user_id,),
         ).fetchone()
 
-        if student is None:
+        if user is None:
             return api_error(
                 401,
                 "UNAUTHORIZED",
-                "The logged-in user no longer exists.",
-                "Log in again and retry.",
+                "Your account could not be verified.",
+                "Log in again and try again.",
             )
 
-        if student["role"] != "student":
+        if user["role"] != "student":
             return api_error(
                 403,
                 "FORBIDDEN",
-                "Only students can submit evaluations.",
+                "Only students can submit course evaluations.",
                 "Log in with a student account.",
             )
 
+        # Verify evaluation and student enrollment.
         evaluation = connection.execute(
             """
-            SELECT id, course_id, deadline, status
-            FROM evaluations
-            WHERE id = ?
+            SELECT e.id, e.course_id, e.deadline, e.status
+            FROM evaluations AS e
+            JOIN course_enrollments AS ce
+                ON ce.course_id = e.course_id
+            WHERE e.id = ?
+              AND ce.student_id = ?
             """,
-            (evaluation_id,),
+            (evaluation_id, user_id),
         ).fetchone()
 
         if evaluation is None:
             return api_error(
                 404,
                 "EVALUATION_NOT_FOUND",
-                "The evaluation does not exist.",
-                "Select an available evaluation.",
+                "The evaluation does not exist or you are not enrolled in its course.",
+                "Select an evaluation assigned to one of your courses.",
             )
 
-        if evaluation["status"] != "open":
+        # Check evaluation status.
+        if (evaluation["status"] or "").lower() != "open":
             return api_error(
                 400,
                 "EVALUATION_CLOSED",
@@ -1096,54 +1141,62 @@ def create_submission():
                 "Choose an open evaluation.",
             )
 
-        try:
-            deadline = datetime.fromisoformat(
-                evaluation["deadline"].replace("Z", "+00:00")
-            )
-            now = (
-                datetime.now(deadline.tzinfo)
-                if deadline.tzinfo
-                else datetime.now()
-            )
-        except (ValueError, TypeError, AttributeError):
-            return api_error(
-                500,
-                "INVALID_EVALUATION_DEADLINE",
-                "The evaluation deadline is invalid.",
-                "Contact the system administrator.",
-            )
+        # Check deadline.
+        deadline_text = evaluation["deadline"]
 
-        if deadline < now:
-            return api_error(
-                400,
-                "DEADLINE_EXPIRED",
-                "The submission deadline has passed.",
-                "Contact the lecturer if you need further assistance.",
-            )
+        if deadline_text:
+            try:
+                deadline = datetime.fromisoformat(deadline_text)
+            except (ValueError, TypeError):
+                return api_error(
+                    500,
+                    "INVALID_DEADLINE",
+                    "The evaluation deadline is invalid.",
+                    "Contact the system administrator.",
+                )
 
-        enrollment = connection.execute(
+            now = datetime.now()
+
+            if deadline.tzinfo is not None:
+                from datetime import timezone
+                now = datetime.now(timezone.utc).astimezone(
+                    deadline.tzinfo
+                )
+
+            if deadline <= now:
+                return api_error(
+                    400,
+                    "DEADLINE_EXPIRED",
+                    "The submission deadline has passed.",
+                    "Contact the lecturer if you need further assistance.",
+                )
+
+        # Prevent duplicate submissions.
+        existing = connection.execute(
             """
-            SELECT 1
-            FROM course_enrollments
-            WHERE student_id = ? AND course_id = ?
+            SELECT id, status
+            FROM responses
+            WHERE evaluation_id = ?
+              AND student_id = ?
             """,
-            (user_id, evaluation["course_id"]),
+            (evaluation_id, user_id),
         ).fetchone()
 
-        if enrollment is None:
+        if existing and existing["status"] == "submitted":
             return api_error(
-                403,
-                "NOT_ENROLLED",
-                "You are not enrolled in the course for this evaluation.",
-                "Only enrolled students can submit this evaluation.",
+                409,
+                "DUPLICATE_SUBMISSION",
+                "You have already submitted this evaluation.",
+                "Check your submission status instead of submitting again.",
             )
 
+        # Retrieve all questions belonging to this evaluation.
         questions = connection.execute(
             """
-            SELECT id, question_type, is_required
+            SELECT id, question_text, question_type, is_required
             FROM questions
             WHERE evaluation_id = ?
-            ORDER BY question_order
+            ORDER BY question_order, id
             """,
             (evaluation_id,),
         ).fetchall()
@@ -1152,196 +1205,386 @@ def create_submission():
             return api_error(
                 400,
                 "NO_QUESTIONS",
-                "This evaluation has no questions.",
-                "Contact the lecturer responsible for this evaluation.",
+                "This evaluation does not contain any questions.",
+                "Contact the lecturer.",
             )
 
-        questions_by_id = {
+        question_map = {
             str(question["id"]): question
             for question in questions
         }
 
-        normalized_answers = {}
-
-        # Validate each submitted answer.
-        for question_id, answer in answers.items():
-            if (
-                not isinstance(question_id, str)
-                or not question_id.isdigit()
-                or str(int(question_id)) != question_id
-                or question_id not in questions_by_id
-            ):
+        # Reject answers belonging to other evaluations.
+        for question_id in answers:
+            if str(question_id) not in question_map:
                 return api_error(
                     400,
                     "INVALID_QUESTION",
-                    "An answer refers to an invalid question.",
-                    "Only answer questions belonging to this evaluation.",
+                    "An answer references an invalid question.",
+                    "Refresh the evaluation and try again.",
                 )
+
+        # Validate required questions and answer types.
+        validated_answers = []
+
+        for question in questions:
+            question_id = str(question["id"])
+            answer = answers.get(question_id)
+
+            if answer is None:
+                if question["is_required"]:
+                    return api_error(
+                        400,
+                        "MISSING_REQUIRED_ANSWERS",
+                        "Please answer all required questions before submitting.",
+                        "Complete all required questions and try again.",
+                    )
+                continue
 
             if not isinstance(answer, dict):
                 return api_error(
                     400,
                     "INVALID_ANSWER",
-                    "Each answer must be an object.",
-                    "Provide a valid answer for each question.",
+                    "An answer must be a valid object.",
+                    "Review your answers and try again.",
                 )
-
-            question = questions_by_id[question_id]
-            rating_value = answer.get("rating_value")
-            text_value = answer.get("text_value")
 
             if question["question_type"] == "rating":
+                value = answer.get("rating_value")
+
                 if (
-                    isinstance(rating_value, bool)
-                    or not isinstance(rating_value, int)
-                    or not 1 <= rating_value <= 5
-                    or text_value is not None
+                    isinstance(value, bool)
+                    or not isinstance(value, int)
+                    or value < 1
+                    or value > 5
                 ):
                     return api_error(
                         400,
-                        "INVALID_ANSWER",
-                        "Rating answers must be integers from 1 to 5.",
-                        "Provide a rating from 1 to 5.",
+                        "INVALID_RATING",
+                        "Rating must be an integer between 1 and 5.",
+                        "Select a valid rating.",
                     )
 
-                normalized_answers[question_id] = {
-                    "rating_value": rating_value,
+                validated_answers.append({
+                    "question_id": question["id"],
+                    "rating_value": value,
                     "text_value": None,
-                }
+                })
 
             elif question["question_type"] == "text":
-                if (
-                    not isinstance(text_value, str)
-                    or not text_value.strip()
-                    or rating_value is not None
-                ):
+                value = answer.get("text_value")
+
+                if not isinstance(value, str):
                     return api_error(
                         400,
-                        "INVALID_ANSWER",
-                        "Text answers must contain non-empty text.",
-                        "Enter text for each answered text question.",
+                        "INVALID_TEXT_ANSWER",
+                        "Text answers must be strings.",
+                        "Enter valid written feedback.",
                     )
 
-                normalized_answers[question_id] = {
+                value = value.strip()
+
+                if not value:
+                    if question["is_required"]:
+                        return api_error(
+                            400,
+                            "MISSING_REQUIRED_ANSWERS",
+                            "Please answer all required questions before submitting.",
+                            "Complete all required questions and try again.",
+                        )
+                    continue
+
+                if len(value) > 2000:
+                    return api_error(
+                        400,
+                        "TEXT_TOO_LONG",
+                        "Text answers cannot exceed 2000 characters.",
+                        "Shorten your answer and try again.",
+                    )
+
+                validated_answers.append({
+                    "question_id": question["id"],
                     "rating_value": None,
-                    "text_value": text_value.strip(),
-                }
+                    "text_value": value,
+                })
 
-            else:
-                return api_error(
-                    400,
-                    "INVALID_QUESTION_TYPE",
-                    "The question has an unsupported type.",
-                    "Contact the lecturer responsible for this evaluation.",
+        # Persist the submission atomically.
+        if existing:
+            response_id = existing["id"]
+
+            connection.execute(
+                """
+                DELETE FROM response_answers
+                WHERE response_id = ?
+                """,
+                (response_id,),
+            )
+
+        else:
+            cursor = connection.execute(
+                """
+                INSERT INTO responses (
+                    evaluation_id,
+                    student_id,
+                    status
                 )
+                VALUES (?, ?, 'draft')
+                """,
+                (evaluation_id, user_id),
+            )
 
-        # Required-answer validation must happen before duplicate checking.
-        for question in questions:
-            question_id = str(question["id"])
+            response_id = cursor.lastrowid
 
-            if (
-                question["is_required"]
-                and question_id not in normalized_answers
-            ):
-                return api_error(
-                    400,
-                    "MISSING_REQUIRED_ANSWERS",
-                    "One or more required questions are unanswered.",
-                    "Complete all required questions and try again.",
+        for answer in validated_answers:
+            connection.execute(
+                """
+                INSERT INTO response_answers (
+                    response_id,
+                    question_id,
+                    rating_value,
+                    text_value
                 )
+                VALUES (?, ?, ?, ?)
+                """,
+                (
+                    response_id,
+                    answer["question_id"],
+                    answer["rating_value"],
+                    answer["text_value"],
+                ),
+            )
 
-        # Check for an existing submission only after validating the payload.
-        existing = connection.execute(
+        connection.execute(
             """
-            SELECT id, status
-            FROM responses
-            WHERE evaluation_id = ? AND student_id = ?
+            UPDATE responses
+            SET status = 'submitted',
+                submitted_at = CURRENT_TIMESTAMP
+            WHERE id = ?
             """,
-            (evaluation_id, user_id),
-        ).fetchone()
-
-        if existing is not None and existing["status"] == "submitted":
-            return api_error(
-                409,
-                "DUPLICATE_SUBMISSION",
-                "You have already submitted this evaluation.",
-                "Check your submission status instead of submitting again.",
-            )
-
-        # Persist the response and answers atomically.
-        try:
-            connection.execute("BEGIN")
-
-            if existing is None:
-                cursor = connection.execute(
-                    """
-                    INSERT INTO responses
-                        (evaluation_id, student_id, submitted_at, status)
-                    VALUES (?, ?, CURRENT_TIMESTAMP, 'submitted')
-                    """,
-                    (evaluation_id, user_id),
-                )
-                response_id = cursor.lastrowid
-
-            else:
-                response_id = existing["id"]
-
-                connection.execute(
-                    """
-                    UPDATE responses
-                    SET submitted_at = CURRENT_TIMESTAMP,
-                        status = 'submitted'
-                    WHERE id = ?
-                    """,
-                    (response_id,),
-                )
-
-                connection.execute(
-                    "DELETE FROM response_answers WHERE response_id = ?",
-                    (response_id,),
-                )
-
-            for question_id, answer in normalized_answers.items():
-                connection.execute(
-                    """
-                    INSERT INTO response_answers
-                        (response_id, question_id, rating_value, text_value)
-                    VALUES (?, ?, ?, ?)
-                    """,
-                    (
-                        response_id,
-                        int(question_id),
-                        answer["rating_value"],
-                        answer["text_value"],
-                    ),
-                )
-
-            connection.commit()
-
-        except sqlite3.IntegrityError:
-            connection.rollback()
-            return api_error(
-                409,
-                "DUPLICATE_SUBMISSION",
-                "The response conflicts with an existing submission.",
-                "Refresh the evaluation and check your submission status.",
-            )
-
-        except sqlite3.Error:
-            connection.rollback()
-            app.logger.exception("Failed to save evaluation submission")
-            return api_error(
-                500,
-                "SUBMISSION_FAILED",
-                "The submission could not be saved.",
-                "Please try again later.",
-            )
+            (response_id,),
+        )
 
     return jsonify({
         "message": "Evaluation submitted successfully.",
         "evaluation_id": evaluation_id,
         "response_id": response_id,
+        "submitted_answers": len(validated_answers),
         "status": "submitted",
+    }), 201
+
+
+
+@app.route("/api/evaluations", methods=["POST"])
+def create_evaluation():
+    data = request.get_json(silent=True)
+
+    # Validate request body.
+    if not isinstance(data, dict):
+        return api_error(
+            400,
+            "INVALID_REQUEST",
+            "A valid JSON object is required.",
+            "Send evaluation details as a JSON object.",
+        )
+
+    course_id = data.get("course_id")
+    title = data.get("title")
+    deadline = data.get("deadline")
+    questions = data.get("questions")
+
+    # Validate course ID.
+    if (
+        isinstance(course_id, bool)
+        or not isinstance(course_id, int)
+        or course_id <= 0
+    ):
+        return api_error(
+            400,
+            "INVALID_COURSE_ID",
+            "Course ID must be a positive integer.",
+            "Provide a valid course_id.",
+        )
+
+    # Validate title.
+    if not isinstance(title, str) or not title.strip():
+        return api_error(
+            400,
+            "MISSING_TITLE",
+            "Evaluation title is required.",
+            "Provide a non-empty title.",
+        )
+
+    # Validate deadline.
+    if not isinstance(deadline, str) or not deadline.strip():
+        return api_error(
+            400,
+            "MISSING_DEADLINE",
+            "Evaluation deadline is required.",
+            "Provide a deadline in ISO format.",
+        )
+
+    try:
+        parsed_deadline = datetime.fromisoformat(deadline.strip())
+    except ValueError:
+        return api_error(
+            400,
+            "INVALID_DEADLINE",
+            "The deadline format is invalid.",
+            "Use ISO format, for example 2099-01-01T00:00:00.",
+        )
+
+    # Validate questions.
+    if not isinstance(questions, list) or not questions:
+        return api_error(
+            400,
+            "MISSING_QUESTIONS",
+            "At least one question is required.",
+            "Provide a non-empty questions list.",
+        )
+
+    for index, question in enumerate(questions, start=1):
+        if not isinstance(question, dict):
+            return api_error(
+                400,
+                "INVALID_QUESTION",
+                f"Question {index} must be an object.",
+                "Provide question_text, question_type, and optionally is_required.",
+            )
+
+        question_text = question.get("question_text")
+        question_type = question.get("question_type")
+        is_required = question.get("is_required", True)
+
+        if not isinstance(question_text, str) or not question_text.strip():
+            return api_error(
+                400,
+                "INVALID_QUESTION_TEXT",
+                f"Question {index} requires non-empty question_text.",
+                "Provide text for every question.",
+            )
+
+        if question_type not in ("rating", "text"):
+            return api_error(
+                400,
+                "INVALID_QUESTION_TYPE",
+                f"Question {index} has an unsupported question_type.",
+                "Use 'rating' or 'text'.",
+            )
+
+        if not isinstance(is_required, bool):
+            return api_error(
+                400,
+                "INVALID_IS_REQUIRED",
+                f"Question {index} has an invalid is_required value.",
+                "Use true or false.",
+            )
+
+    # Authenticate user.
+    user_id = session.get("user_id")
+
+    if not user_id:
+        return api_error(
+            401,
+            "UNAUTHORIZED",
+            "You must be logged in to create an evaluation.",
+            "Log in and try again.",
+        )
+
+    # Verify lecturer role, course, and assignment.
+    with get_db_connection() as connection:
+        user = connection.execute(
+            "SELECT id, role FROM users WHERE id = ?",
+            (user_id,),
+        ).fetchone()
+
+        if user is None:
+            return api_error(
+                401,
+                "UNAUTHORIZED",
+                "The authenticated user does not exist.",
+                "Log in again with a valid account.",
+            )
+
+        if user["role"] != "lecturer":
+            return api_error(
+                403,
+                "FORBIDDEN",
+                "Only lecturers can create evaluations.",
+                "Log in with a lecturer account.",
+            )
+
+        course = connection.execute(
+            "SELECT id FROM courses WHERE id = ?",
+            (course_id,),
+        ).fetchone()
+
+        if course is None:
+            return api_error(
+                404,
+                "COURSE_NOT_FOUND",
+                "The course does not exist.",
+                "Select an existing course.",
+            )
+
+        assignment = connection.execute(
+            """
+            SELECT 1
+            FROM course_lecturers
+            WHERE lecturer_id = ? AND course_id = ?
+            """,
+            (user_id, course_id),
+        ).fetchone()
+
+        if assignment is None:
+            return api_error(
+                403,
+                "COURSE_ACCESS_DENIED",
+                "You are not assigned to this course.",
+                "Select a course assigned to your lecturer account.",
+            )
+
+        # Insert evaluation and questions in one transaction.
+        cursor = connection.execute(
+            """
+            INSERT INTO evaluations
+                (course_id, created_by, title, deadline, status)
+            VALUES (?, ?, ?, ?, 'draft')
+            """,
+            (
+                course_id,
+                user_id,
+                title.strip(),
+                parsed_deadline.isoformat(),
+            ),
+        )
+
+        evaluation_id = cursor.lastrowid
+
+        for order, question in enumerate(questions, start=1):
+            connection.execute(
+                """
+                INSERT INTO questions
+                    (evaluation_id, question_text, question_type,
+                     is_required, question_order)
+                VALUES (?, ?, ?, ?, ?)
+                """,
+                (
+                    evaluation_id,
+                    question["question_text"].strip(),
+                    question["question_type"],
+                    int(question.get("is_required", True)),
+                    order,
+                ),
+            )
+
+    return jsonify({
+        "message": "Evaluation created successfully.",
+        "evaluation_id": evaluation_id,
+        "course_id": course_id,
+        "title": title.strip(),
+        "deadline": parsed_deadline.isoformat(),
+        "status": "draft",
+        "questions_created": len(questions),
     }), 201
 
 
