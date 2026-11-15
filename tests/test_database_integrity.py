@@ -48,6 +48,7 @@ def test_runtime_foreign_keys_finding(api_client):
                 "INSERT INTO response_answers (response_id, question_id, rating_value) "
                 "VALUES (999, 1, 4)"
             )
+        assert db.execute("PRAGMA foreign_key_check").fetchall() == []
         db.rollback()
     with closing(app_module.get_db_connection()) as fresh:
         assert fresh.execute("PRAGMA foreign_keys").fetchone()[0] == 1

@@ -12,6 +12,10 @@ node/mapping files, GitHub snapshot and rendered HTML/PNG/PDF remain the
 unchanged baseline. See the report/testing.md remediation section for exact
 commands and contract updates; no independent human execution is claimed.
 
+**Merge reconciliation with main `6acf0dd`:** `merge-pytest.txt` and
+`merge-pytest.xml` record **200 passed in 62.73s**, zero failures/errors/skips,
+after preserving both sets of test assertions and ten deployment cases.
+
 | File | Provenance |
 |---|---|
 | `pytest.txt` | Full PowerShell-captured pytest console, transcoded from UTF-16 to UTF-8 without editing the result |

@@ -78,7 +78,7 @@ def test_production_config_requires_explicit_secrets_and_storage(monkeypatch, tm
     """BE-05: production refuses implicit demo config; HTTPS session cookie required."""
     monkeypatch.setenv("EDUSURVEY_ENV", "production")
     if path == "/data/app.db":
-        path = str(tmp_path / "app.db")
+        path = str(tmp_path / "app.db")  # A real absolute path on Windows and Linux.
     for key, value in (("EDUSURVEY_SECRET_KEY", secret), ("EDUSURVEY_DATABASE", path)):
         if value is None:
             monkeypatch.delenv(key, raising=False)
@@ -107,12 +107,21 @@ def test_database_transaction_closes_and_rolls_back(api_client):
         assert check.execute("SELECT COUNT(*) FROM courses WHERE course_code='ROLLBACK'").fetchone()[0] == 0
 
 
-def test_online_backup_and_restore_round_trip(api_client, tmp_path):
+def test_online_backup_and_restore_round_trip(api_client, tmp_path, monkeypatch):
     """BE-07: backup survives new source changes; a restored copy has original data."""
     source = app_module.DATABASE
     backup = tmp_path / "snapshot.db"
     restored = tmp_path / "restored.db"
+    original_open = os.open
+    creation_modes = []
+
+    def recorded_open(path, flags, mode=0o777):
+        creation_modes.append(mode)
+        return original_open(path, flags, mode)
+
+    monkeypatch.setattr(os, "open", recorded_open)
     backup_database(source, backup)
+    assert creation_modes == [0o600]
     mode = backup.stat().st_mode
     if os.name == "nt":
         # Windows exposes read/write attributes, not POSIX group/other permissions.

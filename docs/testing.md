@@ -641,6 +641,9 @@ both task implementations and all existing tests are retained.
 
 ## Database fixture and transaction audit - #189 (2026-11-15)
 
+Historical pre-#223 evidence follows. Runtime FK and error-handling findings are
+superseded by the #205 integration verification below; original run results are retained.
+
 Parent US11 #183 / refinement #163 owns this audit. Cross-story dependencies are
 US03 #22 for response/answer integrity and submission atomicity, and US04 #50
 for submitted-only feedback queries. These audit IDs are separate from the
@@ -748,3 +751,79 @@ JUnit confirms 149 tests, zero errors/failures/skips (142 retained + 7 new audit
 variants). Existing browser, authentication/logout, feedback, uniqueness and
 submission/deadline cases are retained. No schema, production route or SQL helper
 was changed. CI verification is separate from this local result.
+
+## Deployment preparation and main integration - #205 (2026-11-15)
+
+Parent #200; dependencies #204/#207. Real deployment/public HTTPS, paid-account
+approval, failing-CI/provider rehearsal and hosted rollback remain pending.
+See [deployment handover](deployment.md) for exact settings, runbook and limits.
+
+The first full Windows run on main 686bd9e plus deployment preparation reported
+**5 failed / 195 passed in 135.87s**. It exposed three stale #189 assertions after
+#223 enabled runtime FK and sanitized SQLite errors, and two POSIX-specific
+assumptions in #223 tests. No production contract was weakened to pass tests.
+
+DB-189-F01 retains `test_runtime_foreign_keys_finding` but now asserts FK=1 on
+two fresh runtime connections and actual orphan rejection: #223 resolves the old
+FK-OFF finding. DB-189-07/08 retain the real second-answer trigger, exact rollback
+snapshots and successful retry; they now assert sanitized 503 DATABASE_UNAVAILABLE
+instead of an exception escaping Flask. SQL time remains explicitly controlled.
+
+BE-05 uses tmp_path for a genuinely absolute path on either operating system.
+BE-07 verifies the backup requests mode 0600 on all systems, and additionally
+checks effective POSIX permission bits on POSIX. Windows ACL privacy is not
+established by Unix mode bits; the actual backup/restore/overwrite checks run on
+both platforms. No test is skipped. Existing audit-run evidence remains historical.
+
+| ID | Real pytest node | Scope |
+|---|---|---|
+| DEP-205-01 | `tests/test_deployment.py::test_production_restart_preserves_data` | New opt-in bootstrap, byte-identical restart, missing-after-provision refusal |
+| DEP-205-02 | `tests/test_deployment.py::test_bootstrap_fails_closed[no-opt-in]` | Missing DB cannot seed without opt-in |
+| DEP-205-03 | `tests/test_deployment.py::test_bootstrap_fails_closed[no-mount]` | Absent persistent mount cannot seed |
+| DEP-205-04 | `tests/test_deployment.py::test_bootstrap_fails_closed[corrupt]` | Corrupt existing DB is never reset |
+| DEP-205-05 | `tests/test_deployment.py::test_deploy_rejects_pr_before_provider_call` | PR context rejected before API call |
+| DEP-205-06 | `tests/test_deployment.py::test_deploy_exact_sha_and_readiness[auto-deploy]` | Reject competing platform auto-deploy before POST |
+| DEP-205-07 | `tests/test_deployment.py::test_deploy_exact_sha_and_readiness[wrong-repo]` | Reject wrong service repository before POST |
+| DEP-205-08 | `tests/test_deployment.py::test_deploy_exact_sha_and_readiness[wrong-sha]` | Reject provider's live SHA mismatch |
+| DEP-205-09 | `tests/test_deployment.py::test_deploy_exact_sha_and_readiness[failed-build]` | Failed build cannot be reported ready |
+| DEP-205-10 | `tests/test_deployment.py::test_deploy_exact_sha_and_readiness[ready]` | Exact-SHA POST and HTTPS health contract through fake provider |
+
+These ten tests use temporary data/fake API; they do not prove real deployment
+or a failed GitHub test preventing a provider release. Startup dates are only
+used to seed relative demo availability, not asserted against wall time. Tests
+restore environment, mount mock and initializer globals. Config/factory guards
+already verified in #223 are reused rather than duplicated.
+
+Executed on Windows/Python 3.12.6:
+`python -m pytest -q tests/test_deployment.py tests/test_database_integrity.py tests/test_backend_runtime.py`
+-> **53 passed in 5.01s**. Changed Python modules passed Ruff, YAML dependency/
+security-step/mount checks passed, and `git diff --check` passed.
+
+Final full local verification (Windows/Python 3.12.6, installed Chrome selected via
+PLAYWRIGHT_CHROMIUM_EXECUTABLE): `python -m pytest -q --junitxml=junit.xml` ->
+**200 passed in 118.32s (0:01:58)**, zero failures/errors/skips. This includes the
+existing 190 collected cases on main 686bd9e and ten new deployment cases.
+Real hosting, paid-resource approval, CI red-test gate proof, rollback and release
+verification remain pending; a local green suite does not complete #205.
+
+## #190 / PR #227 merge reconciliation with main 6acf0dd
+
+Resolved conflicts in `tests/test_backend_runtime.py` and
+`tests/test_database_integrity.py` while preserving the #205 integration and
+both sets of assertions. Backup tests retain main's requested mode-0600 check,
+POSIX effective permissions and Windows read/write attributes, plus the full
+restore/no-overwrite workflow. FK tests retain both the immediate and fresh
+connection checks and the exact unchanged snapshot. Rollback tests retain the
+trigger callback, sanitized 503, exact draft/new snapshot restoration and retry.
+No test node, production behavior or approval policy is removed or bypassed.
+
+Focused Windows/Python 3.11.9 verification:
+`python -m pytest -q tests/test_backend_runtime.py tests/test_database_integrity.py`
+returned **43 passed in 1.23s**; Ruff on both files and `git diff --check` passed.
+
+Full run with the same installed Chrome override:
+`python -m pytest -v --junitxml=docs/evidence/190/merge-pytest.xml` returned
+**200 passed in 62.73s**, zero failures/errors/skips (190 retained + 10 merged
+deployment cases). [Console](evidence/190/merge-pytest.txt) and
+[JUnit](evidence/190/merge-pytest.xml) retain this integration result separately
+from both earlier 190-case remediation and the original failing baseline.
