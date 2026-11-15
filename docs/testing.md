@@ -1,5 +1,16 @@
 # EduSurvey M4 Automated Testing
 
+**Current #190 audit (2026-11-15, main `686bd9e`):** fresh clone + new Python
+3.11.9/Windows environment installed `requirements-dev.txt` successfully.
+`python -m pytest -v --junitxml=junit.xml` returned **185 passed, 5 failed,
+0 skipped**. All **97 story mappings resolve and pass**; failures are additional
+runtime/database audit nodes. Runtime FK enforcement from #223 supersedes the
+earlier FK-OFF finding, and the old #189 characterization/rollback assumptions
+now fail. Historical runs below remain dated evidence. Current baseline CI is
+red; current Board access and several substantive reviews remain unresolved.
+See [commands, exact failing nodes, CI/review links and sign-off blockers](m4-review-evidence.md)
+and [machine-readable mapping check](evidence/190/mapping-audit.json).
+
 **Backend audit contract update — 2026-11-15.**
 
 Current behavior supersedes earlier dated 401-HTML/old-message snapshots below: approved #214 uses canonical API messages, and #215 redirects anonymous protected HTML navigation to `/login` while APIs/JSON clients retain JSON 401. Existing denial scenarios and all old test IDs are retained; their HTML-only assertions are deliberately updated. Topic/ranking/statistics APIs now require assigned lecturer access. [Backend file/route map](backend.md) and [runtime handover](backend-runtime.md) explain the implementation and remaining deployment/security limits.
