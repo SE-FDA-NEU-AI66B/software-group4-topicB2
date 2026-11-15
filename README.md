@@ -186,6 +186,13 @@ The Flask/SQLite backend already implements the five P0 workflows in `src/app.py
 
 ## Testing
 
+Production releases require the full CI test/security gate. The #207
+[CI/protection evidence](docs/ci-production-gate.md) records the actual red-PR
+rehearsal, latest green main run/duration and current ruleset screenshot.
+Enforced named-check protection still requires the
+[administrator handoff](docs/main-protection-admin.md); passing CI is not a
+substitute for an independent PR approval or a verified live deployment.
+
 Run the automated test suite, including the Chromium UI checks:
 
 ```bash

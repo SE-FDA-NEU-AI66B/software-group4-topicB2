@@ -1,0 +1,18 @@
+[
+  {
+    "job": "Python tests",
+    "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43733767041/job/132871781285",
+    "actual_log_lines": [
+      "2026-11-15T16:09:25.7944854Z FAILED tests/test_intentional_ci_failure.py::test_intentional_failure_blocks_release - AssertionError: Intentional #207 rehearsal: a failing full suite must block CI gate and deployment.",
+      "2026-11-15T16:09:25.7945733Z ======================== 1 failed, 228 passed in 34.17s ========================"
+    ]
+  },
+  {
+    "job": "CI gate",
+    "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43733767041/job/132872061101",
+    "actual_log_lines": [
+      "2026-11-15T16:09:32.2335052Z     raise RuntimeError(f\"Required CI job did not succeed: {name}\")",
+      "2026-11-15T16:09:32.2337937Z RuntimeError: Required CI job did not succeed: PYTHON_RESULT"
+    ]
+  }
+]
