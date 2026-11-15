@@ -144,6 +144,118 @@ def get_database_counts(client):
     return response_count, answer_count
 
 
+@pytest.fixture
+def boundary_submission_client(submission_client, monkeypatch):
+    """Isolate #184 boundaries at T with an open deadline exactly T+2 days."""
+    instant = datetime(2026, 11, 3, 12, 0, 0)
+
+    class BoundaryDateTime(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return instant if tz is None else instant.replace(tzinfo=tz)
+
+    monkeypatch.setattr(app_module, "datetime", BoundaryDateTime)
+    database = submission_client.application.config["TEST_DATABASE"]
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            "UPDATE evaluations SET deadline = ? WHERE id = 1",
+            ((instant + timedelta(days=2)).isoformat(),),
+        )
+        connection.execute("UPDATE questions SET is_required = 0 WHERE id = 2")
+    login_student(submission_client)
+    assert get_database_counts(submission_client) == (0, 0)
+    return submission_client
+
+
+@pytest.mark.parametrize("rating", [0, 1, 2, 4, 5, 6], ids=lambda n: f"rating-{n}")
+def test_submission_rating_boundaries(boundary_submission_client, rating):
+    """TC-21–TC-26: US03 #22 rating range; missing coverage tracked by #184."""
+    client = boundary_submission_client
+    before = get_database_counts(client)
+    response = client.post("/api/submissions", json={
+        "evaluation_id": 1,
+        "answers": {"1": {"rating_value": rating}},
+    })
+
+    if rating in (0, 6):
+        assert response.status_code == 400
+        assert response.get_json()["error"]["code"] == "INVALID_RATING"
+        assert get_database_counts(client) == before
+    else:
+        assert response.status_code == 201
+        assert response.get_json()["status"] == "submitted"
+        assert get_database_counts(client) == (1, 1)
+        with sqlite3.connect(client.application.config["TEST_DATABASE"]) as connection:
+            assert connection.execute(
+                "SELECT question_id, rating_value, text_value FROM response_answers "
+                "WHERE response_id = ?",
+                (response.get_json()["response_id"],),
+            ).fetchall() == [(1, rating, None)]
+
+
+@pytest.mark.parametrize("length", [1999, 2000, 2001], ids=lambda n: f"length-{n}")
+def test_submission_text_length_boundaries(boundary_submission_client, length):
+    """TC-27–TC-29: US03 #22 text limit applies after whitespace trimming."""
+    client = boundary_submission_client
+    before = get_database_counts(client)
+    text = "a" * length
+    payload = valid_submission_payload()
+    payload["answers"]["2"]["text_value"] = f" \t{text}\n "
+    response = client.post("/api/submissions", json=payload)
+
+    if length == 2001:
+        assert response.status_code == 400
+        assert response.get_json()["error"]["code"] == "TEXT_TOO_LONG"
+        assert get_database_counts(client) == before
+    else:
+        assert response.status_code == 201
+        assert response.get_json()["status"] == "submitted"
+        assert get_database_counts(client) == (1, 2)
+        with sqlite3.connect(client.application.config["TEST_DATABASE"]) as connection:
+            assert connection.execute(
+                "SELECT text_value FROM response_answers "
+                "WHERE response_id = ? AND question_id = 2",
+                (response.get_json()["response_id"],),
+            ).fetchone() == (text,)
+
+
+@pytest.mark.parametrize("answered", [4, 5], ids=lambda n: f"answered-{n}")
+def test_submission_required_question_count(boundary_submission_client, answered):
+    """TC-30–TC-31: US03 #22 five-required-question acceptance example."""
+    client = boundary_submission_client
+    database = client.application.config["TEST_DATABASE"]
+    with sqlite3.connect(database) as connection:
+        connection.execute("DELETE FROM questions")
+        connection.executemany(
+            "INSERT INTO questions (id, evaluation_id, question_text, question_type, "
+            "is_required, question_order) VALUES (?, 1, ?, 'rating', 1, ?)",
+            [(n, f"Required rating {n}", n) for n in range(1, 6)],
+        )
+    before = get_database_counts(client)
+    response = client.post("/api/submissions", json={
+        "evaluation_id": 1,
+        "answers": {str(n): {"rating_value": 3} for n in range(1, answered + 1)},
+    })
+
+    if answered == 4:
+        assert response.status_code == 400
+        assert response.get_json()["error"]["code"] == "MISSING_REQUIRED_ANSWERS"
+        assert get_database_counts(client) == before
+    else:
+        assert response.status_code == 201
+        assert response.get_json()["status"] == "submitted"
+        assert get_database_counts(client) == (1, 5)
+        with sqlite3.connect(database) as connection:
+            assert connection.execute(
+                "SELECT evaluation_id, student_id, status FROM responses"
+            ).fetchall() == [(1, 1, "submitted")]
+            assert connection.execute(
+                "SELECT question_id, rating_value, text_value FROM response_answers "
+                "WHERE response_id = ? ORDER BY question_id",
+                (response.get_json()["response_id"],),
+            ).fetchall() == [(n, 3, None) for n in range(1, 6)]
+
+
 def test_submission_success_persists_response_and_answers(
     submission_client,
 ):
