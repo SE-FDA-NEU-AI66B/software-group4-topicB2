@@ -1047,3 +1047,53 @@ Final Windows/Python 3.11.9 full execution, using installed Chrome through
 [JUnit](evidence/204/merge-pytest.xml) retain the result. Changed Python module
 Ruff and `git diff --check` passed. No production schema/storage or health/log
 behavior was changed by this merge resolution.
+
+## P0 / M4 release rehearsal - #210 (2026-11-15)
+
+Parent #200 and dependencies #201/#202/#205/#206/#209. The focused register,
+existing normal/error/applicable boundary nodes, public-step results and limits
+are in [p0-release-verification.md](p0-release-verification.md). No duplicate
+wrong-password/unknown-email or other existing pytest test is added.
+
+Actual candidate main `6acf0dd` local Windows/Python 3.12.6 run with installed
+Chrome: `python -m pytest -q --junitxml=junit.xml` -> **200 passed in 173.05s**,
+zero failures/errors/skips. This includes existing student/lecturer browser flows,
+receipt reload/persistence, server rejection/recovery, logout and database-aware
+health checks. It is not public HTTPS / physical-phone or hosted rollback proof.
+[Per-module evidence](evidence/210/main-6acf0dd-local.json).
+
+A prior pinned main `ebb938d` run had **5 failed / 185 passed in 152.65s**;
+[that report](evidence/210/main-ebb938d-local.json) is retained. #226 merged the
+previously prepared test reconciliations while this audit ran; the newer green
+candidate does not erase or relabel the historical failed result.
+
+`python tools/rehearse_business_rule.py --revision 6acf0dd` executed the existing
+`tests/test_student_evaluations.py::test_student_evaluations_due_soon_24_hour_boundary`
+in a temporary git export: baseline **3 passed**, strict `<24h` changed to `<=24h`
+-> **1 failed / 2 passed** (only TC-09-at), original bytes restored -> **3 passed**.
+[Actual output/hashes](evidence/210/mutation.json) confirm the workspace source was
+unchanged. The defect was never committed or deployed. The earlier ebb938d
+rehearsal is separately preserved. This is a controlled mutation demonstration,
+not a new production fix or fabricated red-test screenshot.
+
+Public origin/provider SHA, real private desktop/physical phone, released
+business rejection, live health/rollback and deployed visible-outcome timings
+remain pending. A PR closing reference must not be used to merge/close #210
+before those verification gates and independent recorded review are satisfied.
+
+### #210 merge verification against main e5564f7
+
+Resolved the docs/testing.md append conflict by preserving #190 M4 review,
+#204 database, #205 deployment, #206 monitoring and #210 rehearsal evidence.
+Production/test code was not changed for this resolution. Existing dated reports
+remain intact; the current candidate register and CI link now point to e5564f7.
+
+Windows/Python 3.12.6 with installed Chrome:
+`python -m pytest -q --junitxml=junit.xml` -> **229 passed in 162.18s**, zero
+failures/errors/skips. [Per-module result](evidence/210/main-e5564f7-local.json).
+`python tools/rehearse_business_rule.py --revision e5564f7 --output docs/evidence/210/mutation-e5564f7.json`
+-> baseline **3 passed**, mutant **1 failed / 2 passed** (TC-09-at only), restored
+**3 passed**; source/workspace hashes unchanged after restoration.
+[Rehearsal output](evidence/210/mutation-e5564f7.json). Script Ruff and
+`git diff --check` passed. Public URL/provider SHA, physical phone and hosted
+rollback remain unverified; local/CI results do not complete those gates.

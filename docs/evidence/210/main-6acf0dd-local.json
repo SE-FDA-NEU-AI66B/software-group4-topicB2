@@ -1,0 +1,96 @@
+{
+  "source": "Actual local pytest/JUnit; not public deployment acceptance",
+  "revision": "6acf0dd42b0a8b56831deedc519c194b474a519c",
+  "command": "python -m pytest -q --junitxml=junit.xml",
+  "environment": "Windows / Python 3.12.6 / pytest 9.0.2; installed Chrome, fresh contexts and emulated phone viewport",
+  "tests": 200,
+  "passed": 200,
+  "failed_nodes": [],
+  "errors": 0,
+  "skipped": 0,
+  "pytest_summary": "200 passed in 173.05s (0:02:53)",
+  "modules": {
+    "tests.test_auth": {
+      "tests": 27,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_backend_runtime": {
+      "tests": 36,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_database_integrity": {
+      "tests": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_deployment": {
+      "tests": 10,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_feedback_classifier": {
+      "tests": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_lecturer_feedback": {
+      "tests": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_p0_browser_contracts": {
+      "tests": 18,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_response_schema.ResponseSchemaTests": {
+      "tests": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_smoke": {
+      "tests": 35,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_status.EvaluationStatusTests": {
+      "tests": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_student_evaluations": {
+      "tests": 21,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_submission_workflow": {
+      "tests": 22,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_submissions": {
+      "tests": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "public_url": null,
+  "provider_deployed_sha": null,
+  "physical_phone_verified": false,
+  "hosted_rollback_verified": false
+}
