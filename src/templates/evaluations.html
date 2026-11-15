@@ -1,65 +1,259 @@
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>EduSurvey - Evaluations</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px;
-            background: #f5f7fb;
-            color: #1f2937;
-        }
-        .evaluation {
-            background: white;
-            padding: 20px;
-            margin: 16px 0;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px #00000012;
-        }
-        .course {
-            color: #2563eb;
-            font-weight: bold;
-        }
-        .status {
-            display: inline-block;
-            padding: 5px 10px;
-            background: #e5e7eb;
-            border-radius: 5px;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#102b50">
+
+    <title>My Evaluations | EduSurvey</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/evaluations.css') }}">
 </head>
+
 <body>
-    <h1>EduSurvey</h1>
-    <p>Course Evaluations</p>
+    <div class="app-shell">
 
-```
-{% if evaluations %}
-    {% for evaluation in evaluations %}
-        <article class="evaluation">
-            <div class="course">
-                {{ evaluation["course_code"] }} —
-                {{ evaluation["course_name"] }}
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <a class="brand" href="/evaluations">
+                <span class="brand-icon">E</span>
+                <span class="brand-name">EduSurvey</span>
+            </a>
+
+            <div class="sidebar-section">
+                <p class="sidebar-label">WORKSPACE</p>
+
+                <a href="/evaluations" class="nav-link active">
+                    <span class="nav-icon">▦</span>
+                    <span>My Evaluations</span>
+                </a>
             </div>
-            <h2>{{ evaluation["title"] }}</h2>
-            <p>
-                <strong>Deadline:</strong>
-                {{ evaluation["deadline"] }}
-            </p>
-            <p>
-                <strong>Status:</strong>
-                <span class="status">{{ evaluation["status"] }}</span>
-            </p>
-        </article>
-    {% endfor %}
-{% else %}
-    <p>No evaluations found.</p>
-{% endif %}
-```
 
+            <div class="sidebar-bottom">
+                <div class="help-card">
+                    <div class="help-icon">?</div>
+                    <div>
+                        <strong>Need assistance?</strong>
+                        <p>Contact your university administrator.</p>
+                    </div>
+                </div>
+
+                <div class="sidebar-footer">
+                    <span class="footer-dot"></span>
+                    EduSurvey Student Portal
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <main class="main-content">
+
+            <header class="topbar">
+                <button
+                    class="mobile-menu-button"
+                    id="mobileMenuButton"
+                    type="button"
+                    aria-label="Open navigation"
+                    aria-expanded="false"
+                >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <div class="breadcrumb">
+                    <span>Workspace</span>
+                    <span class="breadcrumb-separator">/</span>
+                    <strong>My Evaluations</strong>
+                </div>
+
+                <div class="topbar-right">
+                    <span class="portal-indicator">
+                        <span class="online-dot"></span>
+                        Student Portal
+                    </span>
+                </div>
+            </header>
+
+            <div class="content-container">
+
+                <!-- Page heading -->
+                <section class="page-heading">
+                    <div>
+                        <div class="eyebrow">
+                            <span class="eyebrow-line"></span>
+                            STUDENT WORKSPACE
+                        </div>
+
+                        <h1>My Evaluations</h1>
+
+                        <p class="page-description">
+                            View your assigned course evaluations and
+                            keep track of your submission deadlines.
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="refresh-button"
+                        id="refreshButton"
+                    >
+                        <span class="refresh-icon">↻</span>
+                        <span>Refresh</span>
+                    </button>
+                </section>
+
+                <!-- Summary cards -->
+                <section class="stats-grid" aria-label="Evaluation summary">
+
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span class="stat-label">Total evaluations</span>
+                            <span class="stat-icon icon-blue">▤</span>
+                        </div>
+                        <div class="stat-value" id="totalCount">—</div>
+                        <p class="stat-caption">Assigned to you</p>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span class="stat-label">Active</span>
+                            <span class="stat-icon icon-green">✓</span>
+                        </div>
+                        <div class="stat-value" id="activeCount">—</div>
+                        <p class="stat-caption">Open for submission</p>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span class="stat-label">Due soon</span>
+                            <span class="stat-icon icon-orange">◷</span>
+                        </div>
+                        <div class="stat-value" id="dueSoonCount">—</div>
+                        <p class="stat-caption">Less than 24 hours left</p>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span class="stat-label">Completed</span>
+                            <span class="stat-icon icon-purple">✓</span>
+                        </div>
+                        <div class="stat-value" id="completedCount">—</div>
+                        <p class="stat-caption">Successfully submitted</p>
+                    </article>
+
+                </section>
+
+                <!-- Evaluation list -->
+                <section class="evaluation-section">
+
+                    <div class="section-heading">
+                        <div>
+                            <h2>Course evaluations</h2>
+                            <p>All evaluations assigned to your enrolled courses.</p>
+                        </div>
+
+                        <span class="result-count" id="resultCount">
+                            Loading...
+                        </span>
+                    </div>
+
+                    <!-- Search and filters -->
+                    <div class="toolbar">
+
+                        <div class="search-box">
+                            <span class="search-icon">⌕</span>
+                            <input
+                                type="search"
+                                id="searchInput"
+                                placeholder="Search by survey, course or lecturer..."
+                                aria-label="Search evaluations"
+                            >
+                            <kbd>⌘ K</kbd>
+                        </div>
+
+                        <div class="filter-box">
+                            <label class="visually-hidden" for="statusFilter">
+                                Filter by status
+                            </label>
+
+                            <select id="statusFilter">
+                                <option value="All">All statuses</option>
+                                <option value="Active">Active</option>
+                                <option value="Due soon">Due soon</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Closed">Closed</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <!-- List content -->
+                    <div id="evaluationContainer" aria-live="polite">
+
+                        <!-- Loading state -->
+                        <div class="state-card" id="loadingState">
+                            <div class="spinner"></div>
+                            <h3>Loading evaluations</h3>
+                            <p>Please wait while we retrieve your course evaluations.</p>
+                        </div>
+
+                    </div>
+
+                    <!-- Error state -->
+                    <div class="state-card error-state hidden" id="errorState">
+                        <div class="state-illustration error-illustration">!</div>
+                        <h3>Unable to load evaluations</h3>
+                        <p id="errorMessage">
+                            Something went wrong. Please try again.
+                        </p>
+                        <button class="primary-button" id="retryButton" type="button">
+                            Try again
+                        </button>
+                    </div>
+
+                    <!-- Empty state -->
+                    <div class="state-card hidden" id="emptyState">
+                        <div class="state-illustration">▤</div>
+                        <h3>No evaluations available</h3>
+                        <p>
+                            You currently have no course evaluations assigned.
+                            Please check again later.
+                        </p>
+                    </div>
+
+                    <!-- No search results -->
+                    <div class="state-card hidden" id="noResultsState">
+                        <div class="state-illustration">⌕</div>
+                        <h3>No matching evaluations</h3>
+                        <p>Try another keyword or change your status filter.</p>
+                        <button class="secondary-button" id="clearFiltersButton" type="button">
+                            Clear filters
+                        </button>
+                    </div>
+
+                </section>
+
+                <footer class="page-footer">
+                    <span>© 2026 EduSurvey</span>
+                    <span>University Evaluation System</span>
+                </footer>
+
+            </div>
+        </main>
+    </div>
+
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <script
+        src="{{ url_for('static', filename='js/evaluations.js') }}"
+        defer
+    ></script>
 </body>
 </html>

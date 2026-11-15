@@ -12,7 +12,7 @@ from src import app as app_module
 
 
 @pytest.fixture
-def submission_client(tmp_path, monkeypatch):
+def submission_client(tmp_path, monkeypatch, fixed_app_clock):
     """Create a clean database for each submission test."""
 
     database = tmp_path / "test_submission.db"
@@ -105,11 +105,9 @@ def submission_client(tmp_path, monkeypatch):
 
     monkeypatch.setattr(app_module, "DATABASE", database)
 
-    app_module.app.config.update(
-        TESTING=True,
-        SECRET_KEY="test-secret",
-        TEST_DATABASE=str(database),
-    )
+    monkeypatch.setitem(app_module.app.config, "TESTING", True)
+    monkeypatch.setitem(app_module.app.config, "SECRET_KEY", "test-secret")
+    monkeypatch.setitem(app_module.app.config, "TEST_DATABASE", str(database))
 
     with app_module.app.test_client() as client:
         yield client
@@ -380,12 +378,13 @@ def test_submission_closed_evaluation_does_not_create_records(
     assert answer_count == 0
 
 
+# Main rejects deadline <= now, consistently with question opening and US02.
 @pytest.mark.parametrize(
     "deadline_offset, expected_status, expected_code",
     [
-        (timedelta(microseconds=-1), 400, "DEADLINE_EXPIRED"),
-        (timedelta(0), 201, None),
-        (timedelta(microseconds=1), 201, None),
+        pytest.param(timedelta(seconds=-1), 400, "DEADLINE_EXPIRED", id="TC-US03-07-before"),
+        pytest.param(timedelta(0), 400, "DEADLINE_EXPIRED", id="TC-US03-08-at"),
+        pytest.param(timedelta(seconds=1), 201, None, id="TC-US03-09-after"),
     ],
 )
 def test_submission_deadline_boundary(

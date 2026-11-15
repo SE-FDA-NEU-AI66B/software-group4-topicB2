@@ -12,7 +12,7 @@ from src import app as app_module
 
 
 @pytest.fixture
-def client(tmp_path, monkeypatch):
+def client(tmp_path, monkeypatch, fixed_app_clock):
     database = tmp_path / "test_submissions.db"
     schema_path = ROOT_DIR / "src" / "schema.sql"
 
@@ -72,7 +72,8 @@ def client(tmp_path, monkeypatch):
         )
 
     monkeypatch.setattr(app_module, "DATABASE", database)
-    app_module.app.config.update(TESTING=True, SECRET_KEY="test-secret")
+    monkeypatch.setitem(app_module.app.config, "TESTING", True)
+    monkeypatch.setitem(app_module.app.config, "SECRET_KEY", "test-secret")
 
     with app_module.app.test_client() as test_client:
         with test_client.session_transaction() as session:

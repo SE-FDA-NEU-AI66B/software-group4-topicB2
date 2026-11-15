@@ -1,11 +1,6 @@
 import sqlite3
-import sys
-from pathlib import Path
 
-import pytest
 
-ROOT_DIR = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT_DIR))
 
 from src.app import app
 
@@ -16,12 +11,14 @@ from src.app import app
 def login_as_student(client):
     with client.session_transaction() as session:
         session["user_id"] = 1
+        session["role"] = "student"
 
 
 def login_as_lecturer(client):
     with client.session_transaction() as session:
         session["user_id"] = 2
         session["role"] = "lecturer"
+
 
 
 def valid_payload():
@@ -76,11 +73,35 @@ def test_home_route():
     assert response.status_code == 200
 
 
-def test_evaluations_route():
-    response = app.test_client().get("/evaluations")
+
+def test_evaluations_route_requires_login(api_client):
+    response = api_client.get("/evaluations")
+
+    assert response.status_code == 401
+    assert response.get_json()["error"]["code"] == "UNAUTHORIZED"
+
+
+def test_evaluations_route_student_access(api_client):
+    with api_client.session_transaction() as session:
+        session["user_id"] = 1
+        session["role"] = "student"
+
+    response = api_client.get("/evaluations")
 
     assert response.status_code == 200
     assert b"EduSurvey" in response.data
+    assert b"My Evaluations" in response.data
+
+
+def test_evaluations_route_lecturer_forbidden(api_client):
+    with api_client.session_transaction() as session:
+        session["user_id"] = 2
+        session["role"] = "lecturer"
+
+    response = api_client.get("/evaluations")
+
+    assert response.status_code == 403
+    assert response.get_json()["error"]["code"] == "FORBIDDEN"
 
 
 def test_submission_requires_login(api_client):
@@ -514,7 +535,7 @@ def test_evaluation_statistics_calculates_response_count_and_averages(
             """,
             (second_response_id, rating_question_id, 2),
         )
-        
+
 
     response = api_client.get("/api/evaluations/1/statistics")
 
@@ -733,6 +754,7 @@ def test_deadline_reminder_is_recorded_once(api_client):
             VALUES (1, 1)
             """
         )
+
     first_result = send_deadline_reminders(now)
     second_result = send_deadline_reminders(now)
 
@@ -749,3 +771,150 @@ def test_deadline_reminder_is_recorded_once(api_client):
         ).fetchone()[0]
 
     assert count == 1
+
+
+# ==========================================
+# TASK #51 - LECTURER COURSE FEEDBACK API
+# ==========================================
+
+def test_lecturer_can_retrieve_course_feedback(api_client):
+    login_as_lecturer(api_client)
+
+    database = api_client.application.config["TEST_DATABASE"]
+
+    # Add a rating answer to the existing submitted response.
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            """
+            INSERT INTO response_answers
+                (response_id, question_id, rating_value)
+            VALUES (1, 1, 5)
+            """
+        )
+
+    response = api_client.get("/api/courses/1/feedback")
+
+    assert response.status_code == 200
+
+    data = response.get_json()
+
+    assert data["course"]["id"] == 1
+    assert data["course"]["course_code"] == "TEST101"
+    assert data["course"]["course_name"] == "Test Course"
+
+    assert data["completed_evaluations"] == 1
+    assert len(data["feedback"]) == 1
+
+    feedback = data["feedback"][0]
+
+    assert feedback["evaluation_id"] == 1
+    assert feedback["response_id"] == 1
+
+    answers = feedback["answers"]
+
+    rating_answer = next(
+        answer for answer in answers
+        if answer["question_type"] == "rating"
+    )
+
+    text_answer = next(
+        answer for answer in answers
+        if answer["question_type"] == "text"
+    )
+
+    assert rating_answer["rating_value"] == 5
+    assert text_answer["text_value"] == (
+        "The course content was very useful."
+    )
+
+
+def test_lecturer_cannot_access_unassigned_course(api_client):
+    database = api_client.application.config["TEST_DATABASE"]
+
+    # Create another lecturer without a course assignment.
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            """
+            INSERT INTO users (email, password_hash, full_name, role)
+            VALUES (?, ?, ?, ?)
+            """,
+            (
+                "lecturer2@test.com",
+                "test-hash",
+                "Lecturer Two",
+                "lecturer",
+            ),
+        )
+
+    with api_client.session_transaction() as session:
+        session["user_id"] = 4
+        session["role"] = "lecturer"
+
+    response = api_client.get("/api/courses/1/feedback")
+
+    assert response.status_code == 403
+
+    data = response.get_json()
+
+    assert data["error"]["message"] == (
+        "You do not have permission to view this course feedback."
+    )
+
+
+def test_student_cannot_access_lecturer_feedback(api_client):
+    login_as_student(api_client)
+
+    response = api_client.get("/api/courses/1/feedback")
+
+    assert response.status_code == 403
+
+
+def test_course_feedback_requires_login(api_client):
+    response = api_client.get("/api/courses/1/feedback")
+
+    assert response.status_code == 401
+
+
+def test_course_feedback_invalid_course(api_client):
+    login_as_lecturer(api_client)
+
+    response = api_client.get("/api/courses/9999/feedback")
+
+    assert response.status_code == 404
+
+
+
+def test_course_feedback_count_excludes_draft_responses(api_client):
+    login_as_lecturer(api_client)
+
+    database = api_client.application.config["TEST_DATABASE"]
+
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            """
+            INSERT INTO users (email, password_hash, full_name, role)
+            VALUES (?, ?, ?, ?)
+            """,
+            (
+                "student2@test.com",
+                "test-hash",
+                "Student Two",
+                "student",
+            ),
+        )
+
+        connection.execute(
+            """
+            INSERT INTO responses
+                (evaluation_id, student_id, status)
+            VALUES (1, 4, 'draft')
+            """
+        )
+
+    response = api_client.get("/api/courses/1/feedback")
+
+    assert response.status_code == 200
+
+    data = response.get_json()
+
+    assert data["completed_evaluations"] == 1
