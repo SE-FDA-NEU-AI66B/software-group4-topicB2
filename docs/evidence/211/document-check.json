@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-16",
+  "pdf": "docs/m5/Team04_M5_DRAFT.pdf",
+  "sha256": "811e86f5359ccc71b85588f56ca25a04b991624d9a5915e61e9b2b538e995157",
+  "pages": 1,
+  "first_line": "Running app: PENDING — actual HTTPS URL not provided/verified",
+  "team_number": 4,
+  "vietnamese_names_extract_correctly": true,
+  "student_ids_pending": 3,
+  "existing_links": [
+    {
+      "field": "repository",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2",
+      "status": 200
+    },
+    {
+      "field": "main_ci_url",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43744066081",
+      "status": 200
+    },
+    {
+      "field": "test_accounts_url",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/blob/main/README.md",
+      "status": 200
+    }
+  ],
+  "final_export_exit_code": 2,
+  "final_pdf_created": false,
+  "public_url_verified": false,
+  "pdf_submitted": false,
+  "visual_check": "PDF rendered by sips and inspected; white page, accents, links and draft warning present."
+}

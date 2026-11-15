@@ -1,0 +1,39 @@
+{
+  "team_number": 4,
+  "product": "EduSurvey",
+  "members": [
+    {
+      "name": "Khuất Đình Trung",
+      "student_id": null,
+      "github": "khuatnhatminhcfpro-cmyk"
+    },
+    {
+      "name": "Dương Đức Anh",
+      "student_id": null,
+      "github": "tlduongducanh281-jpg"
+    },
+    {
+      "name": "Lê Sỹ Huy",
+      "student_id": null,
+      "github": "lesyhuy2k6-gif"
+    }
+  ],
+  "scrum_master": "khuatnhatminhcfpro-cmyk",
+  "repository": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2",
+  "public_url": null,
+  "release_url": null,
+  "release_sha": null,
+  "deployed_sha": null,
+  "main_ci_url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43744066081",
+  "test_accounts_url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/blob/main/README.md",
+  "late_submission_agreement": null,
+  "confirmations": {
+    "team_details_confirmed": false,
+    "independent_review_and_merge": false,
+    "green_main_ci": false,
+    "provider_sha_and_public_p0_verified": false,
+    "links_and_live_availability_verified": false,
+    "twelve_minute_team_rehearsal_completed": false,
+    "late_submission_arrangement_confirmed": false
+  }
+}

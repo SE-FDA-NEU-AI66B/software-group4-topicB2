@@ -1189,3 +1189,38 @@ $env:PLAYWRIGHT_CHROMIUM_EXECUTABLE='C:\Program Files\Google\Chrome\Application\
 remain historical evidence. `git diff --check` passed. This merge does not
 apply administrator rules, grant approval, certify a provider release or
 replace the outstanding administrator/release handoff.
+
+## M5 release/submission preparation guards — #211 (2026-11-16)
+
+This is preparation evidence, not a final v1.0/public demo/LMS submission. Team 04
+is user-confirmed; existing repo names are retained, but no reliable student IDs
+were found in the searched repo/history/M1 task/PDF sources. See
+[team source audit](evidence/211/team-sources.json).
+
+| ID | Node in `tests/test_m5_submission.py` | Expected and actual check |
+|---|---|---|
+| M5-DOC01 | `test_committed_pending_data_refuses_final` | Current incomplete metadata only renders a marked draft; final mode raises. |
+| M5-DOC02 | `test_incomplete_final_is_rejected` (9 variants) | Missing team, mismatched SHA, local/private/invalid URL, missing release/late arrangement/confirmations blocks final. |
+| M5-DOC03 | `test_formatter_escapes_text_and_uses_supplied_metadata` | Synthetic formatter fixture emits escaped text, not injected script. It is not a real released team/app. |
+| M5-DOC04 | `test_placeholder_or_duplicate_student_ids_are_rejected` (2 variants) | Placeholder or duplicate IDs cannot pass by merely checking confirmations. |
+
+Actual local command `python -m pytest -q tests/test_m5_submission.py` →
+**13 passed in 0.02s**. `ruff check .` and `git diff --check` pass. The draft PDF
+was printed with real Chrome through Playwright, rendered for visual inspection
+and text-extracted: **one page**, first line Running app: PENDING, Team 04,
+correct Vietnamese names, three explicitly pending student IDs. Three existing
+repository/CI/README links returned HTTP 200. CLI `--final` exited **2** and no
+`Team04_M5.pdf` was created; [document-check.json](evidence/211/document-check.json)
+records the exact draft hash and scope. The formatter checks supplied metadata,
+not the truth of human/provider attestations, and never publishes/uploads.
+
+Safe mutation rehearsal on main `7c0b06e` used the existing temporary-export tool:
+**3 baseline passed → 1 equality variant failed / 2 passed → 3 restored passed**;
+workspace source unchanged. [Actual stage output/hashes](evidence/211/mutation.json).
+The latest observed green main CI ran **257 passed in 52.30s**; it is a dated
+main observation, not the prep-branch test count or browser performance evidence.
+
+The [readiness/contribution/rules sources](evidence/211/README.md) explicitly
+retain public-origin/deployed-SHA/release, official student-ID, M3 attribution,
+team rehearsal, late-submission and final per-person evidence gaps. No successful
+public tour, copied-cookie revocation, tag/release or course submission is claimed.
