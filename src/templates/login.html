@@ -10,6 +10,7 @@
           href="{{ url_for('static', filename='css/login.css') }}">
     <script defer
             src="{{ url_for('static', filename='js/login.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/session.css') }}">
 </head>
 <body>
     <div class="login-container">
@@ -98,6 +99,14 @@
 
                 </form>
 
+                <details class="demo-access">
+                    <summary>Try a demo account</summary>
+                    <p>For a seeded demo installation. Shared demo password: <code>Password123!</code></p>
+                    <p>Student: <code>student1@edusurvey.edu</code><br>
+                    Lecturer: <code>lecturer1@edusurvey.edu</code><br>
+                    Administrator: <code>admin@edusurvey.edu</code></p>
+                    <p>Enter an account above, then select Sign in. If unavailable, contact the demo operator.</p>
+                </details>
                 <p class="help-text">
                     New to EduSurvey?<br>
     Your account is provided by your university.<br>

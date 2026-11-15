@@ -16,6 +16,7 @@
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/complete_evaluation.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/session.css') }}">
 </head>
 
 <body data-evaluation-id="{{ evaluation_id }}">
@@ -29,6 +30,7 @@
     <a class="back-link" href="/evaluations">
         ← My Evaluations
     </a>
+    {% include "session_controls.html" %}
 </header>
 
 <main class="layout">
@@ -97,6 +99,11 @@
                 </a>
             </div>
 
+            <section id="submissionSuccess" hidden role="status" tabindex="-1">
+                <h2>Evaluation submitted successfully.</h2>
+                <p>Your response has been saved. This evaluation is now completed.</p>
+                <a class="button primary" href="/evaluations">Back to My Evaluations</a>
+            </section>
             <div id="questionsList"></div>
 
             <div id="validationMessage"
@@ -201,5 +208,6 @@
 <script src="{{ url_for('static', filename='js/complete_evaluation.js') }}"
         defer></script>
 
+<script src="{{ url_for('static', filename='js/session.js') }}" defer></script>
 </body>
 </html>

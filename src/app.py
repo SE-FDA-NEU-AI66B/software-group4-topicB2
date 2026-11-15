@@ -294,6 +294,14 @@ def classify_feedback(comment):
     return "Other"
 
 
+@app.after_request
+def prevent_private_page_caching(response):
+    """Avoid storing authenticated pages or authentication responses in caches."""
+    if session.get("user_id") or request.path.startswith("/api/auth/"):
+        response.headers["Cache-Control"] = "no-store"
+    return response
+
+
 @app.route("/login", methods=["GET"])
 def login_page():
     return render_template("login.html")
@@ -301,7 +309,13 @@ def login_page():
 
 @app.route("/")
 def home():
-    return '<h1>EduSurvey</h1><a href="/evaluations">View Evaluations</a>'
+    return render_template("login.html")
+
+
+@app.route("/account")
+@login_required()
+def account_page():
+    return render_template("account.html", role=session["role"])
 
 
 @app.route("/evaluations")
