@@ -84,6 +84,18 @@ For new tests, use a separate temporary SQLite database per case, load `src/sche
 | TC-US11-07 | US11 | Valid login then logout; GET /api/auth/me | 401; UNAUTHORIZED | Error |
 | TC-US11-08 | US11 | Anonymous POST /api/auth/logout | 200; authenticated=false | Normal |
 | TC-US11-09 | US11 | Insert student1@edusurvey.edu again into fixture users table | sqlite3.IntegrityError for duplicate email | Error |
+| US01-A01 | US01 | Lecturer demo credentials lecturer1@edusurvey.edu / Password123! | 200; user_id=2, role=lecturer in response and session | Normal |
+| US01-A02 | US01 | Administrator demo credentials admin@edusurvey.edu / Password123! | 200; user_id=3, role=administrator in response and session | Normal |
+| US01-A03 | US01 | Anonymous GET /api/auth/me | 401; UNAUTHORIZED; no authenticated session | Error |
+| US01-A04 | US01 | Anonymous GET /evaluations | 401 JSON; UNAUTHORIZED; no authenticated session | Error |
+| US01-A05 | US01 | Anonymous GET /evaluations/1/complete | 401 JSON; UNAUTHORIZED; no authenticated session | Error |
+| US01-A06 | US01 | Anonymous GET /api/evaluations | 401; UNAUTHORIZED; no authenticated session | Error |
+| US01-A07 | US01 | Student login then GET /api/auth/me; repeat with independent client | Original client: 200 and exact public student identity; independent client: 401 | Normal |
+| US01-A08 | US01 | Student demo login then GET both student pages and list API; no evaluations seeded | Pages: 200 HTML; API: 200 with count=0 and evaluations=[] | Normal |
+| US01-A09 | US01 | Lecturer demo login then GET both student pages and list API | All 403; FORBIDDEN | Error |
+| US01-A10 | US01 | Administrator demo login then GET both student pages and list API | All 403; FORBIDDEN | Error |
+| US01-A11 | US01 | Admin login; insert stale_state into session; login as student | Session contains only user_id=1 and role=student; student page returns 200 | Normal |
+| US01-A12 | US01 | Student login; delete that user in temporary database; GET /api/auth/me | 401; message="The authenticated user no longer exists."; session cleared | Error |
 
 The US02 fixture freezes the route clock before creating data at T=2026-11-03T12:00:00. The Due soon rule is strictly less than 24 hours; tests now check 86399, 86400 and 86401 seconds remaining separately. Deadline equality is Closed; additional tests check T-1s, T and T+1s. Rating boundaries and submission examples below belong to pending US03 work. Five required answers and 20 completed responses are acceptance examples, not implementation maxima.
 
@@ -115,7 +127,7 @@ All existing mappings below are API integration tests using temporary SQLite dat
 
 | Case ID | Pytest function | File | Level / type | Expected / actual verified result | Responsible Sprint 4 task |
 |---|---|---|---|---|---|
-| TC-01 | `test_login_success` | `tests/test_auth.py` | API integration / normal | Section 2 expectation; existing assertions PASS | #165 |
+| TC-01 | `test_login_success[TC-01-student]` | `tests/test_auth.py` | API integration / normal | Section 2 expectation; existing assertions PASS | #165 |
 | TC-02 | `test_login_wrong_password` | `tests/test_auth.py` | API integration / error | Section 2 expectation; existing assertions PASS | #165 |
 | TC-03 | `test_login_unknown_email` | `tests/test_auth.py` | API integration / error | Section 2 expectation; existing assertions PASS | #165 |
 | TC-04 | `test_login_missing_password` | `tests/test_auth.py` | API integration / error | Section 2 expectation; existing assertions PASS | #165 |
@@ -167,21 +179,33 @@ All existing mappings below are API integration tests using temporary SQLite dat
 | US02-L09 | `test_student_completion_is_personal` | `tests/test_student_evaluations.py` | API integration | Section 2 expectation; PASS (#166) | #166 |
 | US02-L10 | `test_draft_response_is_not_completed` | `tests/test_student_evaluations.py` | API integration | Section 2 expectation; PASS (#166) | #166 |
 | US02-L11 | `test_draft_evaluation_is_hidden` | `tests/test_student_evaluations.py` | API integration | Section 2 expectation; PASS (#166) | #166 |
-| TC-US11-01 | `test_login_success` | `tests/test_auth.py` | API / database integration | Section 2 expectation; verified in integration run below | #169 |
+| TC-US11-01 | `test_login_success[TC-01-student]` | `tests/test_auth.py` | API / database integration | Section 2 expectation; verified in integration run below | #169 |
 | TC-US11-02 | `test_login_wrong_password` | `tests/test_auth.py` | API / database integration | Section 2 expectation; verified in integration run below | #169 |
-| TC-US11-03 | `test_current_user_requires_login` | `tests/test_auth.py` | API / database integration | Section 2 expectation; verified in integration run below | #169 |
+| TC-US11-03 | `test_current_user_requires_login[US01-A03-me]` | `tests/test_auth.py` | API / database integration | Section 2 expectation; verified in integration run below | #169 |
 | TC-US11-04 | `test_current_user_after_login` | `tests/test_auth.py` | API / database integration | Section 2 expectation; verified in integration run below | #169 |
 | TC-US11-05 | `test_logout_success` | `tests/test_auth.py` | API / database integration | Section 2 expectation; verified in integration run below | #169 |
 | TC-US11-06 | `test_logout_clears_session` | `tests/test_auth.py` | API / database integration | Section 2 expectation; verified in integration run below | #169 |
 | TC-US11-07 | `test_protected_resource_after_logout_returns_401` | `tests/test_auth.py` | API / database integration | Section 2 expectation; verified in integration run below | #169 |
 | TC-US11-08 | `test_logout_without_login` | `tests/test_auth.py` | API / database integration | Section 2 expectation; verified in integration run below | #169 |
 | TC-US11-09 | `test_users_email_unique_constraint` | `tests/test_auth.py` | API / database integration | Section 2 expectation; verified in integration run below | #169 |
+| US01-A01 | `test_login_success[US01-A01-lecturer]` | `tests/test_auth.py` | API integration | Expected as Section 2; PASS | #165 |
+| US01-A02 | `test_login_success[US01-A02-admin]` | `tests/test_auth.py` | API integration | Expected as Section 2; PASS | #165 |
+| US01-A03 | `test_current_user_requires_login[US01-A03-me]` | `tests/test_auth.py` | API integration | Expected as Section 2; PASS | #165 |
+| US01-A04 | `test_current_user_requires_login[US01-A04-list-page]` | `tests/test_auth.py` | API integration | Expected as Section 2; PASS | #165 |
+| US01-A05 | `test_current_user_requires_login[US01-A05-complete-page]` | `tests/test_auth.py` | API integration | Expected as Section 2; PASS | #165 |
+| US01-A06 | `test_current_user_requires_login[US01-A06-list-api]` | `tests/test_auth.py` | API integration | Expected as Section 2; PASS | #165 |
+| US01-A07 | `test_current_user_after_login` | `tests/test_auth.py` | API integration | Expected as Section 2; PASS | #165 |
+| US01-A08 | `test_authenticated_student_access[US01-A08-student]` | `tests/test_auth.py` | API integration | Expected as Section 2; PASS | #165 |
+| US01-A09 | `test_authenticated_student_access[US01-A09-lecturer]` | `tests/test_auth.py` | API integration | Expected as Section 2; PASS | #165 |
+| US01-A10 | `test_authenticated_student_access[US01-A10-admin]` | `tests/test_auth.py` | API integration | Expected as Section 2; PASS | #165 |
+| US01-A11 | `test_login_replaces_previous_session` | `tests/test_auth.py` | API integration | Expected as Section 2; PASS | #165 |
+| US01-A12 | `test_current_user_deleted_account` | `tests/test_auth.py` | API integration | Expected as Section 2; PASS | #165 |
 
-Traceability totals: **61 cases; 42 mapped to existing tests; 19 NOT IMPLEMENTED**. The US02 matrix maps one documented case to each of its 20 collected pytest items. Other stories retain the #164 baseline mappings.
+Traceability totals: **73 cases; 54 mapped to existing tests; 19 NOT IMPLEMENTED**. The US02 matrix maps one documented case to each of its 20 collected pytest items. US01 mappings include #181, and the nine original US11 IDs are preserved.
 
 | Story | Documented cases | Existing mappings | Pending |
 |---|---:|---:|---:|
-| US01 | 4 | 4 | 0 |
+| US01 | 16 | 16 | 0 |
 | US02 | 20 | 20 | 0 |
 | US03 | 18 | 3 | 15 |
 | US04 | 6 | 5 | 1 |
@@ -196,7 +220,7 @@ collected 63 items
 
 In that historical baseline, all six modules ran: `test_auth.py` (7), `test_feedback_classifier.py` (3), `test_response_schema.py` (3), `test_smoke.py` (35), `test_status.py` (6), and `test_student_evaluations.py` (9). The extra tests cover schema integrity, classification, statistics, evaluation creation/deadline updates and reminders beyond the case matrix. There is no screenshot or verified CI result for this documentation commit.
 
-**Issue #166 actual verification, 2026-11-15:** macOS, Python 3.12.4, pytest 7.4.4, anyio 4.2.0; both commands exited 0:
+**Historical #166 actual verification, 2026-11-15:** macOS, Python 3.12.4, pytest 7.4.4, anyio 4.2.0; both commands exited 0:
 
 ```text
 python -m pytest -v tests/test_student_evaluations.py
@@ -208,17 +232,33 @@ python -m pytest -v
 
 No manual server or real database initialization is required. US02 uses no current-date calculation; other modules retain their historical fixture limitations. Its test IDs appear in parameter IDs or function docstrings and every item maps to Section 2/3. The existing #164 mutation evidence below is historical; its line number refers to the original test version, which #166 now parametrizes. No new production bug was found by the #166 test run. CI is not yet verified.
 
-**Integration verification (2026-11-15):** fetched main `ecc0727` baseline: `python -m pytest -v` → **67 passed in 3.02s**. This branch after resolution: `python -m pytest -v` → **67 passed in 3.00s**. All legacy US11 scenarios remain linked to actual test functions. Python tests do not establish the unrelated SQL-scanner check passes: CI's `No secrets committed` job rejects tracked `src/feedback_queries.sql` and `src/response_queries.sql` already present on main. No SQL file or scanner rule was changed here.
+**Integration verification (2026-11-15):** fetched main `ecc0727` baseline: `python -m pytest -v` → **67 passed in 3.02s**. PR #180 after resolution: `python -m pytest -v` → **67 passed in 3.00s**. All legacy US11 scenarios remain linked to actual test functions. Python tests do not establish the unrelated SQL-scanner check passes: CI's `No secrets committed` job rejects tracked `src/feedback_queries.sql` and `src/response_queries.sql` already present on main. No SQL file or scanner rule was changed here.
+
+**Historical #165 verified execution, 2026-11-15:** macOS, Python 3.12.4, pytest 7.4.4, anyio 4.2.0. Both commands exited 0:
+
+```text
+python -m pytest -v tests/test_auth.py
+17 passed in 2.04s
+
+python -m pytest -v
+73 passed in 4.11s
+```
+
+The pre-integration authentication module collected 17 items: 16 US01 cases and the retained US11 TC-38 regression. TC-01–TC-04 use their existing identifiers from PR #180; new IDs US01-A01–A12 avoid renumbering the other stories. Each parameter variant has an explicit pytest ID; nonparameterized functions carry the case ID in their docstring. Role-restriction variants each check three resources. No manual Flask server, real database, external service or wall-clock deadline is required. No production defect was found by this run. The #164 historical baseline/mutation evidence below remains distinct from this run; CI verification is pending.
+
+**PR #181 after integration (2026-11-15):** `python -m pytest -v` → **77 passed in 4.51s**; `python -m pytest -v tests/test_auth.py` → **21 passed in 2.32s**. The suite retains all distinct main US11 tests and all US01 tests; its single `test_logout_clears_session` combines both branches’ assertions. The original `TC-US11-*` IDs remain present. No production source, shared fixture file or SQL scanner was changed.
+
+**PR #182 after integration (2026-11-15):** `python -m pytest -v` → **88 passed in 2.66s**; `python -m pytest -v tests/test_auth.py tests/test_student_evaluations.py` → **41 passed in 2.40s** (21 authentication/US11 and 20 US02 items). Merge dependencies are #180 → #181 → #182. The final matrix has 73 unique IDs, 54 existing mappings and 19 pending cases belonging to US03, US04 and US11. No pending case was marked implemented without a real test. Historical mutation evidence is unchanged.
 
 **Fixture and assertion audit / remaining work:**
 
-- #165: `test_auth.py` creates a minimal users table and hashes a test-only password. Login success checks the student role and password-hash exclusion; failure-message equality, lecturer/admin login and unsupported roles need additional assertions/tests.
+- #165 completed: authentication fixtures load the real schema into a per-test temporary database; the three demo identities/password match `src/init_db.py`. They do not run the initializer or access the application database. TESTING and SECRET_KEY changes are restored by monkeypatch. TC-01–TC-04 and US01-A01–A12 verify all three roles, credentials, exact credential-error messages, anonymous page/API restrictions, session persistence/isolation/replacement and deleted-account invalidation. Unsupported-role login is not tested because the actual schema rejects unsupported roles; performance and the requirement-message discrepancy remain outside this task.
 - #166 completed: the list fixture loads the real schema into a fresh `tmp_path` SQLite database, freezes the application clock before seeding, supplies explicit fixture timestamps, and restores Flask configuration with monkeypatch. Twenty individually traceable items cover retrieval, anonymous/role denial, disjoint enrollment and query impersonation attempts, personal completion status, empty lists, all four display statuses, draft states, completion precedence, and both exact time boundaries. Authentication is injected through `session_transaction()` to isolate US02; credential login remains US01. The retrieval case checks three total evaluations including closed, not three active evaluations.
 - #167: smoke fixtures pre-seed a submitted response, so current submission tests cover rejection rather than a successful submission. Use fresh/draft data for success and boundary cases. The existing expired-deadline test uses 2000, while normal fixtures use 2099 and the real clock; neither is an exact fixed-time boundary. Test transaction rollback, enrollment/role denial, question loading at `GET /api/evaluations/<evaluation_id>/questions`, invalid IDs and wrong-question answers as further coverage. Required-answer and duplicate error messages come from source; existing tests assert codes only.
 - #168: lecturer ownership denial asserts the exact message. Other mapped feedback tests assert status and/or returned data. Add the 20-response acceptance example and test no cross-course leakage. Statistics and topic routes currently lack the authentication/ownership decorators used by the course-feedback route; passing smoke tests do not establish access control for those endpoints.
 - #169 integrated: retain logout success, session clearing, post-logout `/api/auth/me` denial, anonymous logout and duplicate-email coverage and all nine legacy IDs. Redirects, role-specific post-logout denial, repeated anonymous logout and saved-cookie replay remain unverified. Flask uses a signed client-side cookie and logout calls `session.clear()`; server-side revocation of a copied old cookie is not demonstrated. Shared app configuration is changed by fixtures without comprehensive restoration; centralize isolated fixtures and freeze both Python time and SQL timestamps where assertions depend on time.
 
-Schema tests explicitly enable foreign keys on `:memory:` SQLite. Smoke tests load the real schema into `tmp_path`; other fixtures create reduced schemas, so they cannot establish all production constraints. Some smoke fixture rows use SQLite `CURRENT_TIMESTAMP`, which Python clock patching does not control. Current tests avoid the real application database, but the suite does **not yet satisfy** the stricter requirement to avoid uncontrolled current dates everywhere. Issue #166 changes only this documentation and `tests/test_student_evaluations.py`; no production logic is changed. Authentication fixtures in this branch still match main; PR #181 is separate.
+Schema tests explicitly enable foreign keys on `:memory:` SQLite. Smoke tests load the real schema into `tmp_path`; other fixtures create reduced schemas, so they cannot establish all production constraints. Some smoke fixture rows use SQLite `CURRENT_TIMESTAMP`, which Python clock patching does not control. Current tests avoid the real application database, but the suite does **not yet satisfy** the stricter requirement to avoid uncontrolled current dates everywhere. Issue #166 changes only this documentation and `tests/test_student_evaluations.py`; no production logic is changed. Authentication fixtures now include PR #181 and the main US11 assertions; all distinct tests are preserved.
 
 ## 4. What the tests found
 
