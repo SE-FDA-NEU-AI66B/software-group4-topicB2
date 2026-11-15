@@ -257,3 +257,112 @@ def test_users_email_unique_constraint(client):
                     "student",
                 ),
             )
+
+
+@pytest.fixture
+def logout_client(client, fixed_app_clock):
+    """Seed real protected data for TC-39/40 in the existing temporary auth DB."""
+    from contextlib import closing
+
+    timestamp = fixed_app_clock.strftime("%Y-%m-%d %H:%M:%S")
+    with closing(sqlite3.connect(app_module.DATABASE)) as connection, connection:
+        connection.execute(
+            "INSERT INTO courses (id, course_code, course_name, created_at) "
+            "VALUES (1, 'LOGOUT101', 'PRIVATE_STUDENT_COURSE', ?)", (timestamp,),
+        )
+        connection.execute(
+            "INSERT INTO course_enrollments (student_id, course_id, enrolled_at) "
+            "VALUES (1, 1, ?)", (timestamp,),
+        )
+        connection.execute(
+            "INSERT INTO course_lecturers (lecturer_id, course_id, assigned_at) "
+            "VALUES (2, 1, ?)", (timestamp,),
+        )
+        connection.execute(
+            "INSERT INTO evaluations (id, course_id, created_by, title, deadline, status, created_at) "
+            "VALUES (1, 1, 2, 'PRIVATE_EVALUATION', '2026-11-10 12:00:00', 'open', ?)",
+            (timestamp,),
+        )
+        connection.execute(
+            "INSERT INTO questions (id, evaluation_id, question_text, question_type, is_required, question_order) "
+            "VALUES (1, 1, 'Course feedback', 'text', 1, 1)"
+        )
+        connection.execute(
+            "INSERT INTO responses (id, evaluation_id, student_id, submitted_at, status) "
+            "VALUES (1, 1, 1, ?, 'submitted')", (timestamp,),
+        )
+        connection.execute(
+            "INSERT INTO response_answers (response_id, question_id, text_value) "
+            "VALUES (1, 1, 'PRIVATE_SUBMITTED_FEEDBACK')"
+        )
+    return client
+
+
+def test_student_page_denied_after_logout(logout_client):
+    """TC-39 / US11 #183 + US02 #18: a real student loses page/API access."""
+    client = logout_client
+    authenticated = login(client)
+    assert authenticated.status_code == 200
+    assert authenticated.get_json()["user"]["role"] == "student"
+    assert client.get("/evaluations").status_code == 200
+    before = client.get("/api/evaluations")
+    assert before.status_code == 200
+    assert before.get_json()["count"] == 1
+    assert b"PRIVATE_STUDENT_COURSE" in before.data
+
+    logout = client.post("/api/auth/logout")
+    assert logout.status_code == 200
+    assert logout.get_json() == {"authenticated": False}
+    assert_anonymous(client)
+    for path in ("/evaluations", "/api/evaluations"):
+        response = client.get(path, follow_redirects=False)
+        assert response.status_code == 401
+        assert response.is_json
+        assert response.get_json() == {"error": {
+            "code": "UNAUTHORIZED",
+            "message": "You must be logged in to access this resource.",
+            "action": "Log in and try again.",
+        }}
+        assert "Location" not in response.headers
+        assert b"PRIVATE_STUDENT_COURSE" not in response.data
+        assert b"PRIVATE_EVALUATION" not in response.data
+
+
+def test_lecturer_feedback_denied_after_logout(logout_client):
+    """TC-40 / US11 #183 + US04 #50: an assigned lecturer loses real feedback."""
+    client = logout_client
+    authenticated = login(client, "lecturer1@edusurvey.edu")
+    assert authenticated.status_code == 200
+    assert authenticated.get_json()["user"]["role"] == "lecturer"
+    before = client.get("/api/courses/1/feedback")
+    assert before.status_code == 200
+    assert before.get_json()["completed_evaluations"] == 1
+    assert b"PRIVATE_SUBMITTED_FEEDBACK" in before.data
+
+    logout = client.post("/api/auth/logout")
+    assert logout.status_code == 200
+    assert logout.get_json() == {"authenticated": False}
+    assert_anonymous(client)
+    response = client.get("/api/courses/1/feedback", follow_redirects=False)
+    assert response.status_code == 401
+    assert response.is_json
+    assert response.get_json() == {"error": {
+        "code": "UNAUTHORIZED",
+        "message": "You must be logged in to access this resource.",
+        "action": "Log in and try again.",
+    }}
+    assert "Location" not in response.headers
+    assert b"PRIVATE_SUBMITTED_FEEDBACK" not in response.data
+    assert b"PRIVATE_STUDENT_COURSE" not in response.data
+
+
+def test_anonymous_logout_is_idempotent(client, fixed_app_clock):
+    """TC-41 / US11 #183: two anonymous logouts succeed and remain anonymous."""
+    assert_anonymous(client)
+    for _ in range(2):
+        response = client.post("/api/auth/logout", follow_redirects=False)
+        assert response.status_code == 200
+        assert response.is_json
+        assert response.get_json() == {"authenticated": False}
+        assert "Location" not in response.headers
+        assert_anonymous(client)

@@ -5,120 +5,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>EduSurvey - Lecturer Feedback</title>
-    <style>
-        :root {
-            font-family: Arial, sans-serif;
-            color: #1f2937;
-            background: #f5f7fb;
-        }
-
-        * { box-sizing: border-box; }
-
-        body {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 32px 20px;
-        }
-
-        a { color: #2563eb; }
-
-        .muted { color: #64748b; }
-
-        .panel, .evaluation, .feedback-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 16px 0;
-        }
-
-        .evaluation {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .evaluation h2 { margin-top: 0; }
-
-        .button {
-            display: inline-block;
-            background: #2563eb;
-            color: white;
-            padding: 10px 14px;
-            border-radius: 8px;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 16px;
-            margin: 20px 0;
-        }
-
-        .stat {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 20px;
-        }
-
-        .stat strong {
-            display: block;
-            font-size: 28px;
-            margin-top: 8px;
-        }
-
-        .feedback-card h3 { margin-top: 0; }
-
-        .rating {
-            color: #b45309;
-            font-weight: bold;
-        }
-
-        .empty {
-            text-align: center;
-            padding: 36px 20px;
-            background: white;
-            border: 1px dashed #cbd5e1;
-            border-radius: 12px;
-        }
-
-        .error {
-            color: #b91c1c;
-            background: #fef2f2;
-            padding: 16px;
-            border-radius: 8px;
-        }
-
-        @media (max-width: 650px) {
-            .stats { grid-template-columns: 1fr; }
-            .evaluation {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-        }
-    </style>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/session.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/lecturer_feedback.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/session.css') }}">
 </head>
 <body>
-    <header>
+    <a class="skip-link" href="#main-content">Skip to feedback</a>
+    <header class="workspace-header">
+        <a class="brand" href="/lecturer/feedback" aria-label="EduSurvey lecturer home"><span aria-hidden="true">E</span> EduSurvey</a>
+        {% if session.get('user_id') %}{% include "session_controls.html" %}
+        {% else %}<a class="button" href="/login">Sign in</a>{% endif %}
+    </header>
+    <main id="main-content" tabindex="-1">
+    <div class="page-intro">
         <p class="muted">EDUSURVEY / LECTURER</p>
         <h1>Student Feedback Review</h1>
         <p class="muted">
             Review submitted course evaluations, ratings, and comments.
         </p>
-        {% include "session_controls.html" %}
-    </header>
+    </div>
 
     {% if error_message %}
-        <p class="error" role="alert">{{ error_message }}</p>
+        <section class="error" role="alert" aria-labelledby="feedback-error-heading">
+            <p class="eyebrow">FEEDBACK ACCESS</p>
+            <h2 id="feedback-error-heading">Unable to display feedback</h2>
+            <p>{{ error_message }}</p>
+            {% if error_kind == 'sign-in' %}
+                <p>Your session is missing or has ended. Sign in with your lecturer account to continue.</p>
+                <a class="button" href="/login">Sign in to continue</a>
+            {% elif error_kind == 'role' %}
+                <p>This account does not have the lecturer role. Return to your account, or sign out above and use a lecturer account.</p>
+                <a class="button" href="/account">Return to My account</a>
+            {% elif error_kind == 'unavailable' %}
+                <p>The server could not load feedback data. Try again; if the problem continues, contact your university administrator.</p>
+                <a class="button" href="{{ request.path }}">Try again</a>
+            {% elif error_message == 'Evaluation not found.' %}
+                <p>The evaluation may have been removed or the link is outdated. Return to your assigned evaluations and choose an available item.</p>
+                <a class="button" href="/lecturer/feedback">Return to assigned evaluations</a>
+            {% else %}
+                <p>Only lecturers assigned to a course can review its feedback. Return to your assigned evaluations; contact your university administrator if an assignment is missing.</p>
+                <a class="button" href="/lecturer/feedback">Return to assigned evaluations</a>
+            {% endif %}
+        </section>
     {% elif selected_evaluation %}
         <p><a href="/lecturer/feedback">&larr; All evaluations</a></p>
 
-        <section class="panel">
+        <section class="panel" aria-label="Selected evaluation">
             <p class="muted">
                 {{ selected_evaluation["course_code"] }}
                 &mdash;
@@ -138,7 +69,7 @@
         <section class="stats" aria-label="Feedback summary">
             <div class="stat">
                 <span class="muted">Completed evaluations</span>
-                <strong>{{ completed_responses }}</strong>
+                <span data-completed-count><strong>{{ completed_responses }}</strong></span>
             </div>
             <div class="stat">
                 <span class="muted">Average rating</span>
@@ -157,11 +88,12 @@
         </section>
 
         {% if completed_responses == 0 %}
-            <section class="empty">
+            <section class="empty" role="status">
                 <h2>No feedback submitted yet</h2>
                 <p class="muted">
-                    Submitted student ratings and comments will appear here.
+                    Only completed submissions appear here; draft answers are excluded. Return after students submit their evaluations.
                 </p>
+                <a href="{{ request.path }}">Refresh feedback</a>
             </section>
         {% else %}
             <section>
@@ -181,7 +113,7 @@
                     {% endfor %}
                 {% else %}
                     <p class="muted">
-                        No rating answers are available.
+                        No rating answers are available in the completed responses. Use All evaluations above to choose another evaluation, or return after more students submit.
                     </p>
                 {% endif %}
             </section>
@@ -192,7 +124,7 @@
                     {% for item in comments %}
                         <article class="feedback-card">
                             <h3>{{ item["question_text"] }}</h3>
-                            <p>{{ item["text_value"] }}</p>
+                            <p class="comment-text">{{ item["text_value"] }}</p>
                             <p class="muted">
                                 Submitted:
                                 {{ item["submitted_at"] or "Date unavailable" }}
@@ -204,7 +136,8 @@
                         <h3>No written comments</h3>
                         <p class="muted">
                             No written feedback has been submitted for this
-                            evaluation.
+                            evaluation. Use All evaluations above to choose another evaluation,
+                            or return after more students submit written answers.
                         </p>
                     </div>
                 {% endif %}
@@ -216,7 +149,7 @@
 
             {% if evaluations %}
                 {% for item in evaluations %}
-                    <article class="evaluation">
+                    <article class="evaluation" data-evaluation-id="{{ item['id'] }}">
                         <div>
                             <p class="muted">
                                 {{ item["course_code"] }}
@@ -233,21 +166,24 @@
                             </p>
                         </div>
                         <a class="button"
-                           href="/lecturer/feedback/{{ item['id'] }}">
+                           href="/lecturer/feedback/{{ item['id'] }}"
+                           aria-label="Review feedback: {{ item['title'] }}">
                             Review feedback
                         </a>
                     </article>
                 {% endfor %}
             {% else %}
-                <div class="empty">
+                <div class="empty" role="status">
                     <h2>No evaluations available</h2>
                     <p class="muted">
-                        Evaluations for your assigned courses will appear here.
+                        No course evaluations are currently assigned to your lecturer account. Refresh this page after an assignment is added, or contact your university administrator to check your course assignments.
                     </p>
+                    <a href="/lecturer/feedback">Refresh assigned evaluations</a>
                 </div>
             {% endif %}
         </section>
     {% endif %}
+</main>
 <script src="{{ url_for('static', filename='js/session.js') }}" defer></script>
 </body>
 </html>

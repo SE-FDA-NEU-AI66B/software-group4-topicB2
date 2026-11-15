@@ -333,7 +333,8 @@ def test_feedback_completed_count(api_client, fixed_app_clock, count):
     assert "COUNT_DRAFT_ONLY" not in page.get_data(as_text=True)
     # Bind the number to its label so a rating or unrelated summary cannot match.
     match = re.search(
-        r'<span class="muted">Completed evaluations</span>\s*<strong>(\d+)</strong>',
+        r'<span class="muted">Completed evaluations</span>\s*'
+        r'<span data-completed-count><strong>(\d+)</strong></span>',
         page.get_data(as_text=True),
     )
     assert match is not None
