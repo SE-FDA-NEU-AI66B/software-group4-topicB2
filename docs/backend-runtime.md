@@ -1,5 +1,14 @@
 # Backend runtime handover (local evidence; platform configuration pending)
 
+The #204 [database runbook](database-operations.md) supersedes the earlier
+initializer/backup details below: initialization now refuses an existing file
+in every environment, builds privately and publishes without overwriting;
+backups also validate foreign keys. It records the paid Render disk decision,
+assigned backup policy and isolated recovery verification, with host deployment
+checks explicitly pending. POSIX backup files use owner-only creation mode;
+Windows ACL protection needs operator configuration and is not inferred from
+POSIX mode bits.
+
 This supplements the backend portion of #204/#205/#206/#208; it does not certify a public deployment or replace the final reviewed operations handover. No real production URL, platform dashboard, storage mount or alert channel has been verified.
 
 ## Run and provision

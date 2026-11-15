@@ -1,6 +1,7 @@
 import argparse
 import os
 import sqlite3
+import tempfile
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -13,13 +14,22 @@ SCHEMA_PATH = BASE_DIR / "src" / "schema.sql"
 
 
 def initialize_database(m5_demo=False, now=None):
-    if os.environ.get("EDUSURVEY_ENV") == "production" and DB_PATH.exists():
-        raise RuntimeError("Refusing to reset an existing production database. Use a reviewed migration.")
-    DB_DIR.mkdir(parents=True, exist_ok=True)
-
-    connection = sqlite3.connect(DB_PATH)
+    if DB_PATH.exists():
+        raise RuntimeError("Refusing to reset an existing database. Use a reviewed migration.")
+    if os.environ.get("EDUSURVEY_ENV") == "production" and not DB_PATH.is_absolute():
+        raise RuntimeError("Production initialization requires an absolute database path.")
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    # Build privately beside the destination. Publish only a fully validated DB,
+    # without overwriting even if another initializer wins the startup race.
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=".edusurvey-init-", suffix=".db", dir=DB_PATH.parent,
+    )
+    os.close(descriptor)
+    temporary_path = Path(temporary_name)
+    connection = None
 
     try:
+        connection = sqlite3.connect(temporary_path)
         connection.execute("PRAGMA foreign_keys = ON")
 
         with open(SCHEMA_PATH, "r", encoding="utf-8") as schema_file:
@@ -330,6 +340,9 @@ def initialize_database(m5_demo=False, now=None):
             )
 
         connection.commit()
+        connection.close()
+        connection = None
+        os.link(temporary_path, DB_PATH)
 
         print("EduSurvey database initialized successfully.")
         print(f"Database: {DB_PATH}")
@@ -338,15 +351,18 @@ def initialize_database(m5_demo=False, now=None):
             print(f"Seeded {table}: {count}")
 
     except Exception:
-        connection.rollback()
+        if connection is not None:
+            connection.rollback()
         raise
 
     finally:
-        connection.close()
+        if connection is not None:
+            connection.close()
+        temporary_path.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Initialize a NEW EduSurvey database (destructive outside production).")
+    parser = argparse.ArgumentParser(description="Initialize a NEW EduSurvey database; existing files are never reset.")
     parser.add_argument("--m5-demo", action="store_true", help="Seed synthetic demo workflows with upcoming deadlines.")
     arguments = parser.parse_args()
     initialize_database(m5_demo=arguments.m5_demo)

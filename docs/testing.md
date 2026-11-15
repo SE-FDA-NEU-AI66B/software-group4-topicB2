@@ -1,5 +1,13 @@
 # EduSurvey M4 Automated Testing
 
+**Latest #204 verification (2026-11-15): 206 passed in 56.91s, zero
+failures/errors/skips** on Windows/Python 3.11.9. This includes 16 new
+production-database cases, the retained 190 cases and the #227 runtime-contract
+test fixes. The historical #189 FK-OFF/exception-propagation assumptions below
+are superseded: current runtime enforces FK=1 and sanitizes SQLite failures as
+503/DATABASE_UNAVAILABLE. See the #204 register at the end and
+[the database operations runbook](database-operations.md).
+
 **Backend audit contract update — 2026-11-15.**
 
 Current behavior supersedes earlier dated 401-HTML/old-message snapshots below: approved #214 uses canonical API messages, and #215 redirects anonymous protected HTML navigation to `/login` while APIs/JSON clients retain JSON 401. Existing denial scenarios and all old test IDs are retained; their HTML-only assertions are deliberately updated. Topic/ranking/statistics APIs now require assigned lecturer access. [Backend file/route map](backend.md) and [runtime handover](backend-runtime.md) explain the implementation and remaining deployment/security limits.
@@ -697,3 +705,74 @@ JUnit confirms 149 tests, zero errors/failures/skips (142 retained + 7 new audit
 variants). Existing browser, authentication/logout, feedback, uniqueness and
 submission/deadline cases are retained. No schema, production route or SQL helper
 was changed. CI verification is separate from this local result.
+
+## #204 production database, demo persistence and isolated recovery
+
+Parent #200; interfaces with deployment #205 and operations #208. The schema
+and production routes are retained. New initialization publishes only a fully
+seeded private file without replacing an existing target. Backup validation
+now rejects FK-invalid source/copy data; `tools.verify_database` validates
+read-only and compares the complete offline schema/data/sequence dump.
+
+All nodes below are in `tests/test_production_database.py`; dependencies include
+US01 #14 (real role login), US02 #18 (usable evaluations), US03 #22 (committed
+submission) and US04 #50 (restored submitted feedback).
+
+| Evidence / dependency | Real pytest node suffix | Verified result |
+|---|---|---|
+| DB204-01 / #14,#18,#50 | `test_demo_roles_have_usable_landing[student1@edusurvey.edu-student-/evaluations]`, `[lecturer1@edusurvey.edu-lecturer-/lecturer/feedback]`, `[admin@edusurvey.edu-administrator-/account]` | Three canonical demo credentials work; student active work, lecturer feedback and administrator landing exist |
+| DB204-02 / #204,#205 | `test_initializer_preserves_existing_file[production]`, `[development]` | Both environments refuse repeat initialization; existing bytes preserved |
+| DB204-03 / #204 | `test_failed_initialization_leaves_no_published_database` | Injected seed failure publishes no partial file and cleans temporary output |
+| DB204-04 / #204,#205 | `test_initializer_never_overwrites_concurrent_winner` | Late concurrent target is preserved; exclusive publication fails closed |
+| DB204-05 / #204,#205 | `test_platform_environment_and_new_process_read` | Separate process imports production env path/secure cookies and reads health |
+| DB204-06 / #22,#50,#204 | `test_actual_backup_restore_preserves_snapshot` | Real API submission backed up/restored; full schema/rows/sequences equal; later source edit excluded; restored role workflows and no-overwrite checks pass |
+| DB204-07 / #22,#204 | `test_created_record_survives_new_process` | A committed submission/answers survive a separate application process |
+| DB204-08 / #204 | `test_backup_rejects_invalid_source_without_output[missing]`, `[corrupt]`, `[foreign-key]` | Reject invalid source; no output or source mutation |
+| DB204-09 / #204 | `test_failed_backup_removes_only_its_partial_output` | Injected online-copy failure removes partial copy and preserves source |
+| DB204-10 / #204 | `test_readonly_verification_never_creates_missing_file` | Missing verification path fails without creating a file |
+| DB204-11 / #18,#22,#204 | `test_seeded_submission_survives_browser_reload` | Chromium uses full M5 seed; real login, two ratings/comment, submit, reload; completion and exactly one response/three answers persist |
+
+The fixture freezes application time, initializes only under tmp_path and
+restores environment/configuration via monkeypatch. Browser HTTP runs on a
+fixture-owned ephemeral loopback server; only that local fixture disables
+Secure cookies. Production HTTPS behavior is unchanged. Seed SQL default
+timestamps are not claimed to follow Python's frozen time; assertions compare
+actual snapshots rather than invented timestamp values.
+
+Main advanced to `6acf0dd` while this task was being prepared. The baseline
+test-contract fixes from merged deployment PR #226 are retained exactly;
+this PR does not introduce a competing baseline implementation. DB-189-F01
+checks orphan rejection on two FK-enabled runtime connections; rollback variants
+assert sanitized 503, exact draft/new snapshots and a successful retry. BE-05
+uses native absolute paths; BE-07 verifies requested creation mode 0600 and
+POSIX effective permissions, preserving restore/no-overwrite checks. Windows
+ACLs remain an operator requirement. No tests are skipped or removed.
+
+Actual execution by OpenAI Codex (AI-assisted, not a separate teammate run),
+Windows NT 10.0.26200.0 / Python 3.11.9 / pytest 9.2.0 / Flask 3.1.2 /
+Playwright 1.65.2 / installed Chrome 157.0.8103.51:
+
+```powershell
+$env:PLAYWRIGHT_CHROMIUM_EXECUTABLE='C:\Program Files\Google\Chrome\Application\chrome.exe'
+& .venv/m4-env/Scripts/python.exe -m pytest -v --cov --cov-report=term-missing --junitxml=docs/evidence/204/pytest.xml
+# 206 passed in 56.91s; exit 0; no errors/failures/skips
+```
+
+[Console](evidence/204/pytest.txt) and [JUnit](evidence/204/pytest.xml) retain
+the actual run. The initial 15-case focused run passed before adding the
+separate-process committed-record case and strengthening restored-role checks;
+the full run above includes all 16 final cases. Ruff on all changed Python
+files and `git diff --check` passed. This is not measured production latency.
+
+An additional CLI drill used a TemporaryDirectory: `python -m src.init_db
+--m5-demo`, insert a synthetic recovery marker, `python tools/backup_database.py
+source.db snapshot.db`, edit the original marker, copy snapshot to restored,
+then `python -m tools.verify_database snapshot.db --compare restored.db`.
+Integrity/FK/schema/data comparison passed; restored marker retained its
+pre-backup value. [Actual commands/results](evidence/204/restore-check.json)
+contain only statuses/counts and synthetic temporary paths. The corrected
+drill explicitly closes SQLite handles before removing all its temporary files.
+
+Pending external evidence: actual paid mount/URL, restart and redeploy survival,
+off-host backup transfer/scheduling and host-level restore under #205/#208,
+plus a teammate's independent review. Local tests do not certify those actions.

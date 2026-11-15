@@ -1,0 +1,68 @@
+{
+  "executed_date": "2026-11-15",
+  "operator": "OpenAI Codex (AI-assisted, not independent teammate execution)",
+  "python": "3.11.9",
+  "storage": "TemporaryDirectory; all SQLite files removed on completion",
+  "record_recovered": true,
+  "post_backup_change_excluded": true,
+  "verification": {
+    "comparison": "equal",
+    "foreign_keys": "ok",
+    "integrity": "ok",
+    "table_counts": {
+      "course_enrollments": 7,
+      "course_lecturers": 5,
+      "courses": 6,
+      "deadline_reminders": 0,
+      "evaluations": 10,
+      "questions": 30,
+      "response_answers": 14,
+      "responses": 6,
+      "users": 6
+    }
+  },
+  "commands": [
+    {
+      "command": [
+        "python",
+        "-m",
+        "src.init_db",
+        "--m5-demo"
+      ],
+      "exit_code": 0,
+      "stdout": "EduSurvey database initialized successfully.\nDatabase: C:\\Users\\ADMIN\\AppData\\Local\\Temp\\edusurvey-204-drill-caqylu0j\\source.db\nSeeded users: 6\nSeeded courses: 5\nSeeded course_enrollments: 7\nSeeded course_lecturers: 5\nSeeded evaluations: 10\nSeeded questions: 30\nSeeded responses: 6\nSeeded response_answers: 14\n"
+    },
+    {
+      "command": [
+        "python",
+        "tools/backup_database.py",
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\edusurvey-204-drill-caqylu0j\\source.db",
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\edusurvey-204-drill-caqylu0j\\snapshot.db"
+      ],
+      "exit_code": 0,
+      "stdout": "Backup created and integrity checked. Treat the backup as private data.\n"
+    },
+    {
+      "command": [
+        "python",
+        "tools/backup_database.py",
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\edusurvey-204-drill-caqylu0j\\snapshot.db",
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\edusurvey-204-drill-caqylu0j\\restored.db"
+      ],
+      "exit_code": 0,
+      "stdout": "Backup created and integrity checked. Treat the backup as private data.\n"
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "tools.verify_database",
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\edusurvey-204-drill-caqylu0j\\snapshot.db",
+        "--compare",
+        "C:\\Users\\ADMIN\\AppData\\Local\\Temp\\edusurvey-204-drill-caqylu0j\\restored.db"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"comparison\": \"equal\", \"foreign_keys\": \"ok\", \"integrity\": \"ok\", \"table_counts\": {\"course_enrollments\": 7, \"course_lecturers\": 5, \"courses\": 6, \"deadline_reminders\": 0, \"evaluations\": 10, \"questions\": 30, \"response_answers\": 14, \"responses\": 6, \"users\": 6}}\n"
+    }
+  ]
+}
