@@ -1,15 +1,21 @@
+import argparse
+import os
 import sqlite3
-from werkzeug.security import generate_password_hash
+from datetime import datetime, timedelta
 from pathlib import Path
 
+from werkzeug.security import generate_password_hash
+
 BASE_DIR = Path(__file__).resolve().parent.parent
-DB_DIR = BASE_DIR / "data"
-DB_PATH = DB_DIR / "edusurvey.db"
+DB_PATH = Path(os.environ.get("EDUSURVEY_DATABASE", str(BASE_DIR / "data" / "edusurvey.db")))
+DB_DIR = DB_PATH.parent
 SCHEMA_PATH = BASE_DIR / "src" / "schema.sql"
 
 
-def initialize_database():
-    DB_DIR.mkdir(exist_ok=True)
+def initialize_database(m5_demo=False, now=None):
+    if os.environ.get("EDUSURVEY_ENV") == "production" and DB_PATH.exists():
+        raise RuntimeError("Refusing to reset an existing production database. Use a reviewed migration.")
+    DB_DIR.mkdir(parents=True, exist_ok=True)
 
     connection = sqlite3.connect(DB_PATH)
 
@@ -290,6 +296,13 @@ def initialize_database():
                         ),
                     )
 
+        if m5_demo:
+            # Explicit opt-in for a NEW synthetic demo DB; never refresh an existing deployment.
+            deadline = ((now or datetime.now()) + timedelta(days=7)).strftime("%Y-%m-%d %H:%M:%S")
+            cursor.execute("UPDATE evaluations SET deadline = ? WHERE status='open'", (deadline,))
+            cursor.execute("DELETE FROM response_answers WHERE response_id IN (SELECT id FROM responses WHERE student_id=1 AND evaluation_id=1)")
+            cursor.execute("DELETE FROM responses WHERE student_id=1 AND evaluation_id=1")
+
         # Verify seeded data before committing.
         counts = {}
 
@@ -333,4 +346,7 @@ def initialize_database():
 
 
 if __name__ == "__main__":
-    initialize_database()
+    parser = argparse.ArgumentParser(description="Initialize a NEW EduSurvey database (destructive outside production).")
+    parser.add_argument("--m5-demo", action="store_true", help="Seed synthetic demo workflows with upcoming deadlines.")
+    arguments = parser.parse_args()
+    initialize_database(m5_demo=arguments.m5_demo)

@@ -10,7 +10,7 @@ def get_evaluation_status(deadline, completed, now=None):
     if isinstance(deadline, str):
         deadline = datetime.fromisoformat(deadline)
 
-    now = now or datetime.now()
+    now = now or datetime.now(deadline.tzinfo)
 
     if deadline <= now:
         return "Closed"

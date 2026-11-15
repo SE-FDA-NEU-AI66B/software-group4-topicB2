@@ -103,3 +103,7 @@ The review/planning work is ready for independent review: five contract discrepa
 ## Integration with merged M5 UI
 
 Main `2b644c7` includes #213 and #218. The source-only navigation findings above describe the original diagnostic baseline: #218 has since corrected role landings, added persisted submission receipts and visible logout navigation. P0C-03/04/07 now have real browser nodes. Preserve the original latency samples and copied-cookie observation as dated evidence; no measurement is silently regenerated, and #214/#215/#216 plus deployment timing remain separate.
+
+## Backend contract implementation update
+
+After the backend audit, P0C-01/02 (canonical credential messages), P0C-05/06 (canonical duplicate messages with data preserved), and P0C-08 (HTML-only redirects, API JSON unchanged) are implemented and mapped in [testing.md](testing.md). Earlier baseline diagnostics and future-register status text are historical; the current verification register supersedes those pending markers for these five IDs. P0C-09 copied-cookie policy and all deployed timing assertions remain pending. The backend runtime/health/backup additions are documented separately in [backend.md](backend.md).

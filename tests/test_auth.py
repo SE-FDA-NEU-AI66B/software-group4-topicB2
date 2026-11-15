@@ -84,7 +84,7 @@ def test_login_wrong_password(client):
     assert response.status_code == 401
     assert response.get_json()["error"] == {
         "code": "INVALID_CREDENTIALS",
-        "message": "Email or password is incorrect.",
+        "message": "Invalid email or password.",
         "action": "Check your credentials and try again.",
     }
     assert_anonymous(client)
@@ -120,6 +120,12 @@ def test_login_missing_password(client):
 )
 def test_current_user_requires_login(client, path):
     response = client.get(path)
+    if not path.startswith("/api/"):
+        assert response.status_code == 302
+        assert response.headers["Location"] == "/login"
+        assert client.get(response.headers["Location"]).status_code == 200
+        assert_anonymous(client)
+        return
     assert response.status_code == 401
     assert response.get_json()["error"] == {
         "code": "UNAUTHORIZED",
@@ -316,6 +322,11 @@ def test_student_page_denied_after_logout(logout_client):
     assert_anonymous(client)
     for path in ("/evaluations", "/api/evaluations"):
         response = client.get(path, follow_redirects=False)
+        if path == "/evaluations":
+            assert response.status_code == 302
+            assert response.headers["Location"] == "/login"
+            assert b"PRIVATE_STUDENT_COURSE" not in response.data
+            continue
         assert response.status_code == 401
         assert response.is_json
         assert response.get_json() == {"error": {
@@ -366,3 +377,22 @@ def test_anonymous_logout_is_idempotent(client, fixed_app_clock):
         assert response.get_json() == {"authenticated": False}
         assert "Location" not in response.headers
         assert_anonymous(client)
+
+
+@pytest.mark.parametrize("email,paths", [
+    ("student1@edusurvey.edu", ["/evaluations", "/evaluations/1/complete", "/account"]),
+    ("lecturer1@edusurvey.edu", ["/lecturer/feedback", "/lecturer/feedback/1", "/account"]),
+    ("admin@edusurvey.edu", ["/account"]),
+])
+def test_protected_html_redirects_after_logout(logout_client, email, paths):
+    """P0C-08 / #215: HTML navigates to login while APIs retain JSON 401."""
+    client = logout_client
+    assert login(client, email).status_code == 200
+    assert client.post("/api/auth/logout").status_code == 200
+    assert_anonymous(client)
+    for path in paths:
+        response = client.get(path, headers={"Accept": "text/html"}, follow_redirects=False)
+        assert response.status_code == 302
+        assert response.headers["Location"] == "/login"
+        assert client.get(response.headers["Location"]).status_code == 200
+    assert client.get("/api/evaluations").status_code == 401

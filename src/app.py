@@ -1,25 +1,29 @@
 
-from pathlib import Path
 import sqlite3
 from datetime import datetime, timedelta
-
-from flask import Flask, render_template, jsonify, request, session, make_response
-from werkzeug.security import check_password_hash
 from functools import wraps
-import os
+from pathlib import Path
+
+from flask import (
+    Flask,
+    jsonify,
+    make_response,
+    redirect,
+    render_template,
+    request,
+    session,
+)
+from werkzeug.security import check_password_hash
+
+if __package__:
+    from .runtime import TransactionConnection, configure_runtime, register_runtime
+else:
+    from runtime import TransactionConnection, configure_runtime, register_runtime
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.environ.get(
-    "EDUSURVEY_SECRET_KEY",
-    "dev-only-secret-change-before-deployment",
-)
-app.config.update(
-    SESSION_COOKIE_HTTPONLY=True,
-    SESSION_COOKIE_SAMESITE="Lax",
-)
-
 BASE_DIR = Path(__file__).resolve().parent.parent
-DATABASE = BASE_DIR / "data" / "edusurvey.db"
+DATABASE = configure_runtime(app, BASE_DIR / "data" / "edusurvey.db")
+register_runtime(app, lambda: DATABASE)
 
 
 def api_error(status, code, message, action):
@@ -32,8 +36,18 @@ def api_error(status, code, message, action):
     }), status
 
 
+@app.errorhandler(sqlite3.Error)
+def database_unavailable(error):
+    app.logger.error("database_unavailable")
+    return api_error(503, "DATABASE_UNAVAILABLE", "The service cannot access its data right now.", "Try again shortly; contact the administrator if the problem continues.")
+
+
 def get_db_connection():
-    connection = sqlite3.connect(DATABASE)
+    connection = sqlite3.connect(
+        Path(DATABASE).resolve().as_uri() + "?mode=rw", uri=True,
+        factory=TransactionConnection, timeout=5,
+    )
+    connection.execute("PRAGMA foreign_keys = ON")
     connection.row_factory = sqlite3.Row
     return connection
 
@@ -48,6 +62,9 @@ def login_required(roles=None):
         @wraps(view)
         def wrapped(*args, **kwargs):
             if "user_id" not in session:
+                wants_json = request.accept_mimetypes.best_match(["application/json", "text/html"]) == "application/json"
+                if not request.path.startswith("/api/") and not wants_json:
+                    return redirect("/login")
                 return api_error(
                     401,
                     "UNAUTHORIZED",
@@ -124,6 +141,7 @@ def get_student_evaluations():
                 except (ValueError, TypeError):
                     deadline = None
 
+            comparison_now = datetime.now(deadline.tzinfo) if deadline is not None and deadline.tzinfo is not None else now
             evaluation_status = (
                 row["evaluation_status"] or ""
             ).lower()
@@ -134,12 +152,12 @@ def get_student_evaluations():
             elif evaluation_status == "closed":
                 survey_status = "Closed"
 
-            elif deadline is not None and deadline <= now:
+            elif deadline is not None and deadline <= comparison_now:
                 survey_status = "Closed"
 
             elif (
                 deadline is not None
-                and deadline < now + timedelta(hours=24)
+                and deadline < comparison_now + timedelta(hours=24)
             ):
                 survey_status = "Due soon"
 
@@ -211,7 +229,7 @@ def login():
         return api_error(
             401,
             "INVALID_CREDENTIALS",
-            "Email or password is incorrect.",
+            "Invalid email or password.",
             "Check your credentials and try again.",
         )
 
@@ -482,7 +500,7 @@ def lecturer_page_response(view):
         except sqlite3.Error:
             if not wants_html:
                 raise
-            app.logger.exception("Unable to load lecturer feedback")
+            app.logger.error("feedback_database_unavailable")
             response = make_response(render_template(
                 "lecturer_feedback.html",
                 error_message="Feedback is temporarily unavailable.",
@@ -738,7 +756,26 @@ def lecturer_feedback_detail(evaluation_id):
     )
 
 
+def lecturer_evaluation_required(view):
+    @wraps(view)
+    @login_required(roles=["lecturer"])
+    def wrapped(evaluation_id, *args, **kwargs):
+        with get_db_connection() as connection:
+            row = connection.execute("SELECT course_id FROM evaluations WHERE id = ?", (evaluation_id,)).fetchone()
+            if row is None:
+                return api_error(404, "EVALUATION_NOT_FOUND", "The evaluation does not exist.", "Select an existing evaluation and try again.")
+            assigned = connection.execute(
+                "SELECT 1 FROM course_lecturers WHERE lecturer_id = ? AND course_id = ?",
+                (session["user_id"], row["course_id"]),
+            ).fetchone()
+            if not assigned:
+                return api_error(403, "FORBIDDEN", "You do not have permission to view this course feedback.", "Contact the administrator if you believe you should have access.")
+        return view(evaluation_id, *args, **kwargs)
+    return wrapped
+
+
 @app.route("/api/evaluations/<int:evaluation_id>/feedback/topics", methods=["GET"])
+@lecturer_evaluation_required
 def grouped_feedback_by_topic(evaluation_id):
     with get_db_connection() as connection:
         evaluation = connection.execute(
@@ -800,6 +837,7 @@ def grouped_feedback_by_topic(evaluation_id):
     "/api/evaluations/<int:evaluation_id>/feedback/topics/ranking",
     methods=["GET"],
 )
+@lecturer_evaluation_required
 def rank_feedback_topics(evaluation_id):
     """Rank feedback topics by comment frequency."""
     with get_db_connection() as connection:
@@ -877,6 +915,7 @@ def rank_feedback_topics(evaluation_id):
 
 
 @app.route("/api/evaluations/<int:evaluation_id>/statistics", methods=["GET"])
+@lecturer_evaluation_required
 def evaluation_statistics(evaluation_id):
     """Return response count and average rating for each rating question."""
     with get_db_connection() as connection:
@@ -1026,7 +1065,7 @@ def get_evaluation_questions(evaluation_id):
                     "Contact the system administrator.",
                 )
 
-            if deadline <= datetime.now():
+            if deadline <= datetime.now(deadline.tzinfo):
                 return api_error(
                     400,
                     "DEADLINE_EXPIRED",
@@ -1049,7 +1088,7 @@ def get_evaluation_questions(evaluation_id):
             return api_error(
                 409,
                 "DUPLICATE_SUBMISSION",
-                "You have already submitted this evaluation.",
+                "You have already completed this evaluation.",
                 "Check your submission status instead.",
             )
 
@@ -1234,7 +1273,7 @@ def create_submission():
             return api_error(
                 409,
                 "DUPLICATE_SUBMISSION",
-                "You have already submitted this evaluation.",
+                "You have already completed this evaluation.",
                 "Check your submission status instead of submitting again.",
             )
 
@@ -1843,4 +1882,4 @@ def send_deadline_reminders(now=None):
     return reminders
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
