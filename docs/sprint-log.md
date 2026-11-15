@@ -187,3 +187,53 @@ The team completed the main Milestone 2 deliverables:
 Sprint 2 successfully delivered the Milestone 2 technical design and a working end-to-end EduSurvey walking skeleton backed by a real SQLite database.
 
 The final Sprint 2 Project Board contains 14 tracked issues with a final estimated scope of 40 points. All planned Sprint 2 work was completed.
+## Sprint 4
+
+### Sprint Goal
+
+Complete Sprint 4 deliverables, improve automated testing, finalize setup and testing documentation, and prepare the repository for Milestone 4 review.
+
+### Sprint 4 Committed Work
+
+| Issue | Description | Owner | Story Points |
+|---|---|---|---:|
+| #170 | Update setup guide with automated testing instructions | @lesyhuy2k6-gif | TBD |
+| #171 | Sprint 4 wrap-up | @lesyhuy2k6-gif | TBD |
+
+### Sprint 4 Completed Work
+
+- Updated automated testing setup documentation.
+- Added development and testing dependencies.
+- Reviewed automated test execution instructions.
+- Updated project documentation for Milestone 4.
+
+### Sprint 4 Metrics
+
+| Metric | Result |
+|---|---:|
+| Total committed issues | TBD |
+| Completed issues | TBD |
+| Committed story points | TBD |
+| Completed story points | TBD |
+| Sprint velocity | TBD |
+
+### Sprint Review
+
+- Reviewed Sprint 4 deliverables and acceptance criteria.
+- Verified automated testing and CI results.
+- Reviewed pull requests and documentation updates.
+- Prepared project materials for Milestone 4 review.
+
+### Retrospective
+
+| Keep doing | Stop doing | Start doing |
+|---|---|---|
+| Maintain clear documentation. | Delaying testing until the end of the sprint. | Review pull requests earlier. |
+| Use automated tests and CI. | Leaving issues without status updates. | Verify clean-clone setup regularly. |
+
+### Sprint 4 Action Items
+
+- Ensure all required pull requests are reviewed and merged.
+- Verify automated tests pass.
+- Complete testing and setup documentation.
+- Prepare Milestone 4 submission materials.
