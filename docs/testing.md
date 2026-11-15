@@ -144,12 +144,12 @@ From the repository root, use Python 3.12 (the CI version; the setup guide curre
 python -m venv .venv
 source .venv/bin/activate
 # Windows activation: .venv\Scripts\activate
-python -m pip install -r requirements.txt
-python -m pip install pytest==7.4.4
+python -m pip install -r requirements-dev.txt
+python -m playwright install chromium
 python -m pytest -v
 ```
 
-`requirements.txt` pins Flask 3.1.2 but does not include pytest. CI installs pytest separately and invokes coverage; no Flask process or database initialization command is needed to run these tests. Dependency installation from a new clone was not executed in this review.
+`requirements.txt` pins Flask 3.1.2; `requirements-dev.txt` supplies pytest, coverage, Ruff and Playwright. On Linux use `python -m playwright install --with-deps chromium` for browser system dependencies, as CI does. API tests use the Flask test client; #201 browser fixtures start their own ephemeral loopback server. No manually started Flask process or production database initialization is needed. #201 installed dependencies into a fresh temporary virtual environment; CI provides the separate clean-checkout result.
 
 For a single mapping below, run `python -m pytest -v path/to/test_file.py::test_function`; for example:
 
