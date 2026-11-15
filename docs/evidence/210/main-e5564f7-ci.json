@@ -1,0 +1,13 @@
+{
+  "checked_at": "2026-11-15T16:52:52.095637+00:00",
+  "source": "GitHub Actions metadata, not hosted verification",
+  "runs": [
+    {
+      "name": "CI",
+      "sha": "e5564f7fff9ffe270757af24ef05a147f5e37050",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43737606526"
+    }
+  ]
+}

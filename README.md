@@ -179,10 +179,29 @@ Use the student or lecturer demo accounts documented in the setup guide.
 | [Setup Guide](docs/SETUP.md) | Installation and application setup |
 | [UI Documentation](docs/ui.md) | M3 screens, routes, wireframes, and UI states |
 | [Deployment handover](docs/deployment.md) | Proposed Render setup, green gate, costs and pending public-release evidence |
+| [Health and monitoring operations](docs/operations.md) | Database readiness, sanitized logs, metric calculations and pending live evidence |
 
 ## Backend
 
 The Flask/SQLite backend already implements the five P0 workflows in `src/app.py`. See the [file/route map and audit](docs/backend.md) and [production runtime handover](docs/backend-runtime.md) for the server flow, health checks, configuration and backup instructions.
+
+## M5 database and demo storage
+
+The #204 target is SQLite on a **paid Render service with a persistent disk**,
+using `EDUSURVEY_DATABASE=/var/data/edusurvey.db`; hosting is not provisioned by
+this repository change. Render Free loses local SQLite on restart/redeploy/idle
+spin-down, so it must not be described as durable production storage. Startup
+reseeding on ephemeral storage is not the selected mode. See the
+[storage decision, current hosting terms and backup/recovery runbook](docs/database-operations.md).
+
+On a confirmed new volume, `python -m src.init_db --m5-demo` seeds upcoming
+student work and existing lecturer feedback. It refuses every existing target
+instead of resetting data; never run the schema/seed directly on a live database.
+Public synthetic accounts are `student1@edusurvey.edu` (student),
+`lecturer1@edusurvey.edu` (lecturer), and `admin@edusurvey.edu` (administrator),
+all with demo password `Password123!`. Use only fake data. Local reload/process
+restart and isolated backup restore are tested; real host restart/redeploy,
+off-host backup storage and independent review remain release checks.
 
 ## Testing
 

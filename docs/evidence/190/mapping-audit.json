@@ -1,0 +1,778 @@
+[
+  {
+    "case": "TC-01",
+    "node": "tests/test_auth.py::test_login_success[TC-01-student]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-02",
+    "node": "tests/test_auth.py::test_login_wrong_password",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-03",
+    "node": "tests/test_auth.py::test_login_unknown_email",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-04",
+    "node": "tests/test_auth.py::test_login_missing_password",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-05",
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_success",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-06",
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_requires_login",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-07",
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_forbidden_for_lecturer[TC-07-lecturer]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-08",
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_due_soon_24_hour_boundary[TC-08-below]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-09",
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_due_soon_24_hour_boundary[TC-09-at]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-10",
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_due_soon_24_hour_boundary[TC-10-above]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-11",
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_deadline_boundary[TC-11-before]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-12",
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_deadline_boundary[TC-12-at]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-13",
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_deadline_boundary[TC-13-after]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-14",
+    "node": "tests/test_submission_workflow.py::test_submission_success_persists_response_and_answers",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-15",
+    "node": "tests/test_smoke.py::test_submission_missing_required_answers",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-16",
+    "node": "tests/test_smoke.py::test_duplicate_submission",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-17",
+    "node": "tests/test_smoke.py::test_submission_requires_login",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-18",
+    "node": "tests/test_submission_workflow.py::test_submission_deadline_boundary[TC-US03-09-after]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-19",
+    "node": "tests/test_submission_workflow.py::test_submission_deadline_boundary[TC-US03-08-at]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-20",
+    "node": "tests/test_submission_workflow.py::test_submission_deadline_boundary[TC-US03-07-before]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-21",
+    "node": "tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-0]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-22",
+    "node": "tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-1]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-23",
+    "node": "tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-2]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-24",
+    "node": "tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-4]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-25",
+    "node": "tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-5]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-26",
+    "node": "tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-6]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-27",
+    "node": "tests/test_submission_workflow.py::test_submission_text_length_boundaries[length-1999]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-28",
+    "node": "tests/test_submission_workflow.py::test_submission_text_length_boundaries[length-2000]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-29",
+    "node": "tests/test_submission_workflow.py::test_submission_text_length_boundaries[length-2001]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-30",
+    "node": "tests/test_submission_workflow.py::test_submission_required_question_count[answered-4]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-31",
+    "node": "tests/test_submission_workflow.py::test_submission_required_question_count[answered-5]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-32",
+    "node": "tests/test_smoke.py::test_lecturer_can_retrieve_course_feedback",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-33",
+    "node": "tests/test_smoke.py::test_lecturer_cannot_access_unassigned_course",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-34",
+    "node": "tests/test_smoke.py::test_student_cannot_access_lecturer_feedback",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-35",
+    "node": "tests/test_smoke.py::test_course_feedback_requires_login",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-36",
+    "node": "tests/test_smoke.py::test_course_feedback_count_excludes_draft_responses",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-37",
+    "node": "tests/test_lecturer_feedback.py::test_feedback_completed_count[count-20]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-38",
+    "node": "tests/test_auth.py::test_protected_resource_after_logout_returns_401",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-39",
+    "node": "tests/test_auth.py::test_student_page_denied_after_logout",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-40",
+    "node": "tests/test_auth.py::test_lecturer_feedback_denied_after_logout",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-41",
+    "node": "tests/test_auth.py::test_anonymous_logout_is_idempotent",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US02-L01",
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_due_soon",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US02-L02",
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_closed",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US02-L03",
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_completed[US02-L03-open]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US02-L04",
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_completed[US02-L04-expired]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US02-L05",
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_completed[US02-L05-closed]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US02-L06",
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_empty",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US02-L07",
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_forbidden_for_lecturer[US02-L07-administrator]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US02-L08",
+    "node": "tests/test_student_evaluations.py::test_student_only_sees_evaluations_for_enrolled_courses",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US02-L09",
+    "node": "tests/test_student_evaluations.py::test_student_completion_is_personal",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US02-L10",
+    "node": "tests/test_student_evaluations.py::test_draft_response_is_not_completed",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US02-L11",
+    "node": "tests/test_student_evaluations.py::test_draft_evaluation_is_hidden",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US11-01",
+    "node": "tests/test_auth.py::test_login_success[TC-01-student]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US11-02",
+    "node": "tests/test_auth.py::test_login_wrong_password",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US11-03",
+    "node": "tests/test_auth.py::test_current_user_requires_login[US01-A03-me]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US11-04",
+    "node": "tests/test_auth.py::test_current_user_after_login",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US11-05",
+    "node": "tests/test_auth.py::test_logout_success",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US11-06",
+    "node": "tests/test_auth.py::test_logout_clears_session",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US11-07",
+    "node": "tests/test_auth.py::test_protected_resource_after_logout_returns_401",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US11-08",
+    "node": "tests/test_auth.py::test_logout_without_login",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US11-09",
+    "node": "tests/test_auth.py::test_users_email_unique_constraint",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US01-A01",
+    "node": "tests/test_auth.py::test_login_success[US01-A01-lecturer]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US01-A02",
+    "node": "tests/test_auth.py::test_login_success[US01-A02-admin]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US01-A03",
+    "node": "tests/test_auth.py::test_current_user_requires_login[US01-A03-me]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US01-A04",
+    "node": "tests/test_auth.py::test_current_user_requires_login[US01-A04-list-page]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US01-A05",
+    "node": "tests/test_auth.py::test_current_user_requires_login[US01-A05-complete-page]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US01-A06",
+    "node": "tests/test_auth.py::test_current_user_requires_login[US01-A06-list-api]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US01-A07",
+    "node": "tests/test_auth.py::test_current_user_after_login",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US01-A08",
+    "node": "tests/test_auth.py::test_authenticated_student_access[US01-A08-student]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US01-A09",
+    "node": "tests/test_auth.py::test_authenticated_student_access[US01-A09-lecturer]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US01-A10",
+    "node": "tests/test_auth.py::test_authenticated_student_access[US01-A10-admin]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US01-A11",
+    "node": "tests/test_auth.py::test_login_replaces_previous_session",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US01-A12",
+    "node": "tests/test_auth.py::test_current_user_deleted_account",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US03-01",
+    "node": "tests/test_submission_workflow.py::test_submission_success_persists_response_and_answers",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US03-02",
+    "node": "tests/test_submission_workflow.py::test_submission_missing_required_answer_does_not_create_records",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US03-03",
+    "node": "tests/test_submission_workflow.py::test_duplicate_submission_does_not_modify_existing_records",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US03-04",
+    "node": "tests/test_submission_workflow.py::test_submission_after_deadline_does_not_create_records",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US03-05",
+    "node": "tests/test_submission_workflow.py::test_submission_invalid_evaluation_does_not_create_records",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US03-06",
+    "node": "tests/test_submission_workflow.py::test_submission_closed_evaluation_does_not_create_records",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US03-07",
+    "node": "tests/test_submission_workflow.py::test_submission_deadline_boundary[TC-US03-07-before]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US03-08",
+    "node": "tests/test_submission_workflow.py::test_submission_deadline_boundary[TC-US03-08-at]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US03-09",
+    "node": "tests/test_submission_workflow.py::test_submission_deadline_boundary[TC-US03-09-after]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US03-P01",
+    "node": "tests/test_submissions.py::test_submit_evaluation_success",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US04-P01",
+    "node": "tests/test_lecturer_feedback.py::test_lecturer_can_view_assigned_evaluation_feedback",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US04-P02",
+    "node": "tests/test_lecturer_feedback.py::test_feedback_page_requires_login",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US04-P03",
+    "node": "tests/test_lecturer_feedback.py::test_student_cannot_access_lecturer_feedback",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US04-P04",
+    "node": "tests/test_lecturer_feedback.py::test_lecturer_cannot_view_nonexistent_evaluation",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US04-01",
+    "node": "tests/test_lecturer_feedback.py::test_lecturer_can_view_assigned_evaluation_feedback",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US04-02",
+    "node": "tests/test_lecturer_feedback.py::test_lecturer_cannot_view_unassigned_evaluation",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US04-03",
+    "node": "tests/test_lecturer_feedback.py::test_student_cannot_access_lecturer_feedback",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US04-04",
+    "node": "tests/test_lecturer_feedback.py::test_feedback_page_requires_login",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US04-05",
+    "node": "tests/test_lecturer_feedback.py::test_draft_responses_are_excluded_from_feedback",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US04-06",
+    "node": "tests/test_lecturer_feedback.py::test_feedback_displays_submitted_ratings_and_comments",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US04-07",
+    "node": "tests/test_lecturer_feedback.py::test_completed_count_includes_only_submitted_responses",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "US02-L12",
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_three_active",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US04-08",
+    "node": "tests/test_lecturer_feedback.py::test_feedback_completed_count[count-19]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  },
+  {
+    "case": "TC-US04-09",
+    "node": "tests/test_lecturer_feedback.py::test_feedback_completed_count[count-21]",
+    "collected_matches": 1,
+    "results": [
+      "passed"
+    ]
+  }
+]

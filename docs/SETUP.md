@@ -82,6 +82,13 @@ The database file is generated locally and ignored by Git.
 
 ## 6. Initialize and Seed the Database
 
+Initialization creates a **new database only** and refuses any existing target
+in every environment. Do not delete or reset a live database to rerun setup;
+use a fresh disposable path for another local demo. For M5 upcoming deadlines
+and a fresh student workflow, add `--m5-demo`. The
+[production database runbook](database-operations.md) covers the mounted path,
+environment settings and validated backup/restore procedure.
+
 ### macOS / Linux
 
 ```bash
@@ -209,6 +216,13 @@ Verification checklist:
 ## 10. Automated Testing
 
 EduSurvey uses `pytest` to run the automated test suite.
+
+The actual #190 [clean-clone audit](m4-review-evidence.md) installed development
+dependencies in a new Python 3.11.9 Windows environment. Baseline `686bd9e`
+had five failing runtime/database audit tests; the subsequent PR remediation
+rerun passed all 190 tests on Windows. See the report for separate baseline
+and rerun evidence. Automated execution does not fill the independent human
+fresh-machine checklist in Section 9.
 
 ### 10.1 Install Test Dependencies
 

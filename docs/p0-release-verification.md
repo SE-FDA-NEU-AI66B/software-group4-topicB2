@@ -9,8 +9,8 @@ that a service, phone check or rollback has been verified.
 
 | Field | Actual evidence / status |
 |---|---|
-| Current code candidate | Main `6acf0dd42b0a8b56831deedc519c194b474a519c` (#226 merged) |
-| Latest observed candidate CI | [Successful CI run](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43731613604); metadata in [main-ci.json](evidence/210/main-ci.json) |
+| Current code candidate | Main `e5564f7fff9ffe270757af24ef05a147f5e37050` (#204/#206 merged) |
+| Latest observed candidate CI | [Successful current-main CI](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43737606526); [metadata](evidence/210/main-e5564f7-ci.json); original 6acf0dd CI retained in main-ci.json |
 | Public HTTPS origin / deployed SHA / v1.0 | Not supplied or discovered; no repository homepage, GitHub deployment or release at inspection. External hosting is not ruled out by empty GitHub metadata |
 | Test environment | Local Windows / Python 3.12.6 / pytest 9.0.2; fresh headless Chrome contexts at laptop/phone viewports |
 | Real private desktop + physical phone + no VPN | Pending on actual public release; a viewport emulator is not a physical phone |
@@ -68,7 +68,7 @@ substitutes for that measurement.
 
 ```bash
 python -m pip install -r requirements-dev.txt
-python tools/rehearse_business_rule.py --revision 6acf0dd
+python tools/rehearse_business_rule.py --revision e5564f7
 python -m ruff check tools/rehearse_business_rule.py
 git diff --check
 ```
@@ -85,7 +85,7 @@ does not mutate/deploy the working app or write a production database.
 | Temporary `deadline <= now+24h` | 1 failed / 2 passed; process exit 1; only `TC-09-at` fails because 24h becomes Due soon instead of Active |
 | Restore original source bytes | 3 passed; process exit 0; restored source hash equals original |
 
-[Mutation evidence](evidence/210/mutation.json) contains sanitized real pytest
+[Current-main mutation evidence](evidence/210/mutation-e5564f7.json) contains sanitized real pytest
 output, counts, source hashes, pinned SHA, environment and measured stage durations.
 It demonstrates detection of this controlled defect, not a newly discovered
 production bug or comprehensive mutation coverage. Preserve dated evidence when
@@ -140,7 +140,7 @@ PR includes `Closes #210` as requested; keep it draft/unmerged until public
 acceptance gates are satisfied so the closing link does not prematurely close
 the task. No automatic merge, self-approval or fabricated release proof.
 
-## Current candidate execution results
+## Original 6acf0dd candidate execution results
 
 Windows / Python 3.12.6 / pytest 9.0.2, installed Chrome selected through
 PLAYWRIGHT_CHROMIUM_EXECUTABLE:
@@ -158,3 +158,20 @@ not a hosted application rollback. No new pytest case or production change is
 introduced by #210. Script Ruff and `git diff --check` passed. The actual main CI
 link above is green for the same candidate; neither green result verifies a
 running public release or physical device.
+
+### #210 merge verification against main e5564f7
+
+Resolved the docs/testing.md append conflict by preserving #190 M4 review,
+#204 database, #205 deployment, #206 monitoring and #210 rehearsal evidence.
+Production/test code was not changed for this resolution. Existing dated reports
+remain intact; the current candidate register and CI link now point to e5564f7.
+
+Windows/Python 3.12.6 with installed Chrome:
+`python -m pytest -q --junitxml=junit.xml` -> **229 passed in 162.18s**, zero
+failures/errors/skips. [Per-module result](evidence/210/main-e5564f7-local.json).
+`python tools/rehearse_business_rule.py --revision e5564f7 --output docs/evidence/210/mutation-e5564f7.json`
+-> baseline **3 passed**, mutant **1 failed / 2 passed** (TC-09-at only), restored
+**3 passed**; source/workspace hashes unchanged after restoration.
+[Rehearsal output](evidence/210/mutation-e5564f7.json). Script Ruff and
+`git diff --check` passed. Public URL/provider SHA, physical phone and hosted
+rollback remain unverified; local/CI results do not complete those gates.
