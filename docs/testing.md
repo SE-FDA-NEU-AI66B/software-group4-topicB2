@@ -117,6 +117,9 @@ For new tests, use a separate temporary SQLite database per case, load `src/sche
 | TC-US04-05 | US04 | Add draft response/comment DRAFT_ONLY_COMMENT alongside seeded submitted response | 200; draft comment absent, seeded submitted comment present | Normal |
 | TC-US04-06 | US04 | Add rating=5 to the seeded submitted response; GET feedback | 200; Student ratings, 5 / 5, Written comments and actual comment displayed | Normal |
 | TC-US04-07 | US04 | One seeded submitted response plus one new submitted response and one draft | 200; completed count=2; new submitted comment visible, draft absent | Normal |
+| US02-L12 | US02 | Frozen T; exactly three open enrolled evaluations with deadlines >24h; another-course evaluation excluded | 200; count=3; all statuses Active and all five display details | Normal |
+| TC-US04-08 | US04 | Assigned lecturer; 19 distinct submitted responses and one draft; frozen time | 200; completed_evaluations=19; draft excluded; consistent HTML count | Normal |
+| TC-US04-09 | US04 | Assigned lecturer; 21 distinct submitted responses and one draft; frozen time | 200; completed_evaluations=21; draft excluded; consistent HTML count | Normal |
 
 The US02 fixture freezes the route clock before creating data at T=2026-11-03T12:00:00. The Due soon rule is strictly less than 24 hours; tests now check 86399, 86400 and 86401 seconds remaining separately. Deadline equality is Closed; additional tests check T-1s, T and T+1s. Rating boundaries and submission examples below belong to pending US03 work. Five required answers and 20 completed responses are acceptance examples, not implementation maxima.
 
@@ -182,27 +185,27 @@ All existing mappings below are API integration tests using temporary SQLite dat
 | TC-18 | `test_submission_deadline_boundary[TC-US03-09-after]` | `tests/test_submission_workflow.py` | API / SQLite integration | Expected as Section 2; PASS in verified #172 run below | #167 |
 | TC-19 | `test_submission_deadline_boundary[TC-US03-08-at]` | `tests/test_submission_workflow.py` | API / SQLite integration | Expected as Section 2; PASS in verified #172 run below | #167 |
 | TC-20 | `test_submission_deadline_boundary[TC-US03-07-before]` | `tests/test_submission_workflow.py` | API / SQLite integration | Expected as Section 2; PASS in verified #172 run below | #167 |
-| TC-21 | NOT IMPLEMENTED | — | Planned API integration / boundary | Section 2 expectation; NOT RUN | #167 |
-| TC-22 | NOT IMPLEMENTED | — | Planned API integration / boundary | Section 2 expectation; NOT RUN | #167 |
-| TC-23 | NOT IMPLEMENTED | — | Planned API integration / boundary | Section 2 expectation; NOT RUN | #167 |
-| TC-24 | NOT IMPLEMENTED | — | Planned API integration / boundary | Section 2 expectation; NOT RUN | #167 |
-| TC-25 | NOT IMPLEMENTED | — | Planned API integration / boundary | Section 2 expectation; NOT RUN | #167 |
-| TC-26 | NOT IMPLEMENTED | — | Planned API integration / boundary | Section 2 expectation; NOT RUN | #167 |
-| TC-27 | NOT IMPLEMENTED | — | Planned API integration / boundary | Section 2 expectation; NOT RUN | #167 |
-| TC-28 | NOT IMPLEMENTED | — | Planned API integration / boundary | Section 2 expectation; NOT RUN | #167 |
-| TC-29 | NOT IMPLEMENTED | — | Planned API integration / boundary | Section 2 expectation; NOT RUN | #167 |
-| TC-30 | NOT IMPLEMENTED | — | Planned API integration / error | Section 2 expectation; NOT RUN | #167 |
-| TC-31 | NOT IMPLEMENTED | — | Planned API integration / normal | Section 2 expectation; NOT RUN | #167 |
+| TC-21 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-0]` (proposed, not an existing function) | #184 |
+| TC-22 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-1]` (proposed, not an existing function) | #184 |
+| TC-23 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-2]` (proposed, not an existing function) | #184 |
+| TC-24 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-4]` (proposed, not an existing function) | #184 |
+| TC-25 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-5]` (proposed, not an existing function) | #184 |
+| TC-26 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-6]` (proposed, not an existing function) | #184 |
+| TC-27 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_text_length_boundaries[length-1999]` (proposed, not an existing function) | #184 |
+| TC-28 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_text_length_boundaries[length-2000]` (proposed, not an existing function) | #184 |
+| TC-29 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_text_length_boundaries[length-2001]` (proposed, not an existing function) | #184 |
+| TC-30 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_required_question_count[answered-4]` (proposed, not an existing function) | #184 |
+| TC-31 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_submission_workflow.py::test_submission_required_question_count[answered-5]` (proposed, not an existing function) | #184 |
 | TC-32 | `test_lecturer_can_retrieve_course_feedback` | `tests/test_smoke.py` | API integration / normal | Section 2 expectation; existing assertions PASS | #168 |
 | TC-33 | `test_lecturer_cannot_access_unassigned_course` | `tests/test_smoke.py` | API integration / error | Section 2 expectation; existing assertions PASS | #168 |
 | TC-34 | `test_student_cannot_access_lecturer_feedback` | `tests/test_smoke.py` | API integration / error | Section 2 expectation; existing assertions PASS | #168 |
 | TC-35 | `test_course_feedback_requires_login` | `tests/test_smoke.py` | API integration / error | Section 2 expectation; existing assertions PASS | #168 |
 | TC-36 | `test_course_feedback_count_excludes_draft_responses` | `tests/test_smoke.py` | API integration / normal | Section 2 expectation; existing assertions PASS | #168 |
-| TC-37 | NOT IMPLEMENTED | — | Planned API integration / normal | Section 2 expectation; NOT RUN | #168 |
+| TC-37 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_lecturer_feedback.py::test_feedback_completed_count[count-20]` (proposed, not an existing function) | #185 |
 | TC-38 | `test_protected_resource_after_logout_returns_401` | `tests/test_auth.py` | API integration / normal | Section 2 expectation; existing assertions PASS | #169 |
-| TC-39 | NOT IMPLEMENTED | — | Planned API integration / error | Section 2 expectation; NOT RUN | #169 |
-| TC-40 | NOT IMPLEMENTED | — | Planned API integration / error | Section 2 expectation; NOT RUN | #169 |
-| TC-41 | NOT IMPLEMENTED | — | Planned API integration / normal | Section 2 expectation; NOT RUN | #169 |
+| TC-39 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_auth.py::test_student_page_denied_after_logout` (proposed, not an existing function) | #186 |
+| TC-40 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_auth.py::test_lecturer_feedback_denied_after_logout` (proposed, not an existing function) | #186 |
+| TC-41 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_auth.py::test_anonymous_logout_is_idempotent` (proposed, not an existing function) | #186 |
 | US02-L01 | `test_student_evaluations_due_soon` | `tests/test_student_evaluations.py` | API integration | Section 2 expectation; PASS (#166) | #166 |
 | US02-L02 | `test_student_evaluations_closed` | `tests/test_student_evaluations.py` | API integration | Section 2 expectation; PASS (#166) | #166 |
 | US02-L03 | `test_student_evaluations_completed[US02-L03-open]` | `tests/test_student_evaluations.py` | API integration | Section 2 expectation; PASS (#166) | #166 |
@@ -256,15 +259,18 @@ All existing mappings below are API integration tests using temporary SQLite dat
 | TC-US04-05 | `test_draft_responses_are_excluded_from_feedback` | `tests/test_lecturer_feedback.py` | Flask rendering / SQLite integration | Expected as Section 2; verification below | #168 |
 | TC-US04-06 | `test_feedback_displays_submitted_ratings_and_comments` | `tests/test_lecturer_feedback.py` | Flask rendering / SQLite integration | Expected as Section 2; verification below | #168 |
 | TC-US04-07 | `test_completed_count_includes_only_submitted_responses` | `tests/test_lecturer_feedback.py` | Flask rendering / SQLite integration | Expected as Section 2; verification below | #168 |
+| US02-L12 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_student_evaluations.py::test_student_evaluations_three_active` (proposed, not an existing function) | #187 |
+| TC-US04-08 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_lecturer_feedback.py::test_feedback_completed_count[count-19]` (proposed, not an existing function) | #185 |
+| TC-US04-09 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_lecturer_feedback.py::test_feedback_completed_count[count-21]` (proposed, not an existing function) | #185 |
 
-Traceability totals: **94 cases; 79 mapped to existing tests; 15 NOT IMPLEMENTED**. The US02 matrix maps one documented case to each of its 20 collected pytest items. US01 mappings include #181, and the nine original US11 IDs are preserved.
+Traceability totals: **97 cases; 79 mapped to existing tests; 18 NOT IMPLEMENTED**. The US02 matrix retains mappings for its 20 collected pytest items and adds one planned three-active-evaluation acceptance case. US01 mappings include #181, and the nine original US11 IDs are preserved.
 
 | Story | Documented cases | Existing mappings | Pending |
 |---|---:|---:|---:|
 | US01 | 16 | 16 | 0 |
-| US02 | 20 | 20 | 0 |
+| US02 | 21 | 20 | 1 |
 | US03 | 28 | 17 | 11 |
-| US04 | 17 | 16 | 1 |
+| US04 | 19 | 16 | 3 |
 | US11 | 13 | 10 | 3 |
 
 **Historical #164 baseline execution, 2026-11-15:** `python -m pytest -v` on macOS, Python 3.12.4, pytest 7.4.4, anyio 4.2.0; exit 0:
@@ -317,6 +323,8 @@ The integration preserves main's enrollment checks, public response IDs, strict 
 US03/shared API fixtures now freeze application time before use and restore configuration through monkeypatch. The CI SQL-source allowlist is limited to `src/schema.sql`, `src/feedback_queries.sql` and `src/response_queries.sql`; arbitrary SQL dumps, SQLite databases and .env files remain blocked. Existing historical SQL-scanner failures above precede this correction. Performance, copied-cookie replay and still-pending cases are not claimed complete.
 
 **PR #173 integration verification (2026-11-15):** `python -m pytest -v` → **106 passed in 2.83s**; `python -m pytest -v tests/test_lecturer_feedback.py` → **8 passed in 0.06s**. This branch contains the resolved #172 dependency and all current main tests. The lecturer detail route first distinguishes a nonexistent evaluation (404) from an existing evaluation in an unassigned course (403), preserving the required permission message before querying any ratings or comments. All seven original TC-US04 IDs are retained and the eighth test covers nonexistent evaluations. No authentication, enrollment, submission or deadline rule is weakened.
+
+**Sprint 4 refinement #163 (2026-11-15):** verified fetched main `5a52af6` with `python -m pytest -v` → **106 passed in 2.95s**. All existing cases and historical evidence are retained; no tests or production code changed for this refinement. Every pending case now names a proposed pytest node and a real open follow-up issue, rather than depending only on closed baseline tasks #167/#168/#169. Proposed nodes are explicitly NOT IMPLEMENTED / NOT RUN. The new US02 three-active example and US04 count-19/count-21 cases are planned; 20 is an acceptance example, not a hard limit. See [sprint4-backlog.md](sprint4-backlog.md) for ownership, hours, dependencies and the verified 21-item Board update (Testing Sprint / Testing Priority / Estimated hours). US11's restored story is #183.
 
 **Fixture and assertion audit / remaining work:**
 
