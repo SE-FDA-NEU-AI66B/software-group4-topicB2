@@ -4,11 +4,26 @@ import json
 import os
 import sqlite3
 from contextlib import closing
+from datetime import UTC, datetime
 from pathlib import Path
 from time import perf_counter
+from uuid import uuid4
 
 from flask import g, jsonify, request
 from werkzeug.exceptions import HTTPException
+
+
+def log_runtime_error(app, event, error=None):
+    """Correlate internal error categories without exception messages or user input."""
+    record = {
+        "event": event,
+        "timestamp": datetime.now(UTC).isoformat(timespec="milliseconds"),
+        "request_id": g.request_id,
+        "endpoint": request.endpoint or "unmatched",
+    }
+    if error is not None:
+        record["error_type"] = type(error).__name__
+    app.logger.error(json.dumps(record, sort_keys=True))
 
 
 class TransactionConnection(sqlite3.Connection):
@@ -49,28 +64,29 @@ def register_runtime(app, database_path):
     @app.before_request
     def start_request_timer():
         g.request_started = perf_counter()
+        # Never trust/reflect client-supplied correlation IDs (may contain private input).
+        g.request_id = uuid4().hex
 
     @app.after_request
     def record_request(response):
         duration = max(0.0, (perf_counter() - g.request_started) * 1000)
         app.logger.info(json.dumps({
             "event": "request_completed",
+            "timestamp": datetime.now(UTC).isoformat(timespec="milliseconds"),
+            "request_id": g.request_id,
             "endpoint": request.endpoint or "unmatched",
-            "method": request.method,
+            "method": request.method if request.method in {"GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"} else "OTHER",
             "status": response.status_code,
             "duration_ms": round(duration, 3),
         }, sort_keys=True))
+        response.headers["X-Request-ID"] = g.request_id
         return response
 
     @app.errorhandler(Exception)
     def unexpected_failure(error):
         if isinstance(error, HTTPException):
             return error
-        app.logger.error(json.dumps({
-            "event": "request_failed",
-            "endpoint": request.endpoint or "unmatched",
-            "error_type": type(error).__name__,
-        }, sort_keys=True))
+        log_runtime_error(app, "request_failed", error)
         return jsonify({"error": {
             "code": "INTERNAL_ERROR",
             "message": "The service could not complete this request.",
@@ -88,10 +104,12 @@ def register_runtime(app, database_path):
                     connection.execute(f"SELECT 1 FROM {table} LIMIT 1").fetchone()
                 if connection.execute("PRAGMA quick_check(1)").fetchone()[0] != "ok":
                     raise sqlite3.DatabaseError("Database integrity check failed")
+                if connection.execute("PRAGMA foreign_key_check").fetchone() is not None:
+                    raise sqlite3.DatabaseError("Database relationship check failed")
             response = jsonify({"status": "ok", "database": "ok"})
             status = 200
         except (sqlite3.Error, OSError, ValueError):
-            app.logger.error('{"event":"database_unavailable"}')
+            log_runtime_error(app, "database_unavailable")
             response = jsonify({"status": "unavailable", "database": "unavailable"})
             status = 503
         response.headers["Cache-Control"] = "no-store"

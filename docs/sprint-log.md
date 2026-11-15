@@ -189,6 +189,19 @@ Sprint 2 successfully delivered the Milestone 2 technical design and a working e
 The final Sprint 2 Project Board contains 14 tracked issues with a final estimated scope of 40 points. All planned Sprint 2 work was completed.
 ## Sprint 4
 
+**Evidence qualification (#190, 2026-11-15):** the narrative below is the
+historical #171 summary, not independently verified meeting attendance or M4
+sign-off. Current [clean-clone/review evidence](m4-review-evidence.md) records
+185 passed / 5 failed / 0 skipped at `686bd9e`, red main CI and unresolved Board
+access/review evidence. Original issue closures are preserved. The later #163
+refinement snapshot is also historical; #163 and #184–#189 are now closed,
+while #183/#190 remain open. Task hours are estimates, not story-point velocity.
+
+The subsequent user-authorized #190 CI remediation passed **190 tests in
+51.40s** locally on Windows, resolving the five obsolete/platform-specific
+test expectations. It does not retroactively change the baseline run or claim
+independent human review and Board verification.
+
 ### Sprint Goal
 
 Complete Sprint 4 deliverables, improve automated testing, finalize setup and testing documentation, and prepare the repository for Milestone 4 review.

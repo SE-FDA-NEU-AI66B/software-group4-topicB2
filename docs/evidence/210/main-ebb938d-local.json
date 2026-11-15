@@ -1,0 +1,92 @@
+{
+  "source": "Actual local pytest/JUnit, not deployed verification",
+  "revision": "ebb938d5416b3b42d3cb3a55ae339ee5887aacd6",
+  "command": "python -m pytest -q --junitxml=junit.xml",
+  "environment": "Windows / Python 3.12.6 / pytest 9.0.2 / installed Chrome",
+  "tests": 190,
+  "passed": 185,
+  "failed_nodes": [
+    "tests.test_backend_runtime::test_production_config_requires_explicit_secrets_and_storage[ssssssssssssssssssssssssssssssssssssssss-/data/app.db-True]",
+    "tests.test_backend_runtime::test_online_backup_and_restore_round_trip",
+    "tests.test_database_integrity::test_runtime_foreign_keys_finding",
+    "tests.test_database_integrity::test_submission_write_failure_rolls_back[new]",
+    "tests.test_database_integrity::test_submission_write_failure_rolls_back[draft]"
+  ],
+  "errors": 0,
+  "skipped": 0,
+  "pytest_summary": "5 failed, 185 passed in 152.65s",
+  "modules": {
+    "tests.test_auth": {
+      "tests": 27,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_backend_runtime": {
+      "tests": 36,
+      "failed": 2,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_database_integrity": {
+      "tests": 7,
+      "failed": 3,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_feedback_classifier": {
+      "tests": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_lecturer_feedback": {
+      "tests": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_p0_browser_contracts": {
+      "tests": 18,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_response_schema.ResponseSchemaTests": {
+      "tests": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_smoke": {
+      "tests": 35,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_status.EvaluationStatusTests": {
+      "tests": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_student_evaluations": {
+      "tests": 21,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_submission_workflow": {
+      "tests": 22,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_submissions": {
+      "tests": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  }
+}

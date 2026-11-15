@@ -1,5 +1,13 @@
 # CI production gate and main protection — #207
 
+**Subsequent main integration (`55e81b5`):** all **257 tests passed in 76.11s**,
+zero failures/errors/skips, and whole-repository Ruff passed. Both conflicting
+testing-documentation sections were preserved, including database, monitoring
+and release-rehearsal evidence. See [the integrated console](evidence/207/merge-pytest.txt)
+and [JUnit](evidence/207/merge-pytest.xml). The dated audit below remains
+historical; this integration does not apply administrator settings or certify
+a live deployment.
+
 Parent #200; deployment interface #205 / PR #226; operations evidence #208.
 Date: **2026-11-15, Asia/Ho_Chi_Minh**. Execution: OpenAI Codex under the user's
 authorization, GitHub actor `lesyhuy2k6-gif`. Status: **code/test rehearsal

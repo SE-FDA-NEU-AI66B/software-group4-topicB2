@@ -1,5 +1,19 @@
 # Sprint 4 Backlog Refinement
 
+**Current reconciliation — #190, 2026-11-15:** the refinement below is a
+historical snapshot at `5a52af6`. GitHub now reports #163–#171 and #184–#189
+closed, with #183/#190 open. All 97 story mappings resolve to passing collected
+nodes at `686bd9e`; the former 18 plans are implemented. Full clean-clone suite:
+185 passed / 5 failed / 0 skipped. M4 sign-off remains blocked. Current Board
+read was denied for missing `read:project`; historical Board statuses must not
+be treated as a current verification. See [the evidence register](m4-review-evidence.md)
+and the separate current issue columns in [the CSV](sprint4-board.csv).
+
+Subsequent #190 remediation resolves those five test failures without changing
+production code or CI gates: **190 passed in 51.40s** locally on Windows.
+Original clean-clone results remain historical. See the linked evidence report
+for the separate rerun and remaining human review/Board sign-off requirements.
+
 Evidence date: **2026-11-15** (Asia/Ho_Chi_Minh). Refinement issue: [#163](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/163). Source: fetched `origin/main` **5a52af6**, requirements, current route/schema code, existing pytest collection, issues #163–#171 and merged PRs #172/#173/#178/#180/#181/#182. This is a current refinement snapshot, not a reconstruction of an earlier planning meeting.
 
 ## Scope and readiness
@@ -71,7 +85,7 @@ The five P0 story estimates sum to **18 story points** (3+3+5+5+2). They are sep
 4. #190 follows the coverage/contract outcomes, installs dependencies in a fresh environment, records actual test/CI results and verifies team review/submission artifacts. #171's earlier closure is not substituted for this evidence.
 5. An independent teammate reviews each PR. Update mappings/results only after actual execution; do not skip failing tests. Update Board status and issue state according to evidence.
 
-## Planned pytest coverage
+## Historical planned pytest coverage (superseded by #190 reconciliation)
 
 Every NOT IMPLEMENTED row in [testing.md](testing.md) now includes an exact **proposed** node and a real open owner task. The names below are specifications; they are not asserted to exist or pass.
 

@@ -22,3 +22,9 @@ required-status-check rule. An administrator must apply the proposed additional
 rules and retain a new screenshot/read-back before that acceptance is complete.
 See [the detailed evidence](../../ci-production-gate.md) and
 [administrator procedure](../../main-protection-admin.md).
+
+`merge-pytest.txt` / `merge-pytest.xml` record integration with main `55e81b5`:
+**257 passed in 76.11s**, zero failures/errors/skips (229 main + 28 CI/protection
+cases). These are separate from the original 228-case local run and the
+intentionally failing, closed rehearsal. No administrator action or reviewer
+approval is inferred from the passing suite.

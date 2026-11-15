@@ -1,0 +1,26 @@
+{
+  "source": "GitHub Actions API metadata; not a hosted release check",
+  "runs": [
+    {
+      "name": "CI",
+      "sha": "6acf0dd42b0a8b56831deedc519c194b474a519c",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43731613604"
+    },
+    {
+      "name": "CI",
+      "sha": "ebb938d5416b3b42d3cb3a55ae339ee5887aacd6",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43730907674"
+    },
+    {
+      "name": "CI",
+      "sha": "686bd9e5bdcbf03947b28cbf8afe393dd087792a",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43726596867"
+    }
+  ]
+}

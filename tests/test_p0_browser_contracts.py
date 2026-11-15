@@ -58,6 +58,8 @@ def test_logout_navigates_to_login(browser_app, viewport):
     assert page.request.get(url + "/evaluations").headers["cache-control"] == "no-store"
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
     page.get_by_role("link", name="Start evaluation").click()
+    # The navigation can finish before the questions fetch; validate a loaded form.
+    expect(page.locator('input[type="radio"][value="5"]')).to_have_count(1)
     review = page.locator("#reviewButtonMobile" if viewport["width"] < 600 else "#reviewButton")
     expect(review).to_be_enabled()
     review.click()
