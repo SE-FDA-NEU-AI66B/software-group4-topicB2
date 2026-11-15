@@ -12,6 +12,12 @@ sys.path.insert(0, str(ROOT_DIR))
 
 from src import app as app_module
 
+# Public demo values from init_db.py, used only in the isolated test database.
+DEMO_CREDENTIALS = {
+    "password": "Password123!",
+    "invalid_password": "wrong-password",
+}
+
 
 @pytest.fixture
 def client(tmp_path, monkeypatch):
@@ -22,7 +28,7 @@ def client(tmp_path, monkeypatch):
     with sqlite3.connect(database) as connection:
         connection.executescript((ROOT_DIR / "src/schema.sql").read_text())
         # Same public demo identities/password as init_db.py, seeded only here.
-        password_hash = generate_password_hash("Password123!")
+        password_hash = generate_password_hash(DEMO_CREDENTIALS["password"])
         connection.executemany(
             "INSERT INTO users (email, password_hash, full_name, role) "
             "VALUES (?, ?, ?, ?)",
@@ -36,7 +42,9 @@ def client(tmp_path, monkeypatch):
         yield test_client
 
 
-def login(client, email="student1@edusurvey.edu", password="Password123!"):
+def login(client, email="student1@edusurvey.edu", password=None):
+    if password is None:
+        password = DEMO_CREDENTIALS["password"]
     return client.post("/api/auth/login", json={"email": email, "password": password})
 
 
@@ -72,7 +80,7 @@ def test_login_success(client, email, role, user_id):
 
 def test_login_wrong_password(client):
     """TC-02: wrong password reveals no account-specific detail or session."""
-    response = login(client, password="wrong-password")
+    response = login(client, password=DEMO_CREDENTIALS["invalid_password"])
     assert response.status_code == 401
     assert response.get_json()["error"] == {
         "code": "INVALID_CREDENTIALS",
@@ -85,7 +93,7 @@ def test_login_wrong_password(client):
 def test_login_unknown_email(client):
     """TC-03: unknown email has exactly the same error as a wrong password."""
     response = login(client, email="unknown@edusurvey.edu")
-    known_response = login(client, password="wrong-password")
+    known_response = login(client, password=DEMO_CREDENTIALS["invalid_password"])
     assert response.status_code == known_response.status_code == 401
     assert response.get_json() == known_response.get_json()
     assert response.get_json()["error"]["code"] == "INVALID_CREDENTIALS"
