@@ -135,3 +135,83 @@ def test_logout_clears_session(client):
     response = client.get("/api/auth/me")
 
     assert response.status_code == 401
+
+
+def test_logout_success(client):
+    login_response = client.post(
+        "/api/auth/login",
+        json={
+            "email": "student1@edusurvey.edu",
+            "password": "Password123!",
+        },
+    )
+    assert login_response.status_code == 200
+
+    response = client.post("/api/auth/logout")
+
+    assert response.status_code == 200
+    assert response.get_json() == {"authenticated": False}
+
+
+def test_logout_clears_session(client):
+    client.post(
+        "/api/auth/login",
+        json={
+            "email": "student1@edusurvey.edu",
+            "password": "Password123!",
+        },
+    )
+
+    with client.session_transaction() as session:
+        assert "user_id" in session
+        assert "role" in session
+
+    client.post("/api/auth/logout")
+
+    with client.session_transaction() as session:
+        assert "user_id" not in session
+        assert "role" not in session
+
+
+def test_protected_resource_after_logout_returns_401(client):
+    client.post(
+        "/api/auth/login",
+        json={
+            "email": "student1@edusurvey.edu",
+            "password": "Password123!",
+        },
+    )
+
+    client.post("/api/auth/logout")
+    response = client.get("/api/auth/me")
+
+    assert response.status_code == 401
+    assert response.get_json()["error"]["code"] == "UNAUTHORIZED"
+
+
+def test_logout_without_login(client):
+    response = client.post("/api/auth/logout")
+
+    assert response.status_code == 200
+    assert response.get_json() == {"authenticated": False}
+
+
+def test_users_email_unique_constraint(client):
+    database = app_module.DATABASE
+
+    with sqlite3.connect(database) as connection:
+        with pytest.raises(sqlite3.IntegrityError):
+            connection.execute(
+                """
+                INSERT INTO users (
+                    email, password_hash, full_name, role
+                )
+                VALUES (?, ?, ?, ?)
+                """,
+                (
+                    "student1@edusurvey.edu",
+                    "some-hash",
+                    "Another Student",
+                    "student",
+                ),
+            )
