@@ -173,3 +173,15 @@ zero interactive requests. UTC timestamps, request IDs and source hashes are
 stored in that report; these observed local durations do not establish public
 latency or deployment availability. The public /health and provider-view evidence
 still require the real #205 service.
+
+### #206 conflict resolution against main ef03d97
+
+Merged #205 deployment setup and #190 M4 evidence without discarding either
+README link or verification section. Retained main's stronger orphan snapshot,
+trigger-reached rollback assertion and Windows backup checks; monitoring's extra
+log fields remain asserted. No production behavior was changed for this merge.
+Windows/Python 3.12.6: focused health/runtime/audit **56 passed in 13.79s**;
+full suite with installed Chrome selected through PLAYWRIGHT_CHROMIUM_EXECUTABLE,
+`python -m pytest -q --junitxml=junit.xml` -> **213 passed in 189.78s**, zero
+failures/errors/skips. Changed runtime/tool/test Ruff and `git diff --check` passed.
+Public deployment/live-monitoring evidence remains pending as described above.

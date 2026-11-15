@@ -1,5 +1,8 @@
 name: CI
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: ["**"]
@@ -10,7 +13,8 @@ on:
 # so a busy sprint week does not exhaust the org's Actions minutes.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # PR/feature runs can cancel; an in-flight main release must finish observation.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   detect:
@@ -137,3 +141,31 @@ jobs:
             exit 1
           fi
           echo "Clean."
+
+  deploy:
+    name: Deploy tested main to Render
+    needs: [python, secrets]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.RENDER_DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: production
+    concurrency:
+      group: render-production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reject a superseded main run
+        shell: bash
+        run: |
+          current_main="$(git ls-remote origin refs/heads/main | cut -f1)"
+          test "$current_main" = "$GITHUB_SHA"
+      - name: Deploy exact tested SHA and verify readiness
+        env:
+          RENDER_SERVICE_ID: ${{ vars.RENDER_SERVICE_ID }}
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+        run: python tools/deploy_render.py

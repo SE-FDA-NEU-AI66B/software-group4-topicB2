@@ -1,5 +1,56 @@
 # EduSurvey M4 Automated Testing
 
+**Baseline #190 audit (2026-11-15, main `686bd9e`):** fresh clone + new Python
+3.11.9/Windows environment installed `requirements-dev.txt` successfully.
+`python -m pytest -v --junitxml=junit.xml` returned **185 passed, 5 failed,
+0 skipped**. All **97 story mappings resolve and pass**; failures are additional
+runtime/database audit nodes. Runtime FK enforcement from #223 supersedes the
+earlier FK-OFF finding, and the old #189 characterization/rollback assumptions
+now fail. Historical runs below remain dated evidence. Current baseline CI is
+red; current Board access and several substantive reviews remain unresolved.
+See [commands, exact failing nodes, CI/review links and sign-off blockers](m4-review-evidence.md)
+and [machine-readable mapping check](evidence/190/mapping-audit.json).
+
+### #190 CI remediation after the baseline audit
+
+Both failed Python checks on PR #227 reproduced the same three obsolete #189
+assumptions on Linux: [PR run](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43729674333)
+and [push run](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43729613376).
+The latter reported **3 failed, 187 passed in 45.57s**. This is distinct from
+the five-failure Windows baseline archived above.
+
+The user authorized remediation of the failing checks. Production code and CI
+gates are unchanged. Real node names and their story dependencies are preserved:
+
+| Retained node / mapping | Updated verification of the #223 runtime contract |
+|---|---|
+| `tests/test_database_integrity.py::test_runtime_foreign_keys_finding` / DB-189-F01 / US11 #183, US03 #22 | Two independent runtime connections enforce FK=1; orphan insert raises IntegrityError; clean FK check and exact unchanged snapshot |
+| `tests/test_database_integrity.py::test_submission_write_failure_rolls_back[new]` / DB-189-07 / US03 #22 | Test-only trigger callback proves answer 2 fails after answer 1 was written; sanitized 503/DATABASE_UNAVAILABLE; exact snapshot rollback; normal retry persists both answers and controlled timestamp |
+| `tests/test_database_integrity.py::test_submission_write_failure_rolls_back[draft]` / DB-189-08 / US03 #22 | Same injection/503/retry checks, preserving the original draft response and answers after failure |
+| `tests/test_backend_runtime.py::test_production_config_requires_explicit_secrets_and_storage` / BE-05 / #223 | Valid absolute fixture uses tmp_path on each OS; missing/relative storage and missing/short secrets remain rejected |
+| `tests/test_backend_runtime.py::test_online_backup_and_restore_round_trip` / BE-07 / #223 | POSIX still requires private mode bits; Windows verifies exposed read/write attributes, without claiming ACL validation. Both platforms execute the entire snapshot/restore/no-overwrite workflow |
+
+No test is skipped, xfailed or removed. `python -m pytest -q
+tests/test_database_integrity.py tests/test_backend_runtime.py` returned
+**43 passed in 0.95s** on Windows/Python 3.11.9. Changed-module Ruff passed.
+The first focused attempt returned 41 passed / 2 failed because its expected
+generic 500 was incorrect: SQLite errors have the more specific sanitized
+503 handler. The final assertions retain that verified production behavior.
+
+Full local rerun (same Windows/Python 3.11.9 environment, existing Chrome):
+
+```powershell
+$env:PLAYWRIGHT_CHROMIUM_EXECUTABLE = 'C:\Program Files\Google\Chrome\Application\chrome.exe'
+& .venv/m4-env/Scripts/python.exe -m pytest -v --cov --cov-report=term-missing --junitxml=docs/evidence/190/remediation-pytest.xml
+# 190 passed in 51.40s; exit 0; zero failures/errors/skips
+```
+
+[Full rerun console](evidence/190/remediation-pytest.txt) and
+[JUnit](evidence/190/remediation-pytest.xml) are separate from the unmodified
+failing clean-clone baseline. This rerun used the working branch, not a second
+fresh environment or an independent human tester. Current PR CI must be read
+separately; the historical red-main result is not rewritten.
+
 **Backend audit contract update — 2026-11-15.**
 
 Current behavior supersedes earlier dated 401-HTML/old-message snapshots below: approved #214 uses canonical API messages, and #215 redirects anonymous protected HTML navigation to `/login` while APIs/JSON clients retain JSON 401. Existing denial scenarios and all old test IDs are retained; their HTML-only assertions are deliberately updated. Topic/ranking/statistics APIs now require assigned lecturer access. [Backend file/route map](backend.md) and [runtime handover](backend-runtime.md) explain the implementation and remaining deployment/security limits.
@@ -590,8 +641,8 @@ both task implementations and all existing tests are retained.
 
 ## Database fixture and transaction audit - #189 (2026-11-15)
 
-Historical pre-#223 evidence. Runtime FK/error handling is superseded by the
-#206 integration notes below; original evidence is retained.
+Historical pre-#223 evidence follows. Runtime FK/error-handling findings are
+superseded by the #205 and #206 integration verification below; original results are retained.
 
 Parent US11 #183 / refinement #163 owns this audit. Cross-story dependencies are
 US03 #22 for response/answer integrity and submission atomicity, and US04 #50
@@ -701,6 +752,82 @@ variants). Existing browser, authentication/logout, feedback, uniqueness and
 submission/deadline cases are retained. No schema, production route or SQL helper
 was changed. CI verification is separate from this local result.
 
+## Deployment preparation and main integration - #205 (2026-11-15)
+
+Parent #200; dependencies #204/#207. Real deployment/public HTTPS, paid-account
+approval, failing-CI/provider rehearsal and hosted rollback remain pending.
+See [deployment handover](deployment.md) for exact settings, runbook and limits.
+
+The first full Windows run on main 686bd9e plus deployment preparation reported
+**5 failed / 195 passed in 135.87s**. It exposed three stale #189 assertions after
+#223 enabled runtime FK and sanitized SQLite errors, and two POSIX-specific
+assumptions in #223 tests. No production contract was weakened to pass tests.
+
+DB-189-F01 retains `test_runtime_foreign_keys_finding` but now asserts FK=1 on
+two fresh runtime connections and actual orphan rejection: #223 resolves the old
+FK-OFF finding. DB-189-07/08 retain the real second-answer trigger, exact rollback
+snapshots and successful retry; they now assert sanitized 503 DATABASE_UNAVAILABLE
+instead of an exception escaping Flask. SQL time remains explicitly controlled.
+
+BE-05 uses tmp_path for a genuinely absolute path on either operating system.
+BE-07 verifies the backup requests mode 0600 on all systems, and additionally
+checks effective POSIX permission bits on POSIX. Windows ACL privacy is not
+established by Unix mode bits; the actual backup/restore/overwrite checks run on
+both platforms. No test is skipped. Existing audit-run evidence remains historical.
+
+| ID | Real pytest node | Scope |
+|---|---|---|
+| DEP-205-01 | `tests/test_deployment.py::test_production_restart_preserves_data` | New opt-in bootstrap, byte-identical restart, missing-after-provision refusal |
+| DEP-205-02 | `tests/test_deployment.py::test_bootstrap_fails_closed[no-opt-in]` | Missing DB cannot seed without opt-in |
+| DEP-205-03 | `tests/test_deployment.py::test_bootstrap_fails_closed[no-mount]` | Absent persistent mount cannot seed |
+| DEP-205-04 | `tests/test_deployment.py::test_bootstrap_fails_closed[corrupt]` | Corrupt existing DB is never reset |
+| DEP-205-05 | `tests/test_deployment.py::test_deploy_rejects_pr_before_provider_call` | PR context rejected before API call |
+| DEP-205-06 | `tests/test_deployment.py::test_deploy_exact_sha_and_readiness[auto-deploy]` | Reject competing platform auto-deploy before POST |
+| DEP-205-07 | `tests/test_deployment.py::test_deploy_exact_sha_and_readiness[wrong-repo]` | Reject wrong service repository before POST |
+| DEP-205-08 | `tests/test_deployment.py::test_deploy_exact_sha_and_readiness[wrong-sha]` | Reject provider's live SHA mismatch |
+| DEP-205-09 | `tests/test_deployment.py::test_deploy_exact_sha_and_readiness[failed-build]` | Failed build cannot be reported ready |
+| DEP-205-10 | `tests/test_deployment.py::test_deploy_exact_sha_and_readiness[ready]` | Exact-SHA POST and HTTPS health contract through fake provider |
+
+These ten tests use temporary data/fake API; they do not prove real deployment
+or a failed GitHub test preventing a provider release. Startup dates are only
+used to seed relative demo availability, not asserted against wall time. Tests
+restore environment, mount mock and initializer globals. Config/factory guards
+already verified in #223 are reused rather than duplicated.
+
+Executed on Windows/Python 3.12.6:
+`python -m pytest -q tests/test_deployment.py tests/test_database_integrity.py tests/test_backend_runtime.py`
+-> **53 passed in 5.01s**. Changed Python modules passed Ruff, YAML dependency/
+security-step/mount checks passed, and `git diff --check` passed.
+
+Final full local verification (Windows/Python 3.12.6, installed Chrome selected via
+PLAYWRIGHT_CHROMIUM_EXECUTABLE): `python -m pytest -q --junitxml=junit.xml` ->
+**200 passed in 118.32s (0:01:58)**, zero failures/errors/skips. This includes the
+existing 190 collected cases on main 686bd9e and ten new deployment cases.
+Real hosting, paid-resource approval, CI red-test gate proof, rollback and release
+verification remain pending; a local green suite does not complete #205.
+
+## #190 / PR #227 merge reconciliation with main 6acf0dd
+
+Resolved conflicts in `tests/test_backend_runtime.py` and
+`tests/test_database_integrity.py` while preserving the #205 integration and
+both sets of assertions. Backup tests retain main's requested mode-0600 check,
+POSIX effective permissions and Windows read/write attributes, plus the full
+restore/no-overwrite workflow. FK tests retain both the immediate and fresh
+connection checks and the exact unchanged snapshot. Rollback tests retain the
+trigger callback, sanitized 503, exact draft/new snapshot restoration and retry.
+No test node, production behavior or approval policy is removed or bypassed.
+
+Focused Windows/Python 3.11.9 verification:
+`python -m pytest -q tests/test_backend_runtime.py tests/test_database_integrity.py`
+returned **43 passed in 1.23s**; Ruff on both files and `git diff --check` passed.
+
+Full run with the same installed Chrome override:
+`python -m pytest -v --junitxml=docs/evidence/190/merge-pytest.xml` returned
+**200 passed in 62.73s**, zero failures/errors/skips (190 retained + 10 merged
+deployment cases). [Console](evidence/190/merge-pytest.txt) and
+[JUnit](evidence/190/merge-pytest.xml) retain this integration result separately
+from both earlier 190-case remediation and the original failing baseline.
+
 ## Health and sanitized monitoring verification - #206 (2026-11-15)
 
 Parent #200; database #204 and deployed verification #205/#210. Reuses #223's
@@ -763,3 +890,15 @@ source hashes. This is local HTTP, not the public HTTPS release. A separate
 requests / one 503 -> 5% error, p95 950ms and exit 2; these are not observed
 production values. Platform/service-specific log access, actual live health demo,
 notification delivery and independent review remain pending in operations.md.
+
+### #206 conflict resolution against main ef03d97
+
+Merged #205 deployment setup and #190 M4 evidence without discarding either
+README link or verification section. Retained main's stronger orphan snapshot,
+trigger-reached rollback assertion and Windows backup checks; monitoring's extra
+log fields remain asserted. No production behavior was changed for this merge.
+Windows/Python 3.12.6: focused health/runtime/audit **56 passed in 13.79s**;
+full suite with installed Chrome selected through PLAYWRIGHT_CHROMIUM_EXECUTABLE,
+`python -m pytest -q --junitxml=junit.xml` -> **213 passed in 189.78s**, zero
+failures/errors/skips. Changed runtime/tool/test Ruff and `git diff --check` passed.
+Public deployment/live-monitoring evidence remains pending as described above.

@@ -1,0 +1,762 @@
+[
+  {
+    "node": "tests/test_auth.py::test_login_success[TC-01-student]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_login_success[US01-A01-lecturer]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_login_success[US01-A02-admin]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_login_wrong_password",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_login_unknown_email",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_login_missing_password",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_current_user_requires_login[US01-A03-me]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_current_user_requires_login[US01-A04-list-page]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_current_user_requires_login[US01-A05-complete-page]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_current_user_requires_login[US01-A06-list-api]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_current_user_after_login",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_authenticated_student_access[US01-A08-student]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_authenticated_student_access[US01-A09-lecturer]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_authenticated_student_access[US01-A10-admin]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_login_replaces_previous_session",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_current_user_deleted_account",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_logout_clears_session",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_logout_success",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_protected_resource_after_logout_returns_401",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_logout_without_login",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_users_email_unique_constraint",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_student_page_denied_after_logout",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_lecturer_feedback_denied_after_logout",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_anonymous_logout_is_idempotent",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_protected_html_redirects_after_logout[student1@edusurvey.edu-paths0]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_protected_html_redirects_after_logout[lecturer1@edusurvey.edu-paths1]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_auth.py::test_protected_html_redirects_after_logout[admin@edusurvey.edu-paths2]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_health_database_check[ready]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_health_database_check[missing]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_health_database_check[empty]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_health_database_check[corrupt]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_request_logs_exclude_user_input",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_feedback_aggregate_permissions[None-401-feedback/topics]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_feedback_aggregate_permissions[None-401-feedback/topics/ranking]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_feedback_aggregate_permissions[None-401-statistics]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_feedback_aggregate_permissions[student-403-feedback/topics]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_feedback_aggregate_permissions[student-403-feedback/topics/ranking]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_feedback_aggregate_permissions[student-403-statistics]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_feedback_aggregate_permissions[administrator-403-feedback/topics]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_feedback_aggregate_permissions[administrator-403-feedback/topics/ranking]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_feedback_aggregate_permissions[administrator-403-statistics]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_feedback_aggregate_permissions[unassigned-403-feedback/topics]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_feedback_aggregate_permissions[unassigned-403-feedback/topics/ranking]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_feedback_aggregate_permissions[unassigned-403-statistics]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_feedback_aggregate_permissions[lecturer-200-feedback/topics]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_feedback_aggregate_permissions[lecturer-200-feedback/topics/ranking]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_feedback_aggregate_permissions[lecturer-200-statistics]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_missing_database_is_safe_503",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_production_config_requires_explicit_secrets_and_storage[None-/data/app.db-False]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_production_config_requires_explicit_secrets_and_storage[short-/data/app.db-False]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_production_config_requires_explicit_secrets_and_storage[ssssssssssssssssssssssssssssssssssssssss-None-False]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_production_config_requires_explicit_secrets_and_storage[ssssssssssssssssssssssssssssssssssssssss-relative.db-False]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_production_config_requires_explicit_secrets_and_storage[ssssssssssssssssssssssssssssssssssssssss-/data/app.db-True]",
+    "result": "failed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_database_transaction_closes_and_rolls_back",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_online_backup_and_restore_round_trip",
+    "result": "failed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_backup_missing_source_creates_no_output",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_production_initializer_refuses_reset",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_unexpected_errors_are_sanitized",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_fresh_m5_demo_has_student_work_and_lecturer_feedback",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_offset_deadlines_consistent_across_p0[86399-Due soon]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_offset_deadlines_consistent_across_p0[86400-Active]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_offset_deadlines_consistent_across_p0[86401-Active]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_backend_runtime.py::test_offset_deadlines_consistent_across_p0[0-Closed]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_database_integrity.py::test_schema_rejects_orphans[evaluation]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_database_integrity.py::test_schema_rejects_orphans[student]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_database_integrity.py::test_schema_rejects_orphans[response]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_database_integrity.py::test_schema_rejects_orphans[question]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_database_integrity.py::test_runtime_foreign_keys_finding",
+    "result": "failed"
+  },
+  {
+    "node": "tests/test_database_integrity.py::test_submission_write_failure_rolls_back[new]",
+    "result": "failed"
+  },
+  {
+    "node": "tests/test_database_integrity.py::test_submission_write_failure_rolls_back[draft]",
+    "result": "failed"
+  },
+  {
+    "node": "tests/test_feedback_classifier.py::test_all_five_topics",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_feedback_classifier.py::test_uncertain_feedback_is_other",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_feedback_classifier.py::test_topic_frequency",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_lecturer_feedback.py::test_lecturer_can_view_assigned_evaluation_feedback",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_lecturer_feedback.py::test_lecturer_cannot_view_unassigned_evaluation",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_lecturer_feedback.py::test_student_cannot_access_lecturer_feedback",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_lecturer_feedback.py::test_feedback_page_requires_login",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_lecturer_feedback.py::test_lecturer_cannot_view_nonexistent_evaluation",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_lecturer_feedback.py::test_draft_responses_are_excluded_from_feedback",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_lecturer_feedback.py::test_feedback_displays_submitted_ratings_and_comments",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_lecturer_feedback.py::test_completed_count_includes_only_submitted_responses",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_lecturer_feedback.py::test_feedback_completed_count[count-19]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_lecturer_feedback.py::test_feedback_completed_count[count-20]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_lecturer_feedback.py::test_feedback_completed_count[count-21]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_p0_browser_contracts.py::test_logout_navigates_to_login[laptop]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_p0_browser_contracts.py::test_logout_navigates_to_login[phone]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_p0_browser_contracts.py::test_login_error_visible_message",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_p0_browser_contracts.py::test_role_landing_and_logout[lecturer@test.com-/lecturer/feedback]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_p0_browser_contracts.py::test_role_landing_and_logout[admin@test.com-/account]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_p0_browser_contracts.py::test_submission_deadline_race_and_retryable_logout",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_p0_browser_contracts.py::test_due_soon_label_and_filter",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_p0_browser_contracts.py::test_open_evaluation_error_explains_next_action[closed]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_p0_browser_contracts.py::test_open_evaluation_error_explains_next_action[unenrolled]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_p0_browser_contracts.py::test_lecturer_feedback_click_through[laptop]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_p0_browser_contracts.py::test_lecturer_feedback_click_through[phone]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_p0_browser_contracts.py::test_lecturer_feedback_empty_states",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_p0_browser_contracts.py::test_lecturer_feedback_access_error_recovery[/lecturer/feedback/2-403]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_p0_browser_contracts.py::test_lecturer_feedback_access_error_recovery[/lecturer/feedback/999-404]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_p0_browser_contracts.py::test_lecturer_feedback_wrong_role_browser_errors[anonymous]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_p0_browser_contracts.py::test_lecturer_feedback_wrong_role_browser_errors[student]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_p0_browser_contracts.py::test_lecturer_feedback_wrong_role_browser_errors[administrator]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_p0_browser_contracts.py::test_lecturer_feedback_unavailable_retry",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_response_schema.py::ResponseSchemaTests::test_question_cannot_have_duplicate_answer_in_response",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_response_schema.py::ResponseSchemaTests::test_student_cannot_have_duplicate_response",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_response_schema.py::ResponseSchemaTests::test_submission_status_and_timestamp_are_stored",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_home_route",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_evaluations_route_requires_login",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_evaluations_route_student_access",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_evaluations_route_lecturer_forbidden",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_submission_requires_login",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_submission_missing_required_answers",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_submission_expired_deadline",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_duplicate_submission",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_submission_invalid_evaluation",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_submission_closed_evaluation",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_submission_errors_have_user_facing_guidance",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_grouped_feedback_response_structure",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_grouped_feedback_excludes_other_evaluations",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_feedback_topic_ranking_order_and_ties",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_feedback_topic_ranking_returns_all_topics",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_feedback_topic_ranking_invalid_evaluation",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_feedback_topic_ranking_excludes_other_evaluations",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_evaluation_statistics_calculates_response_count_and_averages",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_evaluation_statistics_handles_no_ratings",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_evaluation_statistics_invalid_evaluation",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_create_evaluation_success",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_create_evaluation_requires_deadline",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_update_evaluation_deadline_success",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_update_evaluation_deadline_requires_login",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_update_evaluation_deadline_forbidden_for_student",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_update_evaluation_deadline_rejects_past_date",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_update_evaluation_deadline_requires_deadline",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_update_evaluation_deadline_not_found",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_deadline_reminder_is_recorded_once",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_lecturer_can_retrieve_course_feedback",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_lecturer_cannot_access_unassigned_course",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_student_cannot_access_lecturer_feedback",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_course_feedback_requires_login",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_course_feedback_invalid_course",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_smoke.py::test_course_feedback_count_excludes_draft_responses",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_status.py::EvaluationStatusTests::test_completed_takes_priority_over_deadline",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_status.py::EvaluationStatusTests::test_deadline_as_string",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_status.py::EvaluationStatusTests::test_exactly_24_hours_is_active",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_status.py::EvaluationStatusTests::test_less_than_24_hours_is_due_soon",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_status.py::EvaluationStatusTests::test_more_than_24_hours_is_active",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_status.py::EvaluationStatusTests::test_past_deadline_is_closed",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_success",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_three_active",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_due_soon",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_closed",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_completed[US02-L03-open]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_completed[US02-L04-expired]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_completed[US02-L05-closed]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_empty",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_requires_login",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_forbidden_for_lecturer[TC-07-lecturer]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_forbidden_for_lecturer[US02-L07-administrator]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_student_only_sees_evaluations_for_enrolled_courses",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_due_soon_24_hour_boundary[TC-08-below]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_due_soon_24_hour_boundary[TC-09-at]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_due_soon_24_hour_boundary[TC-10-above]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_deadline_boundary[TC-11-before]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_deadline_boundary[TC-12-at]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_student_evaluations_deadline_boundary[TC-13-after]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_student_completion_is_personal",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_draft_response_is_not_completed",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_student_evaluations.py::test_draft_evaluation_is_hidden",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-0]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-1]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-2]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-4]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-5]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_submission_rating_boundaries[rating-6]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_submission_text_length_boundaries[length-1999]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_submission_text_length_boundaries[length-2000]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_submission_text_length_boundaries[length-2001]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_submission_required_question_count[answered-4]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_submission_required_question_count[answered-5]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_submission_success_persists_response_and_answers",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_submission_missing_required_answer_does_not_create_records",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_duplicate_submission_does_not_modify_existing_records",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_submission_after_deadline_does_not_create_records",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_submission_invalid_evaluation_does_not_create_records",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_submission_closed_evaluation_does_not_create_records",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_submission_deadline_boundary[TC-US03-07-before]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_submission_deadline_boundary[TC-US03-08-at]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_submission_deadline_boundary[TC-US03-09-after]",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_duplicate_submission_canonical_message",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submission_workflow.py::test_duplicate_questions_canonical_message",
+    "result": "passed"
+  },
+  {
+    "node": "tests/test_submissions.py::test_submit_evaluation_success",
+    "result": "passed"
+  }
+]

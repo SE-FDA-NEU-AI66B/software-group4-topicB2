@@ -1,0 +1,30 @@
+# Proposed paid service. Review cost/account approval before provisioning.
+services:
+  - type: web
+    name: edusurvey
+    runtime: python
+    branch: main
+    plan: starter
+    region: singapore
+    numInstances: 1
+    autoDeployTrigger: 'off'
+    buildCommand: pip install -r requirements-prod.txt
+    startCommand: python -m tools.prepare_production && gunicorn --config gunicorn.conf.py src.app:app
+    healthCheckPath: /health
+    disk:
+      name: edusurvey-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.12
+      - key: EDUSURVEY_ENV
+        value: production
+      - key: EDUSURVEY_DATABASE
+        value: /var/data/edusurvey.db
+      - key: EDUSURVEY_DATA_MOUNT
+        value: /var/data
+      - key: EDUSURVEY_SECRET_KEY
+        generateValue: true
+      - key: EDUSURVEY_BOOTSTRAP_DEMO
+        value: '1'
