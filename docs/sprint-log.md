@@ -237,3 +237,17 @@ Complete Sprint 4 deliverables, improve automated testing, finalize setup and te
 - Verify automated tests pass.
 - Complete testing and setup documentation.
 - Prepare Milestone 4 submission materials.
+
+
+### Sprint 4 Backlog Refinement - 2026-11-15 (#163)
+
+The current audit is recorded in [sprint4-backlog.md](sprint4-backlog.md), with the prepared Project field register in [sprint4-board.csv](sprint4-board.csv). This supplements the earlier summary; it does not claim that an additional sprint ceremony occurred.
+
+- All five P0 stories are reviewed; the missing US11 story is restored as #183 and #169's invalid parent is corrected.
+- Baseline tasks #164–#171 remain closed as recorded on GitHub. Seven open follow-ups #184–#190 cover the remaining numerical/acceptance examples, logout cases, contract decisions, database integrity and fresh-clone/review evidence.
+- Every task has an owner, estimated hours, priority and Sprint 4 milestone. Task hours total 43 (26 original + 17 supplemental); open estimates total 19h including #163. These are planning estimates, not time spent or story-point velocity.
+- `docs/testing.md` retains all original case IDs and mutation evidence; 97 cases comprise 79 existing mappings and 18 explicitly pending proposed tests.
+- Current main `5a52af6`: `python -m pytest -v` produced **106 passed in 2.95s** locally. No implementation or test code changes are included in this refinement.
+- Project Board Sprint/Priority/Status/estimate values remain **unverified and unapplied** because the token lacks Projects scope. Repository issue metadata is updated separately. #163 must remain open until that acceptance criterion and review are complete.
+
+The existing TBD velocity fields above remain pending verified planning/closure evidence; hours must not be substituted for story points.
