@@ -2,6 +2,7 @@
 
 import json
 import logging
+import os
 import sqlite3
 from contextlib import closing
 from datetime import UTC
@@ -39,7 +40,7 @@ def test_request_logs_exclude_user_input(api_client, caplog):
         api_client.get("/unknown/PRIVATE_PATH?answer=PRIVATE_ANSWER")
     events = [json.loads(record.message) for record in caplog.records if record.message.startswith('{"duration_ms"')]
     assert len(events) == 2
-    assert all(set(event) == {"event", "endpoint", "method", "status", "duration_ms"} for event in events)
+    assert all(set(event) == {"event", "endpoint", "method", "status", "duration_ms", "timestamp", "request_id"} for event in events)
     assert events[1]["endpoint"] == "unmatched"
     assert all(event["duration_ms"] >= 0 for event in events)
     assert "PRIVATE_" not in caplog.text
@@ -72,9 +73,11 @@ def test_missing_database_is_safe_503(api_client, monkeypatch, tmp_path, caplog)
 
 
 @pytest.mark.parametrize("secret,path,valid", [(None, "/data/app.db", False), ("short", "/data/app.db", False), ("s" * 40, None, False), ("s" * 40, "relative.db", False), ("s" * 40, "/data/app.db", True)])
-def test_production_config_requires_explicit_secrets_and_storage(monkeypatch, secret, path, valid):
+def test_production_config_requires_explicit_secrets_and_storage(monkeypatch, tmp_path, secret, path, valid):
     """BE-05: production refuses implicit demo config; HTTPS session cookie required."""
     monkeypatch.setenv("EDUSURVEY_ENV", "production")
+    if path == "/data/app.db":
+        path = str(tmp_path / "app.db")  # A real absolute path on Windows and Linux.
     for key, value in (("EDUSURVEY_SECRET_KEY", secret), ("EDUSURVEY_DATABASE", path)):
         if value is None:
             monkeypatch.delenv(key, raising=False)
@@ -103,13 +106,23 @@ def test_database_transaction_closes_and_rolls_back(api_client):
         assert check.execute("SELECT COUNT(*) FROM courses WHERE course_code='ROLLBACK'").fetchone()[0] == 0
 
 
-def test_online_backup_and_restore_round_trip(api_client, tmp_path):
+def test_online_backup_and_restore_round_trip(api_client, tmp_path, monkeypatch):
     """BE-07: backup survives new source changes; a restored copy has original data."""
     source = app_module.DATABASE
     backup = tmp_path / "snapshot.db"
     restored = tmp_path / "restored.db"
+    original_open = os.open
+    creation_modes = []
+
+    def recorded_open(path, flags, mode=0o777):
+        creation_modes.append(mode)
+        return original_open(path, flags, mode)
+
+    monkeypatch.setattr(os, "open", recorded_open)
     backup_database(source, backup)
-    assert backup.stat().st_mode & 0o077 == 0
+    assert creation_modes == [0o600]
+    if os.name == "posix":
+        assert backup.stat().st_mode & 0o077 == 0
     with app_module.get_db_connection() as connection:
         connection.execute("UPDATE courses SET course_name='CHANGED' WHERE id=1")
     backup_database(backup, restored)

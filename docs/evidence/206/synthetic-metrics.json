@@ -1,0 +1,19 @@
+{
+  "source": "Synthetic CLI fixture; not production measurements",
+  "exit_code": 2,
+  "summary": {
+    "duplicate_events": 0,
+    "error_rate_breach": true,
+    "error_rate_percent": 5.0,
+    "health_breach": false,
+    "health_failures": 0,
+    "invalid_events": 0,
+    "latency_breach": false,
+    "low_sample": false,
+    "p95_server_ms": 950,
+    "requests": 20,
+    "server_errors": 1,
+    "window_end_inclusive": "2026-11-15T12:00:00+00:00",
+    "window_start_exclusive": "2026-11-15T11:55:00+00:00"
+  }
+}

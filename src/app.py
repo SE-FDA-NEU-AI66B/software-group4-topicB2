@@ -16,9 +16,19 @@ from flask import (
 from werkzeug.security import check_password_hash
 
 if __package__:
-    from .runtime import TransactionConnection, configure_runtime, register_runtime
+    from .runtime import (
+        TransactionConnection,
+        configure_runtime,
+        log_runtime_error,
+        register_runtime,
+    )
 else:
-    from runtime import TransactionConnection, configure_runtime, register_runtime
+    from runtime import (
+        TransactionConnection,
+        configure_runtime,
+        log_runtime_error,
+        register_runtime,
+    )
 
 app = Flask(__name__)
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,7 +48,7 @@ def api_error(status, code, message, action):
 
 @app.errorhandler(sqlite3.Error)
 def database_unavailable(error):
-    app.logger.error("database_unavailable")
+    log_runtime_error(app, "database_unavailable")
     return api_error(503, "DATABASE_UNAVAILABLE", "The service cannot access its data right now.", "Try again shortly; contact the administrator if the problem continues.")
 
 
@@ -500,7 +510,7 @@ def lecturer_page_response(view):
         except sqlite3.Error:
             if not wants_html:
                 raise
-            app.logger.error("feedback_database_unavailable")
+            log_runtime_error(app, "feedback_database_unavailable")
             response = make_response(render_template(
                 "lecturer_feedback.html",
                 error_message="Feedback is temporarily unavailable.",
