@@ -1,0 +1,325 @@
+{
+  "client_date": "2026-11-16",
+  "actor": "lesyhuy2k6-gif",
+  "repository_permissions": {
+    "admin": false,
+    "maintain": false,
+    "push": true,
+    "triage": true,
+    "pull": true
+  },
+  "main_sha": "9c5d55c1a25509d8899102e45b0fd5481699d93c",
+  "latest_green_main": {
+    "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43739534488",
+    "id": 43739534488,
+    "sha": "9c5d55c1a25509d8899102e45b0fd5481699d93c",
+    "conclusion": "success",
+    "run_started_at": "2026-11-15T17:09:47Z",
+    "updated_at": "2026-11-15T17:11:43Z",
+    "elapsed_seconds": 116.0,
+    "jobs": [
+      {
+        "name": "No secrets committed",
+        "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43739534488/job/132889422222",
+        "conclusion": "success",
+        "started_at": "2026-11-15T17:09:50Z",
+        "completed_at": "2026-11-15T17:09:54Z",
+        "elapsed_seconds": 4.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:09:50Z",
+            "completed_at": "2026-11-15T17:09:51Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:09:51Z",
+            "completed_at": "2026-11-15T17:09:52Z"
+          },
+          {
+            "name": "Scan for obvious credentials",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:09:52Z",
+            "completed_at": "2026-11-15T17:09:52Z"
+          },
+          {
+            "name": "No .env or database dumps",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:09:52Z",
+            "completed_at": "2026-11-15T17:09:52Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:09:52Z",
+            "completed_at": "2026-11-15T17:09:52Z"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:09:52Z",
+            "completed_at": "2026-11-15T17:09:52Z"
+          }
+        ]
+      },
+      {
+        "name": "Detect stack",
+        "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43739534488/job/132889422475",
+        "conclusion": "success",
+        "started_at": "2026-11-15T17:09:49Z",
+        "completed_at": "2026-11-15T17:09:54Z",
+        "elapsed_seconds": 5.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:09:50Z",
+            "completed_at": "2026-11-15T17:09:51Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:09:51Z",
+            "completed_at": "2026-11-15T17:09:52Z"
+          },
+          {
+            "name": "Run if ls requirements.txt pyproject.toml setup.py 2>/dev/null | grep -q .; then",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:09:52Z",
+            "completed_at": "2026-11-15T17:09:52Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:09:52Z",
+            "completed_at": "2026-11-15T17:09:52Z"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:09:52Z",
+            "completed_at": "2026-11-15T17:09:52Z"
+          }
+        ]
+      },
+      {
+        "name": "Python tests",
+        "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43739534488/job/132889453043",
+        "conclusion": "success",
+        "started_at": "2026-11-15T17:09:56Z",
+        "completed_at": "2026-11-15T17:11:31Z",
+        "elapsed_seconds": 95.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:09:57Z",
+            "completed_at": "2026-11-15T17:09:58Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:09:58Z",
+            "completed_at": "2026-11-15T17:09:59Z"
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:09:59Z",
+            "completed_at": "2026-11-15T17:10:01Z"
+          },
+          {
+            "name": "Install dependencies",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:10:01Z",
+            "completed_at": "2026-11-15T17:10:31Z"
+          },
+          {
+            "name": "Lint",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:10:31Z",
+            "completed_at": "2026-11-15T17:10:31Z"
+          },
+          {
+            "name": "Test",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:10:31Z",
+            "completed_at": "2026-11-15T17:11:27Z"
+          },
+          {
+            "name": "Publish test summary",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:11:27Z",
+            "completed_at": "2026-11-15T17:11:27Z"
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:11:27Z",
+            "completed_at": "2026-11-15T17:11:27Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:11:27Z",
+            "completed_at": "2026-11-15T17:11:28Z"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:11:28Z",
+            "completed_at": "2026-11-15T17:11:28Z"
+          }
+        ]
+      },
+      {
+        "name": "Node build and tests",
+        "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43739534488/job/132889454711",
+        "conclusion": "skipped",
+        "started_at": "2026-11-15T17:09:54Z",
+        "completed_at": "2026-11-15T17:09:54Z",
+        "elapsed_seconds": 0.0,
+        "steps": []
+      },
+      {
+        "name": "CI gate",
+        "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43739534488/job/132889930034",
+        "conclusion": "success",
+        "started_at": "2026-11-15T17:11:33Z",
+        "completed_at": "2026-11-15T17:11:43Z",
+        "elapsed_seconds": 10.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:11:34Z",
+            "completed_at": "2026-11-15T17:11:36Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:11:36Z",
+            "completed_at": "2026-11-15T17:11:41Z"
+          },
+          {
+            "name": "Require successful tests and security checks",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:11:41Z",
+            "completed_at": "2026-11-15T17:11:41Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:11:41Z",
+            "completed_at": "2026-11-15T17:11:41Z"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "started_at": "2026-11-15T17:11:41Z",
+            "completed_at": "2026-11-15T17:11:42Z"
+          }
+        ]
+      },
+      {
+        "name": "Deploy tested main to Render",
+        "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43739534488/job/132889988284",
+        "conclusion": "skipped",
+        "started_at": "2026-11-15T17:11:43Z",
+        "completed_at": "2026-11-15T17:11:43Z",
+        "elapsed_seconds": 0.0,
+        "steps": []
+      }
+    ]
+  },
+  "active_main_rules": [
+    {
+      "type": "deletion",
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "SE-FDA-NEU-AI66B",
+      "ruleset_id": 21540407
+    },
+    {
+      "type": "non_fast_forward",
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "SE-FDA-NEU-AI66B",
+      "ruleset_id": 21540407
+    },
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 1,
+        "dismiss_stale_reviews_on_push": false,
+        "required_reviewers": [],
+        "require_code_owner_review": false,
+        "require_last_push_approval": false,
+        "required_review_thread_resolution": false,
+        "require_extra_approval_for_unattributed_changes": true,
+        "allowed_merge_methods": [
+          "merge",
+          "squash",
+          "rebase"
+        ]
+      },
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "SE-FDA-NEU-AI66B",
+      "ruleset_id": 21540407
+    }
+  ],
+  "deployment_configuration": {
+    "variable_names": [],
+    "environment_names": [],
+    "github_deployments_count": 0,
+    "public_url_verified": false,
+    "provider_access": "Render integration not connected at audit; no provider state inferred from GitHub absence"
+  },
+  "instructor_clarification": {
+    "status": "not found in inspected issues/comments; awaiting instructor evidence",
+    "inspected_issues": [
+      {
+        "number": 200,
+        "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/200",
+        "state": "open",
+        "comment_count": 0
+      },
+      {
+        "number": 204,
+        "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/204",
+        "state": "closed",
+        "comment_count": 0
+      },
+      {
+        "number": 205,
+        "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/205",
+        "state": "closed",
+        "comment_count": 0
+      },
+      {
+        "number": 206,
+        "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/206",
+        "state": "closed",
+        "comment_count": 0
+      },
+      {
+        "number": 207,
+        "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/207",
+        "state": "closed",
+        "comment_count": 0
+      },
+      {
+        "number": 208,
+        "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/208",
+        "state": "open",
+        "comment_count": 0
+      },
+      {
+        "number": 210,
+        "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/210",
+        "state": "closed",
+        "comment_count": 0
+      }
+    ]
+  }
+}
