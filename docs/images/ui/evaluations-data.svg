@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1050" viewBox="0 0 1440 1050">
+    <style>
+      text { font-family: Arial, sans-serif; }
+      .heading { font-size: 20px; font-weight: bold; fill: #102b50; }
+      .muted { font-size: 14px; fill: #75849b; }
+      .small { font-size: 12px; fill: #42648c; }
+      .label { font-size: 11px; font-weight: bold; fill: #96a2b3; }
+      .value { font-size: 13px; font-weight: bold; fill: #40546f; }
+      .white { font-size: 12px; font-weight: bold; fill: white; }
+      .green { font-size: 11px; font-weight: bold; fill: #16865b; }
+      .purple { font-size: 12px; font-weight: bold; fill: #7050b2; }
+    </style>
+    <rect width="1440" height="1050" fill="#f4f7fc"/>
+    <rect width="258" height="1050" fill="#102b50"/>
+    <rect x="20" y="30" width="42" height="42" rx="13" fill="#8ce9ed"/>
+    <text x="41" y="59" text-anchor="middle" font-size="25" font-weight="bold" fill="#102b50">E</text>
+    <text x="76" y="59" font-size="23" font-weight="bold" fill="white">EduSurvey</text>
+    <text x="32" y="150" font-size="11" font-weight="bold" fill="#91a9c5">WORKSPACE</text>
+    <rect x="15" y="175" width="228" height="48" rx="9" fill="#ffffff" fill-opacity=".12"/>
+    <text x="45" y="205" font-size="15" fill="white">▦  My Evaluations</text>
+    <rect x="20" y="885" width="218" height="90" rx="11" fill="#ffffff" fill-opacity=".055" stroke="#ffffff" stroke-opacity=".12"/>
+    <text x="38" y="915" font-size="13" font-weight="bold" fill="white">?  Need assistance?</text>
+    <text x="38" y="942" font-size="11" fill="#aabed5">Contact your university</text>
+    <text x="38" y="960" font-size="11" fill="#aabed5">administrator.</text>
+    <text x="35" y="1015" font-size="11" fill="#9eb2cc">● EduSurvey Student Portal</text>
+
+    <rect x="258" y="0" width="1182" height="72" fill="white" stroke="#e6ebf2"/>
+    <text x="300" y="43" font-size="13" fill="#75849b">Workspace  /</text>
+    <text x="405" y="43" font-size="13" font-weight="bold" fill="#192d4b">My Evaluations</text>
+    <text x="1290" y="43" font-size="12" fill="#52657e">● Student Portal</text>
+
+    <text x="305" y="135" font-size="11" font-weight="bold" fill="#1769c2">— STUDENT WORKSPACE</text>
+    <text x="305" y="185" font-size="35" font-weight="bold" fill="#192d4b">My Evaluations</text>
+    <text x="305" y="215" font-size="14" fill="#75849b">View your assigned course evaluations and keep track of your submission deadlines.</text>
+    <rect x="1270" y="155" width="110" height="42" rx="9" fill="white" stroke="#e6ebf2"/>
+    <text x="1325" y="181" text-anchor="middle" font-size="12" fill="#415672">↻ Refresh</text>
+
+    <!-- Summary cards -->
+    <g>
+      <rect x="305" y="255" width="255" height="115" rx="13" fill="white" stroke="#e6ebf2"/>
+      <rect x="575" y="255" width="255" height="115" rx="13" fill="white" stroke="#e6ebf2"/>
+      <rect x="845" y="255" width="255" height="115" rx="13" fill="white" stroke="#e6ebf2"/>
+      <rect x="1115" y="255" width="265" height="115" rx="13" fill="white" stroke="#e6ebf2"/>
+      <g font-size="12" fill="#687b94">
+        <text x="325" y="285">Total evaluations</text>
+        <text x="595" y="285">Active</text>
+        <text x="865" y="285">Due soon</text>
+        <text x="1135" y="285">Completed</text>
+      </g>
+      <g font-size="31" font-weight="bold" fill="#102b50">
+        <text x="325" y="333">2</text><text x="595" y="333">1</text>
+        <text x="865" y="333">0</text><text x="1135" y="333">1</text>
+      </g>
+    </g>
+
+    <text x="305" y="435" font-size="21" font-weight="bold" fill="#192d4b">Course evaluations</text>
+    <text x="305" y="462" font-size="12" fill="#75849b">All evaluations assigned to your enrolled courses.</text>
+    <rect x="305" y="490" width="820" height="46" rx="9" fill="white" stroke="#e6ebf2"/>
+    <text x="325" y="519" font-size="13" fill="#8798ad">⌕  Search by survey, course or lecturer...</text>
+    <rect x="1140" y="490" width="240" height="46" rx="9" fill="white" stroke="#e6ebf2"/>
+    <text x="1160" y="519" font-size="13" fill="#52657e">All statuses  ▾</text>
+
+    
+        <text x="1370" y="595" text-anchor="end" class="small">2 of 2 evaluations</text>
+        <rect x="370" y="615" width="1000" height="155" rx="12" fill="white" stroke="#e6ebf2"/>
+        <text x="395" y="650" class="heading">Software Engineering Mid-Semester Evaluation</text>
+        <rect x="1230" y="625" width="110" height="28" rx="14" fill="#e9f7ef"/>
+        <text x="1285" y="644" text-anchor="middle" class="green">Active</text>
+        <line x1="395" y1="675" x2="1340" y2="675" stroke="#edf0f5"/>
+        <text x="395" y="704" class="label">COURSE NAME</text>
+        <text x="395" y="730" class="value">Software Engineering</text>
+        <text x="720" y="704" class="label">LECTURER</text>
+        <text x="720" y="730" class="value">Anh Nguyen</text>
+        <text x="1030" y="704" class="label">SUBMISSION DEADLINE</text>
+        <text x="1030" y="730" class="value">30 Dec 2026</text>
+        <rect x="1185" y="740" width="155" height="20" rx="6" fill="#1769c2"/>
+        <text x="1262" y="755" text-anchor="middle" class="white">Start Evaluation →</text>
+
+        <rect x="370" y="790" width="1000" height="155" rx="12" fill="white" stroke="#e6ebf2"/>
+        <text x="395" y="830" class="heading">Web Development Mid-Semester Evaluation</text>
+        <rect x="1230" y="805" width="110" height="28" rx="14" fill="#eeeafd"/>
+        <text x="1285" y="824" text-anchor="middle" class="purple">Completed</text>
+        <line x1="395" y1="850" x2="1340" y2="850" stroke="#edf0f5"/>
+        <text x="395" y="880" class="label">COURSE NAME</text>
+        <text x="395" y="906" class="value">Web Development</text>
+        <text x="720" y="880" class="label">LECTURER</text>
+        <text x="720" y="906" class="value">Hoa Le</text>
+        <text x="1030" y="880" class="label">SUBMISSION DEADLINE</text>
+        <text x="1030" y="906" class="value">28 Oct 2026</text>
+        <text x="1185" y="930" class="purple">✓ Evaluation completed</text>
+        
+    <text x="305" y="1020" font-size="11" fill="#9aa6b5">© 2026 EduSurvey</text>
+    <text x="1380" y="1020" text-anchor="end" font-size="11" fill="#9aa6b5">University Evaluation System</text>
+    </svg>
