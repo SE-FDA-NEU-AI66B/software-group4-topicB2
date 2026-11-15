@@ -107,9 +107,16 @@ For new tests, use a separate temporary SQLite database per case, load `src/sche
 | TC-US03-09 | US03 | Same frozen T; deadline=T+1s | 201; one response and two answers persisted | Normal |
 | US03-P01 | US03 | Enrolled student; rating=5 and optional text="The course was useful." | 201; persisted response and exact two answers | Normal |
 | US04-P01 | US04 | Assigned lecturer GET /lecturer/feedback/1 | 200 HTML with evaluation title, completed count label and submitted comment | Normal |
-| US04-P02 | US04 | Anonymous GET /lecturer/feedback | 401 | Error |
+| US04-P02 | US04 | Anonymous GET /lecturer/feedback/1 | 401 | Error |
 | US04-P03 | US04 | Student GET /lecturer/feedback | 403 | Error |
 | US04-P04 | US04 | Lecturer GET /lecturer/feedback/999; evaluation nonexistent | 404 | Error |
+| TC-US04-01 | US04 | Assigned lecturer GET /lecturer/feedback/1 | 200; evaluation title, completed-count label and seeded comment | Normal |
+| TC-US04-02 | US04 | Remove lecturer 2 course assignment; request existing evaluation 1 | 403; "You do not have permission to view this course feedback." | Error |
+| TC-US04-03 | US04 | Student GET /lecturer/feedback | 403 | Error |
+| TC-US04-04 | US04 | Anonymous GET /lecturer/feedback/1 | 401 | Error |
+| TC-US04-05 | US04 | Add draft response/comment DRAFT_ONLY_COMMENT alongside seeded submitted response | 200; draft comment absent, seeded submitted comment present | Normal |
+| TC-US04-06 | US04 | Add rating=5 to the seeded submitted response; GET feedback | 200; Student ratings, 5 / 5, Written comments and actual comment displayed | Normal |
+| TC-US04-07 | US04 | One seeded submitted response plus one new submitted response and one draft | 200; completed count=2; new submitted comment visible, draft absent | Normal |
 
 The US02 fixture freezes the route clock before creating data at T=2026-11-03T12:00:00. The Due soon rule is strictly less than 24 hours; tests now check 86399, 86400 and 86401 seconds remaining separately. Deadline equality is Closed; additional tests check T-1s, T and T+1s. Rating boundaries and submission examples below belong to pending US03 work. Five required answers and 20 completed responses are acceptance examples, not implementation maxima.
 
@@ -227,16 +234,23 @@ All existing mappings below are API integration tests using temporary SQLite dat
 | US04-P01 | `test_lecturer_can_view_assigned_evaluation_feedback` | `tests/test_lecturer_feedback.py` | API / SQLite integration | Expected as Section 2; PASS in verified #172 run below | #168 |
 | US04-P02 | `test_feedback_page_requires_login` | `tests/test_lecturer_feedback.py` | API / SQLite integration | Expected as Section 2; PASS in verified #172 run below | #168 |
 | US04-P03 | `test_student_cannot_access_lecturer_feedback` | `tests/test_lecturer_feedback.py` | API / SQLite integration | Expected as Section 2; PASS in verified #172 run below | #168 |
-| US04-P04 | `test_lecturer_cannot_view_unassigned_evaluation` | `tests/test_lecturer_feedback.py` | API / SQLite integration | Expected as Section 2; PASS in verified #172 run below | #168 |
+| US04-P04 | `test_lecturer_cannot_view_nonexistent_evaluation` | `tests/test_lecturer_feedback.py` | API / SQLite integration | Expected as Section 2; PASS in verified #172 run below | #168 |
+| TC-US04-01 | `test_lecturer_can_view_assigned_evaluation_feedback` | `tests/test_lecturer_feedback.py` | Flask rendering / SQLite integration | Expected as Section 2; verification below | #168 |
+| TC-US04-02 | `test_lecturer_cannot_view_unassigned_evaluation` | `tests/test_lecturer_feedback.py` | Flask rendering / SQLite integration | Expected as Section 2; verification below | #168 |
+| TC-US04-03 | `test_student_cannot_access_lecturer_feedback` | `tests/test_lecturer_feedback.py` | Flask rendering / SQLite integration | Expected as Section 2; verification below | #168 |
+| TC-US04-04 | `test_feedback_page_requires_login` | `tests/test_lecturer_feedback.py` | Flask rendering / SQLite integration | Expected as Section 2; verification below | #168 |
+| TC-US04-05 | `test_draft_responses_are_excluded_from_feedback` | `tests/test_lecturer_feedback.py` | Flask rendering / SQLite integration | Expected as Section 2; verification below | #168 |
+| TC-US04-06 | `test_feedback_displays_submitted_ratings_and_comments` | `tests/test_lecturer_feedback.py` | Flask rendering / SQLite integration | Expected as Section 2; verification below | #168 |
+| TC-US04-07 | `test_completed_count_includes_only_submitted_responses` | `tests/test_lecturer_feedback.py` | Flask rendering / SQLite integration | Expected as Section 2; verification below | #168 |
 
-Traceability totals: **87 cases; 72 mapped to existing tests; 15 NOT IMPLEMENTED**. The US02 matrix maps one documented case to each of its 20 collected pytest items. US01 mappings include #181, and the nine original US11 IDs are preserved.
+Traceability totals: **94 cases; 79 mapped to existing tests; 15 NOT IMPLEMENTED**. The US02 matrix maps one documented case to each of its 20 collected pytest items. US01 mappings include #181, and the nine original US11 IDs are preserved.
 
 | Story | Documented cases | Existing mappings | Pending |
 |---|---:|---:|---:|
 | US01 | 16 | 16 | 0 |
 | US02 | 20 | 20 | 0 |
 | US03 | 28 | 17 | 11 |
-| US04 | 10 | 9 | 1 |
+| US04 | 17 | 16 | 1 |
 | US11 | 13 | 10 | 3 |
 
 **Historical #164 baseline execution, 2026-11-15:** `python -m pytest -v` on macOS, Python 3.12.4, pytest 7.4.4, anyio 4.2.0; exit 0:
@@ -288,12 +302,14 @@ The integration preserves main's enrollment checks, public response IDs, strict 
 
 US03/shared API fixtures now freeze application time before use and restore configuration through monkeypatch. The CI SQL-source allowlist is limited to `src/schema.sql`, `src/feedback_queries.sql` and `src/response_queries.sql`; arbitrary SQL dumps, SQLite databases and .env files remain blocked. Existing historical SQL-scanner failures above precede this correction. Performance, copied-cookie replay and still-pending cases are not claimed complete.
 
+**PR #173 integration verification (2026-11-15):** `python -m pytest -v` → **106 passed in 2.83s**; `python -m pytest -v tests/test_lecturer_feedback.py` → **8 passed in 0.06s**. This branch contains the resolved #172 dependency and all current main tests. The lecturer detail route first distinguishes a nonexistent evaluation (404) from an existing evaluation in an unassigned course (403), preserving the required permission message before querying any ratings or comments. All seven original TC-US04 IDs are retained and the eighth test covers nonexistent evaluations. No authentication, enrollment, submission or deadline rule is weakened.
+
 **Fixture and assertion audit / remaining work:**
 
 - #165 completed: authentication fixtures load the real schema into a per-test temporary database; the three demo identities/password match `src/init_db.py`. They do not run the initializer or access the application database. TESTING and SECRET_KEY changes are restored by monkeypatch. TC-01–TC-04 and US01-A01–A12 verify all three roles, credentials, exact credential-error messages, anonymous page/API restrictions, session persistence/isolation/replacement and deleted-account invalidation. Unsupported-role login is not tested because the actual schema rejects unsupported roles; performance and the requirement-message discrepancy remain outside this task.
 - #166 completed: the list fixture loads the real schema into a fresh `tmp_path` SQLite database, freezes the application clock before seeding, supplies explicit fixture timestamps, and restores Flask configuration with monkeypatch. Twenty individually traceable items cover retrieval, anonymous/role denial, disjoint enrollment and query impersonation attempts, personal completion status, empty lists, all four display statuses, draft states, completion precedence, and both exact time boundaries. Authentication is injected through `session_transaction()` to isolate US02; credential login remains US01. The retrieval case checks three total evaluations including closed, not three active evaluations.
 - #167 integrated: successful persistence, rejection without writes, duplicate immutability and exact deadline boundaries now have real workflow tests and frozen time. Rating/text numerical boundaries, five-required-question acceptance examples and transaction-failure injection remain pending. Existing smoke rejection tests remain intact.
-- #168: lecturer ownership denial asserts the exact message. Other mapped feedback tests assert status and/or returned data. Add the 20-response acceptance example and test no cross-course leakage. Statistics and topic routes currently lack the authentication/ownership decorators used by the course-feedback route; passing smoke tests do not establish access control for those endpoints.
+- #168 integrated: retain all eight lecturer-page tests, including ownership denial for an existing evaluation (403), nonexistent evaluation (404), anonymous/student restrictions, draft exclusion, submitted ratings/comments and completed counts. Existing course-feedback API tests remain intact. The exactly-20-response acceptance example and broader statistics/topic access control are not established by these tests.
 - #169 integrated: retain logout success, session clearing, post-logout `/api/auth/me` denial, anonymous logout and duplicate-email coverage and all nine legacy IDs. Redirects, role-specific post-logout denial, repeated anonymous logout and saved-cookie replay remain unverified. Flask uses a signed client-side cookie and logout calls `session.clear()`; server-side revocation of a copied old cookie is not demonstrated. Shared app configuration is changed by fixtures without comprehensive restoration; centralize isolated fixtures and freeze both Python time and SQL timestamps where assertions depend on time.
 
 Schema tests explicitly enable foreign keys on `:memory:` SQLite. Smoke tests load the real schema into `tmp_path`; other fixtures create reduced schemas, so they cannot establish all production constraints. Some smoke fixture rows use SQLite `CURRENT_TIMESTAMP`, which Python clock patching does not control. Current tests avoid the real application database, but the suite does **not yet satisfy** the stricter requirement to avoid uncontrolled current dates everywhere. Issue #166 changes only this documentation and `tests/test_student_evaluations.py`; no production logic is changed. Authentication fixtures now include PR #181 and the main US11 assertions; all distinct tests are preserved.
