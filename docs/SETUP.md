@@ -249,3 +249,20 @@ python tools/run_student_demo.py
 ```
 
 Open `http://127.0.0.1:5000/`. The sign-in page documents the seeded student, lecturer and administrator accounts. This tool creates a temporary database, opens one evaluation for seven days, and removes that data when stopped with Ctrl+C. Responses persist across navigation/reloads while that process runs. It never writes `data/edusurvey.db`; it is a local development demo, not the public deployment/production database configuration. See [the walkthrough and verification evidence](p0-student-navigation.md).
+
+## Optional P1 US12 settings migration (#195)
+
+Fresh schema initialization includes system_settings; never reset an existing DB
+to add it. After reviewed PO/database integration and an existing SQLite backup,
+apply the additive migration to the explicitly verified persistent DB path:
+
+```bash
+python -m tools.migrate_us12_settings /absolute/persistent/edusurvey.db
+```
+
+This opens an existing DB only, does not seed/reset users or evaluations, and can
+be rerun without overwriting saved settings. No production migration was run as
+part of development. Current management API, default public contact guidance,
+validation/statuses and frontend/database review dependencies:
+[US12 contract](admin-api.md). Targeted checks:
+`python -m pytest -q tests/test_admin_api.py`. Existing P0 setup is unchanged.

@@ -1,5 +1,6 @@
 PRAGMA foreign_keys = ON;
 
+DROP TABLE IF EXISTS system_settings;
 DROP TABLE IF EXISTS response_answers;
 DROP TABLE IF EXISTS responses;
 DROP TABLE IF EXISTS questions;
@@ -17,6 +18,13 @@ CREATE TABLE users (
     role TEXT NOT NULL
         CHECK (role IN ('student', 'lecturer', 'administrator')),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE system_settings (
+    key TEXT PRIMARY KEY CHECK (key = 'support_contact'),
+    value TEXT NOT NULL CHECK (length(trim(value)) BETWEEN 1 AND 200),
+    updated_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    updated_at TEXT NOT NULL
 );
 
 CREATE TABLE courses (

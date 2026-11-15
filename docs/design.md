@@ -312,3 +312,23 @@ Sign-out was added as an explicit requirement for authenticated users. User stor
 The requirements were updated to define a measurable response-time target. Key interactive actions such as sign in, evaluation submission, feedback/statistics retrieval, saving evaluation configuration, and sign out should complete within 3 seconds under normal operating conditions.
 
 Long-running background operations such as scheduled reminders and large-scale feedback analysis may be processed asynchronously.
+
+## US12 management backend - #195 (2026-11-16)
+
+The implemented JSON integration contract is [admin-api.md](admin-api.md): GET
+`/api/admin`, GET `/api/admin/users`, PATCH `/api/admin/users/<id>/role`, GET
+`/api/admin/settings`, PUT `/api/admin/settings/support_contact`. The existing
+administrator deadline update is reused with the same management denial message.
+No administrator HTML pages or additional user create/delete endpoints are claimed.
+
+The authenticated account's current database role is reloaded on every protected
+request; changing a role updates permissions for already-open sessions on their
+next request. Management writes recheck the actor in the write transaction. The
+existing users.role domain remains student/lecturer/administrator. Only public
+support_contact text is selected for settings, with the requester's delegated
+minimal-scope choice; formal PO/#196 agreement remains a merge review gate.
+The setting is stored in an additive system_settings table and consumed by the
+login/home guidance. Stored HTML is escaped. Old databases render the default
+until the explicit non-destructive migration is applied; writes fail with an
+operator action if storage is absent. Exact statuses, input validation, migration,
+self-demotion behavior and known limits are documented in the contract.
