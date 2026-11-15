@@ -117,7 +117,7 @@ For new tests, use a separate temporary SQLite database per case, load `src/sche
 | TC-US04-05 | US04 | Add draft response/comment DRAFT_ONLY_COMMENT alongside seeded submitted response | 200; draft comment absent, seeded submitted comment present | Normal |
 | TC-US04-06 | US04 | Add rating=5 to the seeded submitted response; GET feedback | 200; Student ratings, 5 / 5, Written comments and actual comment displayed | Normal |
 | TC-US04-07 | US04 | One seeded submitted response plus one new submitted response and one draft | 200; completed count=2; new submitted comment visible, draft absent | Normal |
-| US02-L12 | US02 | Frozen T; exactly three open enrolled evaluations with deadlines >24h; another-course evaluation excluded | 200; count=3; all statuses Active and all five display details | Normal |
+| US02-L12 | US02 | Student 1; frozen T=2026-11-03T12:00:00; enrolled evaluations 1/2/3 open with deadlines T+2/3/4 days and no responses; student 3 alone enrolled in a second course with open evaluation 4 | 200; count=3; only IDs 1/2/3; each has exact title, course name, lecturer name, deadline and Active status | Normal |
 | TC-US04-08 | US04 | Assigned lecturer; 19 distinct submitted responses and one draft; frozen time | 200; completed_evaluations=19; draft excluded; consistent HTML count | Normal |
 | TC-US04-09 | US04 | Assigned lecturer; 21 distinct submitted responses and one draft; frozen time | 200; completed_evaluations=21; draft excluded; consistent HTML count | Normal |
 
@@ -245,16 +245,16 @@ All existing mappings below are API integration tests using temporary SQLite dat
 | TC-US04-05 | `test_draft_responses_are_excluded_from_feedback` | `tests/test_lecturer_feedback.py` | Flask rendering / SQLite integration | Expected as Section 2; verification below | #168 |
 | TC-US04-06 | `test_feedback_displays_submitted_ratings_and_comments` | `tests/test_lecturer_feedback.py` | Flask rendering / SQLite integration | Expected as Section 2; verification below | #168 |
 | TC-US04-07 | `test_completed_count_includes_only_submitted_responses` | `tests/test_lecturer_feedback.py` | Flask rendering / SQLite integration | Expected as Section 2; verification below | #168 |
-| US02-L12 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_student_evaluations.py::test_student_evaluations_three_active` (proposed, not an existing function) | #187 |
+| US02-L12 | `test_student_evaluations_three_active` | `tests/test_student_evaluations.py` | API / SQLite integration | Section 2 expectation; PASS in verified #187 run below | #187 |
 | TC-US04-08 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_lecturer_feedback.py::test_feedback_completed_count[count-19]` (proposed, not an existing function) | #185 |
 | TC-US04-09 | NOT IMPLEMENTED | — | Planned API integration | NOT RUN; planned `tests/test_lecturer_feedback.py::test_feedback_completed_count[count-21]` (proposed, not an existing function) | #185 |
 
-Traceability totals: **97 cases; 79 mapped to existing tests; 18 NOT IMPLEMENTED**. The US02 matrix retains mappings for its 20 collected pytest items and adds one planned three-active-evaluation acceptance case. US01 mappings include #181, and the nine original US11 IDs are preserved.
+Traceability totals: **97 cases; 80 mapped to existing tests; 17 NOT IMPLEMENTED**. The US02 matrix maps its 21 collected pytest items, including the implemented three-active-evaluation acceptance case. US01 mappings include #181, and the nine original US11 IDs are preserved.
 
 | Story | Documented cases | Existing mappings | Pending |
 |---|---:|---:|---:|
 | US01 | 16 | 16 | 0 |
-| US02 | 21 | 20 | 1 |
+| US02 | 21 | 21 | 0 |
 | US03 | 28 | 17 | 11 |
 | US04 | 19 | 16 | 3 |
 | US11 | 13 | 10 | 3 |
@@ -311,6 +311,25 @@ US03/shared API fixtures now freeze application time before use and restore conf
 **PR #173 integration verification (2026-11-15):** `python -m pytest -v` → **106 passed in 2.83s**; `python -m pytest -v tests/test_lecturer_feedback.py` → **8 passed in 0.06s**. This branch contains the resolved #172 dependency and all current main tests. The lecturer detail route first distinguishes a nonexistent evaluation (404) from an existing evaluation in an unassigned course (403), preserving the required permission message before querying any ratings or comments. All seven original TC-US04 IDs are retained and the eighth test covers nonexistent evaluations. No authentication, enrollment, submission or deadline rule is weakened.
 
 **Sprint 4 refinement #163 (2026-11-15):** verified fetched main `5a52af6` with `python -m pytest -v` → **106 passed in 2.95s**. All existing cases and historical evidence are retained; no tests or production code changed for this refinement. Every pending case now names a proposed pytest node and a real open follow-up issue, rather than depending only on closed baseline tasks #167/#168/#169. Proposed nodes are explicitly NOT IMPLEMENTED / NOT RUN. The new US02 three-active example and US04 count-19/count-21 cases are planned; 20 is an acceptance example, not a hard limit. See [sprint4-backlog.md](sprint4-backlog.md) for ownership, hours, dependencies and the verified 21-item Board update (Testing Sprint / Testing Priority / Estimated hours). US11's restored story is #183.
+
+**Issue #187 verification (2026-11-15):** uses the existing per-test `tmp_path` SQLite fixture and application clock frozen at 2026-11-03T12:00:00 before seeding. US02-L12 makes all three enrolled evaluations open with deadlines 48/72/96 hours ahead, seeds another student's course with a valid open evaluation and lecturer assignment, and verifies there are no responses. The Flask-client request must return exactly the three enrolled IDs and all five exact display details with Active status; the other-course record cannot appear. Existing status/boundary tests and production code are unchanged.
+
+Actual local execution on macOS / Python 3.12.4 / pytest 7.4.4 (exit 0):
+
+```text
+python -m pytest -v tests/test_student_evaluations.py::test_student_evaluations_three_active
+1 passed in 0.04s
+
+python -m pytest -v tests/test_student_evaluations.py
+21 passed in 0.15s
+
+python -m pytest -v
+107 passed in 2.94s
+```
+
+Merge verification against main `9e5b647` (2026-11-15): `python -m pytest -q` → **107 passed in 3.19s**. The merged matrix retains the two planned US04 boundary cases; current totals are 97 cases / 80 implemented mappings / 17 pending.
+
+Only this acceptance example is newly automated. All 17 unrelated pending cases from the merged refinement remain NOT IMPLEMENTED, and historical run/mutation evidence is retained.
 
 **Fixture and assertion audit / remaining work:**
 
