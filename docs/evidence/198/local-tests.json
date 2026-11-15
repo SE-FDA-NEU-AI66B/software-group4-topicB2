@@ -1,0 +1,113 @@
+{
+  "scope": "US13 local backend verification, not deployed UI acceptance",
+  "base_commit": "9c5d55c",
+  "environment": "Windows / Python 3.12.6 / pytest 9.0.2 / installed Chrome",
+  "command": "python -m pytest -q --junitxml=junit.xml",
+  "tests": 277,
+  "passed": 277,
+  "pytest_summary": "277 passed in 154.68s (0:02:34)",
+  "modules": {
+    "tests.test_auth": {
+      "tests": 27,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_backend_runtime": {
+      "tests": 36,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_ci_gate": {
+      "tests": 28,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_database_integrity": {
+      "tests": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_deployment": {
+      "tests": 10,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_evaluation_creation": {
+      "tests": 20,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_feedback_classifier": {
+      "tests": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_lecturer_feedback": {
+      "tests": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_monitoring": {
+      "tests": 13,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_p0_browser_contracts": {
+      "tests": 18,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_production_database": {
+      "tests": 16,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_response_schema.ResponseSchemaTests": {
+      "tests": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_smoke": {
+      "tests": 35,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_status.EvaluationStatusTests": {
+      "tests": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_student_evaluations": {
+      "tests": 21,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_submission_workflow": {
+      "tests": 22,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tests.test_submissions": {
+      "tests": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  }
+}
