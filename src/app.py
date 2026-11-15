@@ -1512,7 +1512,7 @@ def create_evaluation():
         return api_error(
             400,
             "MISSING_DEADLINE",
-            "Evaluation deadline is required.",
+            "A deadline is required.",
             "Provide a deadline in ISO format.",
         )
 
@@ -1583,8 +1583,9 @@ def create_evaluation():
             "Log in and try again.",
         )
 
-    # Verify lecturer role, course, and assignment.
+    # Shared US08/US13 creation: admin management or assigned lecturer only.
     with get_db_connection() as connection:
+        connection.execute("BEGIN IMMEDIATE")
         user = connection.execute(
             "SELECT id, role FROM users WHERE id = ?",
             (user_id,),
@@ -1598,12 +1599,12 @@ def create_evaluation():
                 "Log in again with a valid account.",
             )
 
-        if user["role"] != "lecturer":
+        if user["role"] not in {"lecturer", "administrator"}:
             return api_error(
                 403,
                 "FORBIDDEN",
-                "Only lecturers can create evaluations.",
-                "Log in with a lecturer account.",
+                "Only lecturers or administrators can create evaluations.",
+                "Log in with a lecturer or administrator account.",
             )
 
         course = connection.execute(
@@ -1628,11 +1629,11 @@ def create_evaluation():
             (user_id, course_id),
         ).fetchone()
 
-        if assignment is None:
+        if user["role"] == "lecturer" and assignment is None:
             return api_error(
                 403,
                 "COURSE_ACCESS_DENIED",
-                "You are not assigned to this course.",
+                "You do not have permission to create an evaluation for this course.",
                 "Select a course assigned to your lecturer account.",
             )
 
@@ -1670,6 +1671,11 @@ def create_evaluation():
                 ),
             )
 
+        saved_questions = connection.execute(
+            "SELECT id, question_text, question_type, is_required, question_order "
+            "FROM questions WHERE evaluation_id=? ORDER BY question_order", (evaluation_id,),
+        ).fetchall()
+
     return jsonify({
         "message": "Evaluation created successfully.",
         "evaluation_id": evaluation_id,
@@ -1678,6 +1684,8 @@ def create_evaluation():
         "deadline": parsed_deadline.isoformat(),
         "status": "draft",
         "questions_created": len(questions),
+        "questions": [{**dict(question), "is_required": bool(question["is_required"])}
+                      for question in saved_questions],
     }), 201
 
 

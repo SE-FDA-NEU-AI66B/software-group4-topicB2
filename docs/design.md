@@ -312,3 +312,15 @@ Sign-out was added as an explicit requirement for authenticated users. User stor
 The requirements were updated to define a measurable response-time target. Key interactive actions such as sign in, evaluation submission, feedback/statistics retrieval, saving evaluation configuration, and sign out should complete within 3 seconds under normal operating conditions.
 
 Long-running background operations such as scheduled reminders and large-scale feedback analysis may be processed asynchronously.
+
+## Shared US08/US13 evaluation creation - #198
+
+POST /api/evaluations reuses #40 with current database role authorization:
+Administrator can create for an existing course (US08); Lecturer must be assigned
+to that selected course (US13/BR5). The exact unassigned denial is preserved from
+US13 requirements and missing deadline uses US08's canonical message. The current
+role/assignment lookup, evaluation insert and ordered question inserts run in one
+serialized transaction; failed question writes roll everything back. Responses
+retain existing fields/draft state and add persisted ordered question data for
+#197 confirmation rendering. No publish behavior, new schema or duplicate POST
+is added. See [creation contract/tests/latency limits](lecturer-creation-api.md).

@@ -1189,3 +1189,38 @@ $env:PLAYWRIGHT_CHROMIUM_EXECUTABLE='C:\Program Files\Google\Chrome\Application\
 remain historical evidence. `git diff --check` passed. This merge does not
 apply administrator rules, grant approval, certify a provider release or
 replace the outstanding administrator/release handoff.
+
+## US13 creation verification - #198 (2026-11-16)
+
+Parent #193 (P1), shared US08 #38/#40, frontend #197 and queries #199. The existing
+POST /api/evaluations is extended, not duplicated. [Full contract/profile](lecturer-creation-api.md).
+The 97 P0 matrix remains separate from these P1 cases.
+
+| Trace ID | Actual node in tests/test_evaluation_creation.py | Decision |
+|---|---|---|
+| US13-01 | `test_creation_question_count[questions-0]` | Reject empty questions, no writes |
+| US13-02 | `test_creation_question_count[questions-1]` | One question allowed, exact course/creator/ordered persistence |
+| US13-03 | `test_creation_question_count[questions-5]` | Exactly five stored and returned as display data |
+| US13-04 | `test_creation_question_count[questions-6]` | Five is not a maximum |
+| US13-05 | `test_creation_denies_invalid_actor[None-401]`, `[1-403]`, `[999-401]` | Anonymous/Student/deleted actor cannot create despite body/query identity claims |
+| US13-06 | `test_unassigned_creation_exact_message_and_no_writes` | Assignment to course1 does not authorize course2; exact required denial |
+| US13-07 | `test_administrator_creation_reuses_us08_without_course_assignment` | Shared endpoint preserves US08 management role |
+| US13-08 | `test_invalid_creation_has_no_writes` (10 variants: title/missing-deadline/bad-deadline/bad-course/missing-course/missing-questions/question-type/required-type/question-object/question-text) | Validate without partial records; canonical US08 missing deadline message |
+| US13-09 | `test_question_failure_rolls_back_evaluation_and_prior_question` | Real second-question ABORT reached after first insert; rollback + retry |
+
+Twenty new variants use the real schema, Flask test client, temporary SQLite and
+existing fixed clock. Existing #40 smoke tests are retained. Actual Windows/
+Python 3.12.6: focused `python -m pytest -q tests/test_evaluation_creation.py tests/test_smoke.py`
+-> **55 passed in 8.90s**; full `python -m pytest -q --junitxml=junit.xml` with
+installed Chrome -> **277 passed in 154.68s**, no failures/errors/skips.
+The ownership test was strengthened for selected-course isolation and the focused
+suite passed again. Repository Ruff and diff checks passed. [Module counts](evidence/198/local-tests.json).
+
+Real latency is measured separately with `python -m tools.measure_creation_latency
+--samples 30 --warmups 3`: local loopback HTTP, one sequential preauthenticated
+lecturer, five questions, existing synthetic P0 data profile. **p50 17.488ms,
+p95 20.084ms, maximum 20.853ms**, 30/30 HTTP201 confirmations and persisted values
+verified; all <=3000ms on this profile. [Raw samples/environment/source hashes](evidence/198/creation-latency.json).
+This does not certify deployed/browser visible confirmation or use pytest runtime
+as latency. Frontend #197 and independent #199 review remain pending; no UI,
+production data change or public latency result is fabricated.
