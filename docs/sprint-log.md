@@ -237,3 +237,17 @@ Complete Sprint 4 deliverables, improve automated testing, finalize setup and te
 - Verify automated tests pass.
 - Complete testing and setup documentation.
 - Prepare Milestone 4 submission materials.
+
+
+### Sprint 4 Backlog Refinement - 2026-11-15 (#163)
+
+The current audit is recorded in [sprint4-backlog.md](sprint4-backlog.md), with the verified Project field register in [sprint4-board.csv](sprint4-board.csv). This supplements the earlier summary; it does not claim that an additional sprint ceremony occurred.
+
+- All five P0 stories are reviewed; the missing US11 story is restored as #183 and #169's invalid parent is corrected.
+- Baseline tasks #164–#171 remain closed as recorded on GitHub. Seven open follow-ups #184–#190 cover the remaining numerical/acceptance examples, logout cases, contract decisions, database integrity and fresh-clone/review evidence.
+- Every task has an owner, estimated hours, priority and Sprint 4 milestone. Task hours total 43 (26 original + 17 supplemental); open estimates total 19h including #163. These are planning estimates, not time spent or story-point velocity.
+- `docs/testing.md` retains all original case IDs and mutation evidence; 97 cases comprise 79 existing mappings and 18 explicitly pending proposed tests.
+- Current main `5a52af6`: `python -m pytest -v` produced **106 passed in 2.95s** locally. No implementation or test code changes are included in this refinement.
+- After user-authorized Projects access, all **21 Board items** were updated and re-read successfully. Testing Sprint is Sprint 4 for all five P0 stories and all 16 tasks; Testing Priority, assignees and Estimated hours match the issue register. Existing development Sprint 3 values on closed stories and Point/Points values are preserved. #163 is In Review and closes through its reviewed PR; seven follow-ups remain Todo. The real Sprint 4 iteration (2026-11-01, 13 days, already completed) was reused without rewriting dates.
+
+The existing TBD velocity fields above remain pending verified planning/closure evidence; hours must not be substituted for story points.
