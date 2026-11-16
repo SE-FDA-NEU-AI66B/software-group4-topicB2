@@ -365,5 +365,10 @@
     "exit_code": 2,
     "final_pdf_created": false,
     "reason": "Real pending metadata rejected before PDF export"
+  },
+  "classic_branch_protection": {
+    "http_status": 404,
+    "verified": false,
+    "interpretation": "Legacy branch-protection endpoint unavailable to this non-admin actor or protection absent; 404 is not treated as proof of absence. Ruleset read-back remains separately recorded."
   }
 }

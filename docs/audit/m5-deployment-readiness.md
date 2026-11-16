@@ -29,7 +29,7 @@ NOT VERIFIED means evidence has not been obtained; it never means passed.
 | Hosting configuration prepared | PASS | `render.yaml`: current `0.5c-512mb` plan ID, runtime startup guard, 1 GB disk, one instance, auto-deploy off | Provider-side validation/provisioning | Review actual billing and validate Blueprint in connected account |
 | Main CI latest observation | PASS | [Run 43804267947](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43804267947) succeeded for baseline main | Fresh green CI on final merged candidate | Do not use this old run to certify a later commit |
 | PR approval protection | PASS | Read-back: inherited organization PR rule requires one approval | Substantive teammate review of each new PR | Do not self-approve or self-merge |
-| Required green checks enforced before merge | FAIL | Effective rules have no required_status_checks rule | Admin settings/read-back/screenshot | Require CI gate, Python tests and No secrets committed, strict/up-to-date |
+| Required green checks enforced before merge | NOT VERIFIED | Ruleset read-back has no required_status_checks; classic protection endpoint returned 404 | Admin read-back of all protection mechanisms/screenshot | Confirm or enable CI gate, Python tests and No secrets committed, strict/up-to-date |
 | Deploy-after-green code | PASS | `deploy needs: [gate]`; gate depends on detect/python/node/security; exact SHA and fail-closed tests | Actual green main → provider deployment | Keep Render auto-deploy off and use protected GitHub production environment |
 | Live deploy-after-green rehearsal | NOT VERIFIED | Latest main Deploy skipped; GitHub Variables/environments empty | Real service ID, API secret, authorized release and provider history | Record both CI and provider commit identity |
 | Sensitive tracked-file guard | PASS | Five previously missed filename variants reproduced; 12-case fix now passes | Independent PR review/merge | Block `.env.*`, DB/dump and key files even if force-added |
@@ -105,7 +105,11 @@ No new production account or seed was created by this audit.
 Required flow: PR → independent review + green PR CI → merge main → green main
 CI → exact-commit deploy → provider SHA/HTTPS verification. The current read-only
 GitHub actor can push and read effective rules but has no administrator permission.
-Rules therefore could be inspected; settings changes remain BLOCKED, not performed.
+Rulesets therefore could be inspected; settings changes remain BLOCKED, not performed.
+The classic branch-protection API returned 404. That can mean absent protection
+or unavailable access, so overall named-check enforcement is NOT VERIFIED rather
+than inferred absent from the ruleset response alone. An administrator must confirm
+both legacy protection and rulesets before changing settings.
 
 | Pipeline job | Verified configuration/behavior |
 |---|---|
