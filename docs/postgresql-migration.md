@@ -117,7 +117,8 @@ mới trong TemporaryDirectory rồi copy sang database đích đã migrate và 
 Không bao giờ đọc `data/edusurvey.db`. Toàn bộ copy/validate/identity restart
 chạy trong transaction, khóa bảng, giữ IDs/FKs, kiểm row counts của đủ 9 bảng;
 không reseed database có dù chỉ một record. Identity restart dùng transactional
-ALTER thay vì setval không rollback được. Demo có 6 users, 5 courses, 10
+ALTER thay vì setval không rollback được; lấy max của ID hiện có và high-watermark
+trong sqlite_sequence để không tái sử dụng ID đã xóa. Demo có 6 users, 5 courses, 10
 evaluations, 30 questions, enrollment/assignments và feedback đã submit; student1
 vẫn có evaluation1 chưa trả lời, deadline mở được đặt thêm 7 ngày đúng seed cũ.
 
@@ -201,7 +202,9 @@ Chrome cài sẵn, fixtures độc lập:
 | Baseline nguyên bản | 321 passed, 130,29s; 0 fail/error/skip |
 | Focused SQLite runtime/auth/submission/deployment/CI | 124 passed, 5,30s |
 | PostgreSQL integration mở rộng trước full run | 36 passed, 9,61s |
-| Full regression cuối (thêm phone browser) | **358 passed, 141,39s; 0 fail/error/skip** |
+| Full regression trước sửa high-watermark (thêm phone browser) | **358 passed, 141,39s; 0 fail/error/skip** |
+| Regression high-watermark focused | 2 passed, 0,42s |
+| Full regression cuối sau sửa high-watermark | **359 passed, 134,82s; 0 fail/error/skip** |
 | Ruff toàn repo, git diff --check | PASS |
 | Import ứng dụng bằng Python cũ không cài psycopg | PASS: SQLite-only import OK |
 
@@ -212,13 +215,15 @@ local mới và Chrome được truyền bằng environment. Kết quả mới �
 Bằng chứng mới được lưu riêng: [console](evidence/postgresql-migration/pytest.txt)
 và [JUnit](evidence/postgresql-migration/pytest.xml).
 
-37 variants mới gồm constraint/FK/unique/rollback, atomic seed/refusal/identity,
+37 variants của lần chạy đầu gồm constraint/FK/unique/rollback, atomic seed/refusal/identity,
 credentials, phân quyền/deleted account, exact JSON parity, deadline ±1 giây
 và offset, Due soon ±24h, concurrent new/draft submit, persisted responses,
 reminder/expiry SQL, named-query EXPLAIN, health/sanitized errors, URL/SSL
 fail-closed, unknown schema/checksum refusal, large IDs và browser P0 laptop/phone.
 Không khẳng định full suite cũ đã chạy trên PostgreSQL: 321 tests cũ tiếp tục
-chạy SQLite; 37 tests mới bổ sung PostgreSQL và configuration/binding checks.
+chạy SQLite; bản cuối có 38 variants mới cho PostgreSQL và configuration/binding
+checks. Variant bổ sung xác minh nguồn từng dùng rồi xóa ID 100 sẽ cấp ID 101
+sau khi import, không tái sử dụng ID đã xóa.
 
 Trong lúc phát triển, tests **mới** ban đầu dùng sai route/payload/HTTP status
 và split SQL tại dấu chấm phẩy trong comment; đã đối chiếu implementation/test
@@ -252,3 +257,17 @@ PR trước, cần retarget/sync PR sau về main và chạy lại CI trước m
 chạy trên cả ba branch; pull_request trigger hiện chỉ nhắm main/develop.
 Không tự merge hoặc triển khai stack. [CI của branch tích hợp đầy đủ](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/workflows/ci.yml?query=branch%3Afeature%2Fneon-postgresql-migration)
 phải được kiểm tra trước quyết định phát hành; local PASS không thay thế nó.
+
+
+### Verification bổ sung: giữ AUTOINCREMENT high-watermark
+
+Full run cuối sau khi giữ cả `sqlite_sequence`: **359 passed trong 134,82s**,
+không failures/errors/skips. Bằng chứng bổ sung độc lập:
+[console](evidence/postgresql-migration/high-watermark-pytest.txt),
+[JUnit](evidence/postgresql-migration/high-watermark-pytest.xml).
+Bộ 358-case evidence trước được giữ nguyên để phân biệt hai candidate.
+CI kỹ thuật của candidate trước (`e3e8f17`) đã PASS, deploy SKIPPED:
+[run 43834526966](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43834526966).
+Các commit sửa high-watermark đã được sync bằng merge thường trong stack;
+cần kiểm tra CI của HEAD mới nhất trước merge. Scrum linkage đã được sửa bằng
+tham chiếu issue điều phối #200 ở title, không đóng/reopen issue hoặc sửa gate.
