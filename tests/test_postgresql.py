@@ -373,3 +373,17 @@ def test_schema_checksum_mismatch_refused(pg_url):
         db.execute("UPDATE edusurvey_migrations SET checksum='invalid'")
     with pytest.raises(RuntimeError, match='checksum'):
         migrate(pg_url)
+
+
+def test_snapshot_preserves_deleted_id_high_watermark(api_client, pg_url):
+    import sqlite3
+    source = Path(app_module.DATABASE)
+    with sqlite3.connect(source) as db:
+        db.execute("INSERT INTO courses (id,course_code,course_name) VALUES (100,'REMOVED','Removed')")
+        db.execute('DELETE FROM courses WHERE id=100')
+        assert db.execute("SELECT seq FROM sqlite_sequence WHERE name='courses'").fetchone()[0] == 100
+    migrate(pg_url)
+    copy_snapshot(source, pg_url)
+    with connect(pg_url) as db:
+        identifier = db.insert_id('INSERT INTO courses (course_code,course_name) VALUES (?,?)', ('NEXT', 'Next'))
+        assert identifier == 101
