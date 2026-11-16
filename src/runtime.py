@@ -12,6 +12,11 @@ from uuid import uuid4
 from flask import g, jsonify, request
 from werkzeug.exceptions import HTTPException
 
+if __package__:
+    from .pg_driver import PostgresError
+else:
+    from pg_driver import PostgresError
+
 
 def log_runtime_error(app, event, error=None):
     """Correlate internal error categories without exception messages or user input."""
@@ -40,14 +45,29 @@ def configure_runtime(app, default_database):
     production = os.environ.get("EDUSURVEY_ENV") == "production"
     secret = os.environ.get("EDUSURVEY_SECRET_KEY", "dev-only-secret-change-before-deployment")
     database = os.environ.get("EDUSURVEY_DATABASE", str(default_database))
+    url = os.environ.get("DATABASE_URL")
+    postgres_required = os.environ.get("EDUSURVEY_DATABASE_BACKEND") == "postgresql" or os.environ.get("RENDER") == "true"
+    if url:
+        from urllib.parse import parse_qs, urlsplit
+        try:
+            parsed = urlsplit(url)
+            valid = parsed.scheme in {"postgres", "postgresql"} and parsed.hostname and parsed.path.strip("/")
+            if production:
+                valid = valid and parse_qs(parsed.query).get("sslmode", [None])[0] in {"require", "verify-ca", "verify-full"}
+        except ValueError:
+            valid = False
+        if not valid:
+            raise RuntimeError("Invalid PostgreSQL configuration; production requires SSL.")
+    if production and postgres_required and not url:
+        raise RuntimeError("Production PostgreSQL requires DATABASE_URL; SQLite fallback is disabled.")
     if production:
         if len(secret) < 32 or secret == "dev-only-secret-change-before-deployment":
             raise RuntimeError("Production requires EDUSURVEY_SECRET_KEY with at least 32 characters.")
-        if not os.environ.get("EDUSURVEY_DATABASE") or not Path(database).is_absolute():
+        if not url and (not os.environ.get("EDUSURVEY_DATABASE") or not Path(database).is_absolute()):
             raise RuntimeError("Production requires an absolute EDUSURVEY_DATABASE path on persistent storage.")
     app.config.update(
         SECRET_KEY=secret,
-        DATABASE=database,
+        DATABASE=url or database,
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Lax",
         SESSION_COOKIE_SECURE=production,
@@ -57,7 +77,7 @@ def configure_runtime(app, default_database):
         import logging
         logging.getLogger("werkzeug").setLevel(logging.ERROR)
         app.logger.setLevel(logging.INFO)
-    return Path(database)
+    return url or Path(database)
 
 
 def register_runtime(app, database_path):
@@ -96,6 +116,15 @@ def register_runtime(app, database_path):
     @app.get("/health")
     def health():
         try:
+            if __package__:
+                from .database import check_postgres, is_postgres
+            else:
+                from database import check_postgres, is_postgres
+            if is_postgres(database_path()):
+                check_postgres(database_path())
+                response = jsonify({"status": "ok", "database": "ok"})
+                response.headers["Cache-Control"] = "no-store"
+                return response, 200
             # Read-only mode never creates an empty replacement DB when a mount is missing.
             uri = Path(database_path()).resolve().as_uri() + "?mode=ro"
             with closing(sqlite3.connect(uri, uri=True, timeout=2)) as connection:
@@ -108,7 +137,7 @@ def register_runtime(app, database_path):
                     raise sqlite3.DatabaseError("Database relationship check failed")
             response = jsonify({"status": "ok", "database": "ok"})
             status = 200
-        except (sqlite3.Error, OSError, ValueError):
+        except (sqlite3.Error, OSError, ValueError, PostgresError):
             log_runtime_error(app, "database_unavailable")
             response = jsonify({"status": "unavailable", "database": "unavailable"})
             status = 503

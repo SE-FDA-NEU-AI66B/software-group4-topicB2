@@ -3,6 +3,7 @@ import sqlite3
 from datetime import UTC, datetime, timedelta
 from functools import wraps
 from pathlib import Path
+from time import strftime
 
 from flask import (
     Flask,
@@ -16,15 +17,29 @@ from flask import (
 from werkzeug.security import check_password_hash
 
 if __package__:
+    from .database import (
+        DATABASE_ERRORS,
+        connect,
+        insert_id,
+        is_postgres,
+        reserve_submission,
+    )
+    from .pg_driver import PostgresError
     from .runtime import (
-        TransactionConnection,
         configure_runtime,
         log_runtime_error,
         register_runtime,
     )
 else:
+    from database import (
+        DATABASE_ERRORS,
+        connect,
+        insert_id,
+        is_postgres,
+        reserve_submission,
+    )
+    from pg_driver import PostgresError
     from runtime import (
-        TransactionConnection,
         configure_runtime,
         log_runtime_error,
         register_runtime,
@@ -46,6 +61,7 @@ def api_error(status, code, message, action):
     }), status
 
 
+@app.errorhandler(PostgresError)
 @app.errorhandler(sqlite3.Error)
 def database_unavailable(error):
     log_runtime_error(app, "database_unavailable")
@@ -53,13 +69,7 @@ def database_unavailable(error):
 
 
 def get_db_connection():
-    connection = sqlite3.connect(
-        Path(DATABASE).resolve().as_uri() + "?mode=rw", uri=True,
-        factory=TransactionConnection, timeout=5,
-    )
-    connection.execute("PRAGMA foreign_keys = ON")
-    connection.row_factory = sqlite3.Row
-    return connection
+    return connect(DATABASE)
 
 
 VALID_ROLES = {"student", "lecturer", "administrator"}
@@ -528,7 +538,7 @@ def lecturer_page_response(view):
         )
         try:
             response = make_response(view(*args, **kwargs))
-        except sqlite3.Error:
+        except DATABASE_ERRORS:
             if not wants_html:
                 raise
             log_runtime_error(app, "feedback_database_unavailable")
@@ -1229,10 +1239,9 @@ def create_submission():
                 "Log in with a student account.",
             )
 
-        # Reserve the SQLite writer before reading evaluation/duplicate state.
-        # A second tab waits for commit, then observes the saved response (409)
-        # instead of racing an INSERT or overwriting a now-submitted draft.
-        connection.execute("BEGIN IMMEDIATE")
+        # Serialize duplicate checks and persistence for this submission.
+        # SQLite reserves its writer; PostgreSQL locks the evaluation/student pair.
+        reserve_submission(connection, evaluation_id, user_id)
 
         # Verify evaluation and student enrollment.
         evaluation = connection.execute(
@@ -1443,7 +1452,8 @@ def create_submission():
             )
 
         else:
-            cursor = connection.execute(
+            response_id = insert_id(
+                connection,
                 """
                 INSERT INTO responses (
                     evaluation_id,
@@ -1454,8 +1464,6 @@ def create_submission():
                 """,
                 (evaluation_id, user_id),
             )
-
-            response_id = cursor.lastrowid
 
         for answer in validated_answers:
             connection.execute(
@@ -1476,11 +1484,13 @@ def create_submission():
                 ),
             )
 
+        submitted_clock = ("to_char(CURRENT_TIMESTAMP AT TIME ZONE 'UTC', 'YYYY-MM-DD HH24:MI:SS')"
+                           if is_postgres(DATABASE) else "CURRENT_TIMESTAMP")
         connection.execute(
-            """
+            f"""
             UPDATE responses
             SET status = 'submitted',
-                submitted_at = CURRENT_TIMESTAMP
+                submitted_at = {submitted_clock}
             WHERE id = ?
             """,
             (response_id,),
@@ -1666,7 +1676,8 @@ def create_evaluation():
             )
 
         # Insert evaluation and questions in one transaction.
-        cursor = connection.execute(
+        evaluation_id = insert_id(
+            connection,
             """
             INSERT INTO evaluations
                 (course_id, created_by, title, deadline, status)
@@ -1679,8 +1690,6 @@ def create_evaluation():
                 parsed_deadline.isoformat(),
             ),
         )
-
-        evaluation_id = cursor.lastrowid
 
         for order, question in enumerate(questions, start=1):
             connection.execute(
@@ -1712,6 +1721,13 @@ def create_evaluation():
 
 def close_expired_evaluations(connection):
     """Close open evaluations whose deadlines have passed."""
+    if is_postgres(DATABASE):
+        connection.execute("""
+            UPDATE evaluations SET status = 'closed'
+            WHERE status = 'open'
+              AND date_trunc('second', deadline::timestamptz) <= ?::timestamptz
+        """, (strftime('%Y-%m-%d %H:%M:%S'),))
+        return
     connection.execute(
         """
         UPDATE evaluations
@@ -1853,8 +1869,10 @@ def send_deadline_reminders(now=None):
     target_time = now + timedelta(hours=24)
 
     with get_db_connection() as connection:
+        reminder_window = ("date_trunc('second', e.deadline::timestamptz) >= ?::timestamptz AND date_trunc('second', e.deadline::timestamptz) < ?::timestamptz"
+                           if is_postgres(DATABASE) else "datetime(e.deadline) >= datetime(?) AND datetime(e.deadline) < datetime(?)")
         evaluations_due = connection.execute(
-            """
+            f"""
             SELECT
                 e.id AS evaluation_id,
                 e.deadline,
@@ -1862,8 +1880,7 @@ def send_deadline_reminders(now=None):
             FROM evaluations AS e
             JOIN courses AS c ON c.id = e.course_id
             WHERE e.status = 'open'
-              AND datetime(e.deadline) >= datetime(?)
-              AND datetime(e.deadline) < datetime(?)
+              AND {reminder_window}
               AND EXISTS (
                   SELECT 1
                   FROM course_enrollments AS ce
@@ -1896,8 +1913,9 @@ def send_deadline_reminders(now=None):
         for evaluation in evaluations_due:
             cursor = connection.execute(
                 """
-                INSERT OR IGNORE INTO deadline_reminders (evaluation_id)
+                INSERT INTO deadline_reminders (evaluation_id)
                 VALUES (?)
+                ON CONFLICT (evaluation_id) DO NOTHING
                 """,
                 (evaluation["evaluation_id"],),
             )

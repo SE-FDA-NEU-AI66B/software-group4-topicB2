@@ -39,3 +39,5 @@ npm-debug.log*
 Thumbs.db
 # Local SQLite database
 data/*.db
+# Reviewed PostgreSQL schema source, never a data dump.
+!src/postgresql/001_initial.sql
