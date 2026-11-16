@@ -232,7 +232,7 @@ def test_lecturer_feedback_click_through(browser_app, viewport):
     expect(page.get_by_text("Helpful examples. Practical labs made the concepts easier to follow.", exact=True)).to_be_visible()
     expect(page.get_by_text("DRAFT_ONLY_COMMENT", exact=True)).to_have_count(0)
     expect(page.get_by_text("FOREIGN_ONLY_COMMENT", exact=True)).to_have_count(0)
-    assert page.locator("script").count() == 1  # Only the shared session script; feedback stays escaped text.
+    assert page.locator("script:not([src])").count() == 0  # Feedback never creates an executable inline script.
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
     page.reload(wait_until="domcontentloaded")
     expect(page.locator("[data-completed-count]")).to_have_text("1")
@@ -247,7 +247,7 @@ def test_lecturer_feedback_click_through(browser_app, viewport):
         db.execute("UPDATE response_answers SET text_value = ? WHERE response_id=1 AND question_id=2", ('Helpful examples. <script>alert("xss")</script> ' + 'LongFeedback' * 30,))
     page.reload(wait_until="domcontentloaded")
     expect(page.get_by_text('Helpful examples. <script>alert("xss")</script>', exact=False)).to_be_visible()
-    assert page.locator("script").count() == 1
+    assert page.locator("script:not([src])").count() == 0
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
     page.get_by_role("link", name="All evaluations", exact=False).click()
     expect(page.get_by_role("link", name="Review feedback:", exact=False)).to_have_count(1)
@@ -368,4 +368,157 @@ def test_lecturer_feedback_unavailable_retry(browser_app, monkeypatch):
         assert "Helpful examples" not in page.content()
     page.get_by_role("link", name="Try again", exact=True).click()
     expect(page.get_by_role("link", name="Review feedback:", exact=False)).to_have_count(1)
+    page.close()
+
+
+def seed_topic_comments(database, include_other=False):
+    """US05 UI fixture: four meaningful topics, repeated content and excluded data."""
+    from contextlib import closing
+
+    seed_lecturer_feedback(database)
+    comments = [
+        "The course content needs more practical examples.",
+        "The course content and syllabus are clear.",
+        "The lecturer explained concepts clearly.",
+        "The workload leaves little time for practice.",
+        "The exam grading criteria need clarification.",
+    ]
+    if include_other:
+        comments.append('A quieter room would help. <script>alert("xss")</script> ' + "LongComment" * 30)
+    with closing(sqlite3.connect(database)) as db, db:
+        db.execute("UPDATE response_answers SET text_value=? WHERE response_id=1 AND question_id=2", (comments[0],))
+        for position, text in enumerate(comments[1:], start=5):
+            db.execute("INSERT INTO users (id,email,password_hash,full_name,role) VALUES (?,?,'fixture-hash','Synthetic Student','student')", (position, f"topic{position}@example.test"))
+            cursor = db.execute("INSERT INTO responses (evaluation_id,student_id,submitted_at,status) VALUES (1,?,'2026-11-04 10:00:00','submitted')", (position,))
+            db.execute("INSERT INTO response_answers (response_id,question_id,text_value) VALUES (?,2,?)", (cursor.lastrowid, text))
+    return comments
+
+
+def open_topic_analysis(page, url):
+    sign_in(page, url, "lecturer@test.com")
+    expect(page).to_have_url(url + "/lecturer/feedback")
+    page.get_by_role("link", name="Review feedback: Test Evaluation", exact=True).click()
+    page.get_by_role("link", name="Grouped feedback", exact=True).click()
+    expect(page.locator("#topic-analysis")).to_have_attribute("aria-busy", "false")
+
+
+@pytest.mark.parametrize("viewport", [{"width":1440,"height":900}, {"width":390,"height":844}], ids=["laptop", "phone"])
+def test_grouped_feedback_four_topics(browser_app, viewport):
+    """US05-UI01/02: exactly four nonempty groups, precise counts and keyboard expansion."""
+    browser, url, database = browser_app
+    comments = seed_topic_comments(database)
+    page = browser.new_page(viewport=viewport)
+    open_topic_analysis(page, url)
+    expect(page.locator(".topic-card")).to_have_count(4)
+    expect(page.locator("#topic-total")).to_have_text("5 comments · 4 topics")
+    expect(page.locator(".topic-title")).to_have_text(["Course Content", "Teaching Delivery", "Workload", "Assessment"])
+    expect(page.locator('[data-topic="Other"]')).to_have_count(0)
+    content = page.locator('[data-topic="Course Content"]')
+    expect(content.locator(".topic-count")).to_have_text("2 comments")
+    expect(content.locator(".topic-share")).to_contain_text("40%")
+    content.locator("summary").focus()
+    page.keyboard.press("Enter")
+    expect(content).to_have_attribute("open", "")
+    expect(content.locator("li")).to_have_text(comments[:2])
+    page.keyboard.press("Enter")
+    expect(content).not_to_have_attribute("open", "")
+    expect(content.locator("li")).to_have_count(0)
+    for index, title in enumerate(["Teaching Delivery", "Workload", "Assessment"], start=2):
+        group = page.locator(f'[data-topic="{title}"]')
+        group.locator("summary").click()
+        expect(group.locator("li")).to_have_text([comments[index]])
+    assert "DRAFT_ONLY_COMMENT" not in page.locator("#topic-analysis").text_content()
+    assert "FOREIGN_ONLY_COMMENT" not in page.locator("#topic-analysis").text_content()
+    assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+    if evidence_dir := os.environ.get("P0_SCREENSHOT_DIR"):
+        destination = Path(evidence_dir)
+        destination.mkdir(parents=True, exist_ok=True)
+        content.locator("summary").click()
+        page.locator("#topic-analysis").screenshot(path=str(destination / f"topics-{viewport['width']}.png"))
+    page.reload(wait_until="domcontentloaded")
+    expect(page.locator(".topic-card")).to_have_count(4)
+    expect(page.locator("#topic-total")).to_have_text("5 comments · 4 topics")
+    page.close()
+
+
+def test_grouped_feedback_other_is_safe_text(browser_app):
+    """US05-UI03: unclassified comments stay in Other; HTML-like/long text is safe."""
+    browser, url, database = browser_app
+    comments = seed_topic_comments(database, include_other=True)
+    page = browser.new_page(viewport={"width":390,"height":844})
+    open_topic_analysis(page, url)
+    expect(page.locator(".topic-card")).to_have_count(5)
+    expect(page.locator("#topic-total")).to_have_text("6 comments · 5 topics")
+    other = page.locator('[data-topic="Other"]')
+    other.locator("summary").click()
+    expect(other.locator("li")).to_have_text([comments[-1]])
+    assert page.locator("script:not([src])").count() == 0
+    assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+    page.close()
+
+
+def test_grouped_feedback_empty(browser_app):
+    """US05-UI04: zero submitted written comments means no fabricated topic groups."""
+    browser, url, _ = browser_app
+    page = browser.new_page()
+    open_topic_analysis(page, url)
+    expect(page.locator("#topic-empty")).to_be_visible()
+    expect(page.locator(".topic-card")).to_have_count(0)
+    expect(page.locator("#topic-total")).to_have_text("0 comments · 0 topics")
+    expect(page.get_by_role("heading", name="No feedback submitted yet")).to_be_visible()
+    page.close()
+
+
+@pytest.mark.parametrize("failure", ["network", "invalid-data", "forbidden"])
+def test_grouped_feedback_error_and_retry(browser_app, failure):
+    """US05-UI05: explain failed analysis and recover using a real API response."""
+    browser, url, database = browser_app
+    seed_topic_comments(database)
+    page = browser.new_page()
+    endpoint = "**/api/evaluations/1/feedback/topics"
+    def fail(route):
+        if failure == "network":
+            route.abort()
+        elif failure == "invalid-data":
+            route.fulfill(status=200, json={"topics":[{"topic":"Other","count":10,"comments":[]}]})
+        else:
+            # Lose the real course assignment after HTML loads but before analysis fetch.
+            from contextlib import closing
+
+            with closing(sqlite3.connect(database)) as db, db:
+                db.execute("DELETE FROM course_lecturers WHERE lecturer_id=2 AND course_id=1")
+            route.continue_()
+    page.route(endpoint, fail)
+    open_topic_analysis(page, url)
+    expect(page.locator("#topic-error")).to_be_visible()
+    expect(page.locator("#topic-error-message")).not_to_be_empty()
+    expect(page.locator("#topic-empty")).to_be_hidden()
+    expect(page.locator(".topic-card")).to_have_count(0)
+    if failure == "forbidden":
+        expect(page.locator("#topic-error-message")).to_contain_text("You do not have permission to view this course feedback.")
+    page.unroute(endpoint)
+    if failure == "forbidden":
+        from contextlib import closing
+
+        with closing(sqlite3.connect(database)) as db, db:
+            db.execute("INSERT INTO course_lecturers (lecturer_id,course_id) VALUES (2,1)")
+    page.get_by_role("button", name="Try again", exact=True).click()
+    expect(page.locator(".topic-card")).to_have_count(4)
+    expect(page.locator("#topic-error")).to_be_hidden()
+    expect(page.locator("#topic-total")).to_have_text("5 comments · 4 topics")
+    page.close()
+
+
+def test_grouped_feedback_expired_session(browser_app):
+    """US05-UI06: an API 401 sends the browser to usable login without groups."""
+    browser, url, database = browser_app
+    seed_topic_comments(database)
+    page = browser.new_page()
+    page.route("**/api/evaluations/1/feedback/topics", lambda route: route.fulfill(status=401,json={"error":{"code":"UNAUTHORIZED"}}))
+    sign_in(page, url, "lecturer@test.com")
+    expect(page).to_have_url(url + "/lecturer/feedback")
+    page.get_by_role("link", name="Review feedback: Test Evaluation", exact=True).click()
+    expect(page).to_have_url(url + "/login")
+    expect(page.locator("#login-form")).to_be_visible()
+    expect(page.locator(".topic-card")).to_have_count(0)
     page.close()

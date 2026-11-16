@@ -47,7 +47,10 @@
             {% endif %}
         </section>
     {% elif selected_evaluation %}
-        <p><a href="/lecturer/feedback">&larr; All evaluations</a></p>
+        <nav class="feedback-navigation" aria-label="Feedback sections">
+            <a href="/lecturer/feedback">&larr; All evaluations</a>
+            <a href="#topic-analysis">Grouped feedback</a>
+        </nav>
 
         <section class="panel" aria-label="Selected evaluation">
             <p class="muted">
@@ -85,6 +88,32 @@
                 <span class="muted">Rating answers</span>
                 <strong>{{ rating_count }}</strong>
             </div>
+        </section>
+
+        <section id="topic-analysis" class="topic-analysis panel" aria-labelledby="topic-heading"
+                 data-evaluation-id="{{ selected_evaluation['id'] }}" aria-busy="true">
+            <div class="topic-heading-row">
+                <div>
+                    <p class="eyebrow">TOPIC ANALYSIS</p>
+                    <h2 id="topic-heading">Grouped feedback</h2>
+                </div>
+                <p id="topic-total" class="topic-total" role="status" aria-live="polite"></p>
+            </div>
+            <p class="muted">Explore recurring themes in submitted written feedback. Open a topic to read its comments.</p>
+            <p class="topic-guidance muted">Counts show comments, not individual students or sentiment. Review the original comments before drawing conclusions.</p>
+            <p id="topic-loading" role="status">Loading grouped feedback…</p>
+            <div id="topic-error" class="error" role="alert" hidden>
+                <h3>Unable to load grouped feedback</h3>
+                <p id="topic-error-message"></p>
+                <button id="topic-retry" class="button" type="button">Try again</button>
+                <a href="/lecturer/feedback">Return to assigned evaluations</a>
+            </div>
+            <div id="topic-empty" class="empty" role="status" hidden>
+                <h3>No written feedback to group yet</h3>
+                <p>Only submitted, non-empty written answers appear here. Ratings and draft answers do not create topic groups. Return after students submit comments.</p>
+            </div>
+            <div id="topic-groups" class="topic-groups"></div>
+            <noscript><p>Topic analysis requires JavaScript. Individual ratings and written comments remain available below.</p></noscript>
         </section>
 
         {% if completed_responses == 0 %}
@@ -184,6 +213,9 @@
         </section>
     {% endif %}
 </main>
+{% if selected_evaluation and not error_message %}
+<script src="{{ url_for('static', filename='js/grouped_feedback.js') }}" defer></script>
+{% endif %}
 <script src="{{ url_for('static', filename='js/session.js') }}" defer></script>
 </body>
 </html>

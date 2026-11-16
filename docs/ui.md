@@ -369,3 +369,30 @@ The diagram represents the intended system navigation while distinguishing imple
 ##### Error State
 
 ![My Evaluations – Error](images/ui/evaluations-error.svg)
+
+## US05 grouped feedback analysis — #27 (2026-11-16)
+
+Implemented inside the existing lecturer evaluation detail page `/lecturer/feedback/<id>`, using `GET /api/evaluations/<id>/feedback/topics`. From the public login, a lecturer opens an assigned evaluation through **Review feedback**, then uses the **Grouped feedback** section link. Existing counts, ratings, written comments, All evaluations and shared Sign out remain available.
+
+The topic component uses the API's five supported categories: Course Content, Teaching Delivery, Workload, Assessment and Other. Only categories with submitted written comments become cards: the four-topic acceptance example displays exactly four groups, rather than an extra empty Other group. Each card displays its exact comment count and percentage of comments. Cards are ordered by descending count, with canonical category order for ties; the display describes discussion volume, not negative sentiment or unique students. Classification remains the existing backend's responsibility; this UI does not introduce a classifier or claim its accuracy.
+
+Native details/summary controls allow keyboard/click expansion of each topic's comments. Comments enter the DOM through `textContent`, wrap at phone width and are mounted only while expanded. Unmatched comments supplied by the API appear in the exact category Other. Draft/foreign-evaluation exclusion and lecturer permissions are enforced by the existing API.
+
+| State | UI behavior |
+|---|---|
+| Loading | Status text and `aria-busy=true`; no fake counts. |
+| Data | Counts/percentages, populated topic cards and expandable comments; no zero-count group cards. |
+| Empty | “No written feedback to group yet”; explains that only submitted non-empty written answers are grouped. |
+| Network/incomplete payload | Explains failed retrieval/data and provides Try again; does not pretend the list is empty. |
+| Forbidden | Displays the server's permission message/action plus an assigned-list link and shared account/sign-out controls. |
+| Session expired | API 401 navigates to usable `/login`. |
+| JavaScript disabled | Noscript guidance; existing server-rendered individual ratings/comments remain below. |
+
+Files: `src/templates/lecturer_feedback.html`, `src/static/js/grouped_feedback.js`, `src/static/css/lecturer_feedback.css`. The API, classifier, SQL and session implementation are unchanged.
+
+Actual local Chrome screenshots with isolated synthetic feedback data:
+
+- [Laptop — 1440×900 viewport](evidence/27/topics-laptop.png)
+- [Phone — 390×844 viewport](evidence/27/topics-phone.png)
+
+Eight new browser variants in `tests/test_p0_browser_contracts.py` cover the component. [testing.md](testing.md) records IDs, exact nodes, commands and actual results. This is local responsive-browser verification, not a public deployment, physical-device/full accessibility audit or timing acceptance result.
