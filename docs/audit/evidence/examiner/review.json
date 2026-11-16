@@ -59,5 +59,22 @@
     "reversed_exit_code": 0,
     "reversed_wall_seconds": 11.33,
     "scope": "One reversed API/database/runtime/tool ordering; browser tests run in full and focused suites."
-  }
+  },
+  "operations_structure": {
+    "ordered_sections": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "prose_words_outside_tables": 340,
+    "limit": 800,
+    "risk_rows": 6,
+    "maintenance_rows": 5,
+    "lesson_rows": 4,
+    "instructor_section_count_clarification": "pending"
+  },
+  "m3_feedback_attribution_and_real_team_rehearsal": "not verified; existing docs explicitly pending"
 }

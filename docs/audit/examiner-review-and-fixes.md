@@ -61,6 +61,9 @@ is not newly promised by this fix.
 | >=4 green reviewed Sprint5 PRs | Prior wrap-up has ten linked merged/green/independently approved PRs; #240–242 subsequently merged | Existing #212 snapshot plus current #242 state; not evidence of deployed acceptance | PASS |
 | Substantive Review changes and per-member contribution evidence | Approval metadata is not automatically substantive; #242 approval body is empty; full fresh per-member certification not established here | Current approval snapshot and existing wrap-up evidence | NOT VERIFIED |
 | Sprint5 wrap-up/sprint metrics | #212 currently CLOSED; log has all five sprints, but closure does not resolve absent planning/deployed/human evidence | GitHub #212 state; existing qualified five-sprint table | NOT VERIFIED |
+| Operations document minima | Six ordered enumerated sections,340 prose words outside tables,6 risk rows,5 maintenance rows,4 actual lessons; no section invented | Current operations.md structural check; prior #208 evidence retained | PASS |
+| Operations instructor clarification / deployed facts | Brief announces seven sections but enumerates six; no genuine clarification or hosted sign-off is supplied | Existing #208 pending register; do not fabricate instructor response | BLOCKED |
+| Two M3 feedback improvements and real team rehearsal | Before/after documentation and12+5 plan exist; original feedback attribution and actual released-UI/human rehearsal proof remain pending | [UI improvement record](../ui-improvements-m3.md), [demo plan](../m5/demo-runbook.md); not claimed completed | NOT VERIFIED |
 | Releasev1.0 matches running SHA / final PDF / submission | No verified release/origin/SHA; draft/metadata remain pending; no submitted PDF certified | Current releases[], metadata, prior guarded draft builder and release checklist | BLOCKED |
 
 These are scoped technical findings, not a numerical mark. The supplied M5 brief
