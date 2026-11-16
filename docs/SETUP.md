@@ -2,6 +2,24 @@
 
 This guide explains how to set up and run the EduSurvey walking skeleton on a fresh machine.
 
+## Current M5 local walkthrough — 2026-11-16
+
+For a disposable, usable P0 demo without altering an existing DB:
+
+```bash
+python -m pip install -r requirements-dev.txt -r requirements-prod.txt
+python -m playwright install chromium
+python tools/run_student_demo.py
+```
+
+Open the printed loopback URL. The launcher creates a temporary synthetic DB
+with an available submission slot and removes only its own data on exit. Public
+demo credentials are in [README](../README.md#disposable-demo-accounts). This is
+local verification, not the public M5 URL. CI uses Python 3.12; local verification
+also runs on Python 3.14. The historical walking-skeleton instructions below are
+not a requirement to use only Python 3.14 or to reset a database.
+
+
 ## 1. Prerequisites
 
 Required tools:
@@ -176,19 +194,13 @@ If you see:
 sqlite3.OperationalError: no such table: evaluations
 ```
 
-Initialize the database again:
-
-```bash
-python3 src/init_db.py
-```
-
-On Windows:
-
-```bash
-python src/init_db.py
-```
-
-Then restart the application.
+Do not reset/delete an existing DB or rerun the initializer as a repair.
+First check that the configured database path/mount is correct. For existing
+incomplete/corrupt data, follow the reviewed [backup/recovery procedure](database-operations.md)
+and inspect/repair only an isolated copy. For a fresh synthetic walkthrough use
+`python tools/run_student_demo.py`; initialization is only for a confirmed new
+path and intentionally refuses an existing file. Restart only after verifying
+the intended database and schema.
 
 ### Port 5000 already in use
 

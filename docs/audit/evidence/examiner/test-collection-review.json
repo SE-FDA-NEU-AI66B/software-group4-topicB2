@@ -1,0 +1,24 @@
+{
+  "module_test_function_counts": {
+    "tests/test_feedback_classifier.py": 4,
+    "tests/test_lecturer_feedback.py": 9,
+    "tests/test_production_database.py": 11,
+    "tests/test_auth.py": 20,
+    "tests/test_response_schema.py": 0,
+    "tests/test_status.py": 0,
+    "tests/test_smoke.py": 35,
+    "tests/test_student_evaluations.py": 14,
+    "tests/test_monitoring.py": 7,
+    "tests/test_ci_gate.py": 8,
+    "tests/test_database_integrity.py": 3,
+    "tests/test_submissions.py": 1,
+    "tests/test_submission_workflow.py": 12,
+    "tests/test_p0_browser_contracts.py": 20,
+    "tests/test_backend_runtime.py": 14,
+    "tests/test_deployment.py": 4,
+    "tests/test_m5_submission.py": 4,
+    "tests/test_m5_p0_audit.py": 3
+  },
+  "duplicate_module_test_functions": [],
+  "scope": "AST module-level name collisions; not a proof of complete semantic/fixture coverage."
+}

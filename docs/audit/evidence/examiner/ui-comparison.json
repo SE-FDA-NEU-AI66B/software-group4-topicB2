@@ -1,0 +1,47 @@
+{
+  "baseline": "0f924cd",
+  "scope": "Normal student list/questions before/after JS; temporary synthetic DB, frozen clock, same UTC locale/viewport. External Google font stylesheet intentionally neutralized equally for deterministic font fallback; not public-host typography certification.",
+  "comparisons": [
+    {
+      "screen": "list",
+      "viewport": [
+        1440,
+        900
+      ],
+      "before_sha256": "ce0b6b84ceabc158b80e06f606de9b59bdaecb623c9d6d6b56a87d254df6c892",
+      "after_sha256": "ce0b6b84ceabc158b80e06f606de9b59bdaecb623c9d6d6b56a87d254df6c892",
+      "pixel_identical": true
+    },
+    {
+      "screen": "questions",
+      "viewport": [
+        1440,
+        900
+      ],
+      "before_sha256": "127182774eda209681b5d293ed242f648e1c0a4a51516dca58114c02dcd0c877",
+      "after_sha256": "127182774eda209681b5d293ed242f648e1c0a4a51516dca58114c02dcd0c877",
+      "pixel_identical": true
+    },
+    {
+      "screen": "list",
+      "viewport": [
+        390,
+        844
+      ],
+      "before_sha256": "e7c72be5aa430ffb8a0599acf65322cb1420e4b2a845cdd425f433e457f0aab7",
+      "after_sha256": "e7c72be5aa430ffb8a0599acf65322cb1420e4b2a845cdd425f433e457f0aab7",
+      "pixel_identical": true
+    },
+    {
+      "screen": "questions",
+      "viewport": [
+        390,
+        844
+      ],
+      "before_sha256": "64c8105dc07fe475d5b4099cc7f9fc93b1d9c29f58caee4d384b474db5ffd2cf",
+      "after_sha256": "64c8105dc07fe475d5b4099cc7f9fc93b1d9c29f58caee4d384b474db5ffd2cf",
+      "pixel_identical": true
+    }
+  ],
+  "templates_css_requirements_changed": false
+}

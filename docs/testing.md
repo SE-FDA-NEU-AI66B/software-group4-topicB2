@@ -83,6 +83,50 @@ separately; the historical red-main result is not rewritten.
 Current behavior supersedes earlier dated 401-HTML/old-message snapshots below: approved #214 uses canonical API messages, and #215 redirects anonymous protected HTML navigation to `/login` while APIs/JSON clients retain JSON 401. Existing denial scenarios and all old test IDs are retained; their HTML-only assertions are deliberately updated. Topic/ranking/statistics APIs now require assigned lecturer access. [Backend file/route map](backend.md) and [runtime handover](backend-runtime.md) explain the implementation and remaining deployment/security limits.
 
 
+
+## Strict examiner review — 2026-11-16
+
+Scope and actual evidence: [examiner-review-and-fixes.md](audit/examiner-review-and-fixes.md).
+Baseline main `0f924cd`: **298 passed in 92.01s**. Final local suite:
+**318 passed in 114.33s**, zero failures/errors/skips; **20 added variants**.
+No old expected result, test or scenario was removed/skipped. The shared fixture's
+aware clock was corrected only after its inconsistent absolute instant was
+reproduced; this does not choose production semantics for naive deadlines.
+
+| Case ID | Real pytest node | Actual scenario/result |
+|---|---|---|
+| EX-A01 | `tests/test_auth.py::test_deleted_account_cannot_reuse_protected_session` (6) | Real login/deletion; student/lecturer/admin protected direct requests deny and clear invalid session without first visiting /me; passed |
+| EX-A02 | `tests/test_backend_runtime.py::test_reassigned_role_cannot_keep_lecturer_feedback_access` | Real lecturer login, DB downgrade; six protected feedback/page/aggregate routes deny with403 and no feedback; passed |
+| EX-UX01 | `tests/test_p0_browser_contracts.py::test_unreadable_api_response_has_useful_recovery` (6) | HTML503/malformed200 on list/questions/submit; useful fallback, recovery controls, no fake success or saved response before retry; passed |
+| EX-S01 | `tests/test_p0_browser_contracts.py::test_private_history_and_expired_session_require_login` (3) | Three role landings/sign-out/Back/repeated logout/missing-cookie navigation; public login content and protected denial; passed |
+| EX-S02 | `tests/test_auth.py::test_expired_signed_session_cannot_access_protected_data` | Advance actual signer age beyond configured lifetime; same signed cookie denied, not merely deleted; passed |
+| EX-UX02 | `tests/test_p0_browser_contracts.py::test_login_empty_and_invalid_inputs_are_actionable` | Real empty/invalid email form messages/focus, no bad request, valid retry succeeds; passed |
+| EX-T01 | `tests/test_backend_runtime.py::test_frozen_fixture_clock_represents_one_instant` (2) | UTC−5/+7 frozen clock denotes same instant and preserves naive test time; passed |
+
+Command: `python -m pytest -q --junitxml=junit.xml` with installed local Chrome
+selected through PLAYWRIGHT_CHROMIUM_EXECUTABLE. See
+[baseline JUnit](audit/evidence/examiner/baseline.xml),
+[final JUnit](audit/evidence/examiner/final.xml) and
+[actual output](audit/evidence/examiner/final.txt).
+
+Controlled mutation: actual detached disposable worktree, current-role guard
+passes → disabled guard fails → restored passes; worktree removed and workspace
+unchanged. Separate exported `<24h`→`<=24h` mutation produces exactly one
+boundary failure then restores all three. Both logs/hashes are in the audit.
+Additional collection review found no duplicate module-level test names or
+skip/xfail markers; 279 non-browser nodes also passed in reversed order in11.33s.
+This does not certify every ordering. Four normal before/after list/questions captures at phone/laptop sizes have
+identical hashes with a controlled clock/font fallback. Historical images,
+HTML/CSS/requirements/schema and production DB remain unchanged.
+
+A new history test's `/login`-only assumption was corrected: `/` is also the
+approved public login page for admin Back history. It still asserts public login
+content, no private controls, 401 APIs and repeat-logout behavior; no product
+requirement was weakened. This is distinct from copied-cookie replay revocation,
+which remains unresolved. Public HTTPS/physical-phone/SLA/final release and PDF
+are not certified by these local checks.
+
+
 ## M5 deployment-readiness configuration audit — 2026-11-16
 
 Coordination #200; [readiness report](audit/m5-deployment-readiness.md). P0

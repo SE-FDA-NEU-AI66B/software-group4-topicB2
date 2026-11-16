@@ -1,0 +1,93 @@
+{
+  "captured_at": "2026-11-16T13:12:36.966826+07:00",
+  "main-ci": [
+    {
+      "conclusion": "success",
+      "databaseId": 43811819195,
+      "headSha": "0f924cdddf27a0d76881e3350897db87f91028b6",
+      "status": "completed",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43811819195"
+    }
+  ],
+  "repo": {
+    "default_branch": "main",
+    "homepage": null,
+    "html_url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2",
+    "permissions": {
+      "admin": false,
+      "maintain": false,
+      "pull": true,
+      "push": true,
+      "triage": true
+    }
+  },
+  "deployments": [],
+  "releases": [],
+  "rules": [
+    {
+      "type": "deletion",
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "SE-FDA-NEU-AI66B",
+      "ruleset_id": 21540407
+    },
+    {
+      "type": "non_fast_forward",
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "SE-FDA-NEU-AI66B",
+      "ruleset_id": 21540407
+    },
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 1,
+        "dismiss_stale_reviews_on_push": false,
+        "required_reviewers": [],
+        "require_code_owner_review": false,
+        "require_last_push_approval": false,
+        "required_review_thread_resolution": false,
+        "require_extra_approval_for_unattributed_changes": true,
+        "allowed_merge_methods": [
+          "merge",
+          "squash",
+          "rebase"
+        ]
+      },
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "SE-FDA-NEU-AI66B",
+      "ruleset_id": 21540407
+    }
+  ],
+  "pr242": {
+    "mergedAt": "2026-11-16T05:40:52Z",
+    "mergedBy": {
+      "id": "U_kgDODr1GyA",
+      "is_bot": false,
+      "login": "tlduongducanh281-jpg",
+      "name": "DucAnh"
+    },
+    "reviews": [
+      {
+        "id": "PRR_kwDOT0W7zs8AAAABYJdhNw",
+        "author": {
+          "login": "tlduongducanh281-jpg"
+        },
+        "authorAssociation": "MEMBER",
+        "body": "",
+        "submittedAt": "2026-11-16T05:40:40Z",
+        "includesCreatedEdit": false,
+        "reactionGroups": [],
+        "state": "APPROVED",
+        "commit": {
+          "oid": "1bbc65b7e8f43506b723351654cd298906bb59ff"
+        }
+      }
+    ],
+    "state": "MERGED",
+    "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/242"
+  },
+  "212": {
+    "closed": true,
+    "state": "CLOSED",
+    "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/212"
+  }
+}

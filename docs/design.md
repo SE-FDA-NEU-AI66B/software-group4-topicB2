@@ -108,6 +108,18 @@ The `users` table stores account information and the role assigned to each accou
 
 The current design stores the role directly in the `users` table. This ensures that each user has one role value and that only the three supported role values can be stored. Role-based authorization must also be enforced by the backend.
 ## 3. API Design
+
+**Current implementation note (2026-11-16):** the table below is the historical
+M2 proposal, not a request to rename working APIs. Current verified P0 routes are
+`POST /api/auth/login`, `GET /api/auth/me`, idempotent `POST /api/auth/logout`,
+`GET /api/evaluations`, `GET /api/evaluations/<id>/questions`,
+`POST /api/submissions`, and `GET /api/courses/<id>/feedback`. HTML page navigation
+uses the implemented login/role pages in [backend.md](backend.md).
+The approved JSON 200/401/403 and HTML login redirect contracts are preserved;
+anonymous logout remains idempotent. See [acceptance review](p0-acceptance-review.md)
+and [examiner results](audit/examiner-review-and-fixes.md). No API or requirements
+change is implied by preserving the older design table.
+
 EduSurvey provides REST-style API endpoints for authentication, course evaluations, student submissions, and lecturer feedback. The API supports the core P0 user stories defined in the requirements.
 
 | Method | Endpoint | Actor | Purpose | Input | Success | Errors |
