@@ -86,3 +86,30 @@ The edit changes documentation only. No application/CI implementation or tests
 were changed; no new unit tests were added for prose. GitHub's existing full CI
 must still pass for this PR. Counts/links/metadata and `git diff --check` were
 validated locally; no new public-health or production-rollback result is claimed.
+
+## Follow-up after PR #233 merge — 2026-11-16
+
+[PR #233](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/233)
+was merged on November 15. The document is implemented; Board Todo was stale.
+[Independent approval](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/233#pullrequestreview-5912048627)
+by @tlduongducanh281-jpg is recorded. His
+[substantive PR comment](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/233#issuecomment-6898760593)
+distinguishes local restore from hosted rollback, and green CI from enforced
+protection; it asks for owners and evidence for unresolved items. The register
+above already assigns those owners and specifies the required records. This
+meets the literal #208 approval plus substantive recorded-comment requirement;
+the comment is ordinary PR discussion, **not** substantive Review changes
+feedback for #212. Earlier pending-review rows above are historical and superseded
+by this observation. No teammate review is created or impersonated here.
+
+[Follow-up API evidence](followup-audit.json) pins main b26dfc8 to successful CI
+43804267947: 118 seconds from 04:28:05 to 04:30:03 UTC (11:28:05–11:30:03 ICT).
+Every job/step is retained. Deploy is skipped, so this is not a public release.
+The original screenshot remains historical; current effective rules still lack
+required named checks. Public URL, hosted logs/health/rollback, off-host storage,
+keep-online date and instructor section-count clarification remain pending.
+Keep #208 open and In Review while resolving these acceptance items.
+
+The follow-up changes documentation/evidence only. Local checks revalidate the
+six headings, <=800 prose words, risk/maintenance/lesson minima and local links;
+CI runs the existing test suite. AI assistance: Codex — documentation verification.

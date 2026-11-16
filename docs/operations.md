@@ -3,8 +3,8 @@
 Parent #200; dependencies #204–#207 are merged. This is a reviewable repository
 handover, **not production sign-off**. Instructor confirmation of “seven sections”
 versus six enumerated sections is **pending**; six are retained without inventing
-a seventh. Public URL, hosted rollback and independent approval/substantive review
-remain unverified. [Evidence and outstanding confirmations](evidence/208/README.md).
+a seventh. Public URL and hosted rollback remain unverified. PR #233 is merged
+with independent approval and substantive PR discussion; see the linked register. [Evidence and outstanding confirmations](evidence/208/README.md).
 
 ## 1. URL, platform, release and rollback
 
@@ -22,18 +22,19 @@ never reseed live data. [Deployment procedure](deployment.md).
 
 ## 2. CI, duration and branch protection
 
-Latest observed green main: **`9c5d55c`**, [run 43739534488](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43739534488).
-Actual elapsed time: **116s**, 2026-11-16 00:09:47–00:11:43 ICT, from GitHub
+Latest observed green main: **`b26dfc8`**, [run 43804267947](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43804267947).
+Actual elapsed time: **118s**, 2026-11-16 11:28:05–11:30:03 ICT, from GitHub
 run-start/update timestamps. Job durations overlap; they are not summed.
-[Actual steps/timestamps](evidence/208/handover-audit.json).
+[Current steps/timestamps and review](evidence/208/followup-audit.json);
+[original audit](evidence/208/handover-audit.json) remains historical.
 
 | Job | Every configured step, including lifecycle | Observed result/time |
 |---|---|---|
-| Detect stack | Runner setup; checkout; detect Python/Node manifests; checkout cleanup | Success, 5s |
-| Python tests | Checkout; Python 3.12/pip cache; upgrade pip; install dev+prod requirements; Gunicorn config check; managed Chromium/system dependencies; blocking Ruff; full pytest `-v --cov --cov-report=term-missing --junitxml=junit.xml`; always publish JUnit summary; cache/checkout cleanup | Success, 95s |
-| Security | Full-history checkout; credential-pattern scan; reject `.env`/DB dumps with existing schema/query exceptions; cleanup | Success, 4s |
+| Detect stack | Runner setup; checkout; detect Python/Node manifests; checkout cleanup | Success, 6s |
+| Python tests | Checkout; Python 3.12/pip cache; upgrade pip; install dev+prod requirements; Gunicorn config check; managed Chromium/system dependencies; blocking Ruff; full pytest `-v --cov --cov-report=term-missing --junitxml=junit.xml`; always publish JUnit summary; cache/checkout cleanup | Success, 92s |
+| Security | Full-history checkout; credential-pattern scan; reject `.env`/DB dumps with existing schema/query exceptions; cleanup | Success, 8s |
 | Optional Node | Checkout; Node 20/npm cache; `npm ci` or install; lint, test, build when present; cleanup. Node lint remains warning-only. | Skipped: no Node stack |
-| CI gate | Checkout; always evaluate detection/Python/security and detected Node results; fail closed on required failure/cancellation/skip; cleanup | Success, 10s |
+| CI gate | Checkout; always evaluate detection/Python/security and detected Node results; fail closed on required failure/cancellation/skip; cleanup | Success, 8s |
 | Deploy | Exact-SHA checkout; Python 3.12; reject superseded main; provider configuration check, exact-commit deploy, bounded polling, SHA/readiness check; cleanup | Skipped: deployment opt-in absent |
 | Other PR workflows | Scrum issue link/reviewer-participation/size checks; Board status automation | Informational process checks; not approval or deployment evidence |
 
@@ -98,5 +99,6 @@ Assigned policy below is not a claim that remote scheduling or alerting exists.
 | [Rules audit](evidence/208/handover-audit.json) found approval-only main protection | Prepared strict named-check rules and admin handoff; enforcement still pending | Read settings back and capture actual screenshots; green CI alone does not protect main. |
 
 Sign-off still requires instructor clarification, actual deployment/rollback,
-updated protection evidence, and an independent approval plus substantive recorded
-review. None is inferred from this handover or CI success.
+and updated protection evidence. PR #233 has independent approval and concrete
+PR discussion; it does not establish live acceptance or the separate #212
+requirement for substantive feedback through Review changes.

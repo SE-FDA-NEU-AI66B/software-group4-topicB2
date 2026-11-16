@@ -1,0 +1,310 @@
+{
+  "captured_date": "2026-11-16",
+  "main_sha": "b26dfc896f679841be7da442edb1590a85a10bdd",
+  "run_url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43804267947",
+  "run_started_at": "2026-11-16T04:28:05Z",
+  "updated_at": "2026-11-16T04:30:03Z",
+  "elapsed_seconds": 118,
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "No secrets committed",
+      "conclusion": "success",
+      "started_at": "2026-11-16T04:28:11Z",
+      "completed_at": "2026-11-16T04:28:19Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-16T04:28:12Z",
+          "completed_at": "2026-11-16T04:28:14Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-16T04:28:14Z",
+          "completed_at": "2026-11-16T04:28:17Z"
+        },
+        {
+          "name": "Scan for obvious credentials",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-16T04:28:17Z",
+          "completed_at": "2026-11-16T04:28:17Z"
+        },
+        {
+          "name": "No .env or database dumps",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-16T04:28:17Z",
+          "completed_at": "2026-11-16T04:28:17Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-16T04:28:17Z",
+          "completed_at": "2026-11-16T04:28:17Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-16T04:28:17Z",
+          "completed_at": "2026-11-16T04:28:17Z"
+        }
+      ]
+    },
+    {
+      "name": "Detect stack",
+      "conclusion": "success",
+      "started_at": "2026-11-16T04:28:11Z",
+      "completed_at": "2026-11-16T04:28:17Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-16T04:28:12Z",
+          "completed_at": "2026-11-16T04:28:12Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-16T04:28:12Z",
+          "completed_at": "2026-11-16T04:28:14Z"
+        },
+        {
+          "name": "Run if ls requirements.txt pyproject.toml setup.py 2>/dev/null | grep -q .; then",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-16T04:28:14Z",
+          "completed_at": "2026-11-16T04:28:14Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-16T04:28:14Z",
+          "completed_at": "2026-11-16T04:28:14Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-16T04:28:14Z",
+          "completed_at": "2026-11-16T04:28:14Z"
+        }
+      ]
+    },
+    {
+      "name": "Python tests",
+      "conclusion": "success",
+      "started_at": "2026-11-16T04:28:19Z",
+      "completed_at": "2026-11-16T04:29:51Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-16T04:28:20Z",
+          "completed_at": "2026-11-16T04:28:20Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-16T04:28:20Z",
+          "completed_at": "2026-11-16T04:28:21Z"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-16T04:28:21Z",
+          "completed_at": "2026-11-16T04:28:22Z"
+        },
+        {
+          "name": "Install dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-16T04:28:22Z",
+          "completed_at": "2026-11-16T04:28:47Z"
+        },
+        {
+          "name": "Lint",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-16T04:28:47Z",
+          "completed_at": "2026-11-16T04:28:47Z"
+        },
+        {
+          "name": "Test",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-16T04:28:47Z",
+          "completed_at": "2026-11-16T04:29:49Z"
+        },
+        {
+          "name": "Publish test summary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-16T04:29:49Z",
+          "completed_at": "2026-11-16T04:29:49Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-16T04:29:49Z",
+          "completed_at": "2026-11-16T04:29:49Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-11-16T04:29:49Z",
+          "completed_at": "2026-11-16T04:29:50Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-11-16T04:29:50Z",
+          "completed_at": "2026-11-16T04:29:50Z"
+        }
+      ]
+    },
+    {
+      "name": "Node build and tests",
+      "conclusion": "skipped",
+      "started_at": "2026-11-16T04:28:17Z",
+      "completed_at": "2026-11-16T04:28:17Z",
+      "steps": []
+    },
+    {
+      "name": "CI gate",
+      "conclusion": "success",
+      "started_at": "2026-11-16T04:29:54Z",
+      "completed_at": "2026-11-16T04:30:02Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-16T04:29:54Z",
+          "completed_at": "2026-11-16T04:29:57Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-16T04:29:57Z",
+          "completed_at": "2026-11-16T04:30:00Z"
+        },
+        {
+          "name": "Require successful tests and security checks",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-16T04:30:00Z",
+          "completed_at": "2026-11-16T04:30:00Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-16T04:30:00Z",
+          "completed_at": "2026-11-16T04:30:00Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-16T04:30:00Z",
+          "completed_at": "2026-11-16T04:30:00Z"
+        }
+      ]
+    },
+    {
+      "name": "Deploy tested main to Render",
+      "conclusion": "skipped",
+      "started_at": "2026-11-16T04:30:03Z",
+      "completed_at": "2026-11-16T04:30:02Z",
+      "steps": []
+    }
+  ],
+  "merged_handover": {
+    "comments": [
+      {
+        "id": "IC_kwDOT0W7zs8AAAABmzK7kQ",
+        "author": {
+          "login": "tlduongducanh281-jpg"
+        },
+        "authorAssociation": "MEMBER",
+        "body": "The six-section handover brings the release, rollback, monitoring, and maintenance notes together without losing the original monitoring details. The evidence summary makes a useful distinction between the local SQLite restore drill and a rollback on the live service, and between a green CI run and GitHub enforcing required checks on main. One suggestion is to list who will verify each open item and what evidence they should attach, especially for hosted rollback and off-host backups. Overall, this is a useful handover draft. I’d keep #208 open until the instructor confirms the section count and the team records the live checks and updated branch protection settings.",
+        "createdAt": "2026-11-15T17:55:22Z",
+        "includesCreatedEdit": false,
+        "isMinimized": false,
+        "minimizedReason": "",
+        "reactionGroups": [],
+        "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/233#issuecomment-6898760593",
+        "viewerDidAuthor": false
+      }
+    ],
+    "mergedAt": "2026-11-15T17:58:18Z",
+    "reviews": [
+      {
+        "id": "PRR_kwDOT0W7zs8AAAABYGKz8w",
+        "author": {
+          "login": "tlduongducanh281-jpg"
+        },
+        "authorAssociation": "MEMBER",
+        "body": "",
+        "submittedAt": "2026-11-15T17:58:00Z",
+        "includesCreatedEdit": false,
+        "reactionGroups": [],
+        "state": "APPROVED",
+        "commit": {
+          "oid": "26fbc21623570f350556920527c5840b95601083"
+        }
+      }
+    ],
+    "state": "MERGED",
+    "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/233"
+  },
+  "limits": [
+    "Approval and substantive PR discussion exist; discussion is an issue comment, not Review changes content. Do not count it as Sprint 5 substantive Review changes under #212.",
+    "Repository homepage null, deployment records empty; unreported external hosting is not ruled out.",
+    "Current effective main rules have deletion/non_fast_forward/pull_request only; required named checks remain absent.",
+    "Instructor section-count clarification and public rollback remain unverified."
+  ]
+}
