@@ -88,7 +88,7 @@ Current behavior supersedes earlier dated 401-HTML/old-message snapshots below: 
 
 Scope and actual evidence: [examiner-review-and-fixes.md](audit/examiner-review-and-fixes.md).
 Baseline main `0f924cd`: **298 passed in 92.01s**. Final local suite:
-**318 passed in 114.33s**, zero failures/errors/skips; **20 added variants**.
+**318 passed in 124.76s**, zero failures/errors/skips; **20 added variants**.
 No old expected result, test or scenario was removed/skipped. The shared fixture's
 aware clock was corrected only after its inconsistent absolute instant was
 reproduced; this does not choose production semantics for naive deadlines.

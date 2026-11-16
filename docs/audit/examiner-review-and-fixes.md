@@ -3,7 +3,7 @@
 Date: 2026-11-16, Asia/Ho_Chi_Minh. Baseline main:
 `0f924cdddf27a0d76881e3350897db87f91028b6`, after independently merged PRs
 #240/#241/#242. Baseline: **298 passed in 92.01s**, no skipped tests.
-Final local suite: **318 passed in 114.33s**, zero failures/errors/skips.
+Final local suite: **318 passed in 124.76s**, zero failures/errors/skips.
 **Overall M5 release readiness: BLOCKED**, despite local regression success.
 
 The review uses the supplied M5 brief and repository requirements/design/UI/
@@ -48,7 +48,7 @@ is not newly promised by this fix.
 | Strict <24h Due soon and deadline <=now closed | Original approved boundaries unchanged; aware offsets checked deterministically | Existing boundary cases; controlled `<`→`<=` mutation fails only equality and is restored | PASS |
 | US03 required fields, ratings/text boundaries, review/submit/receipt | Server refuses invalid/enrollment/deadline/duplicate requests; save/reload/cross-role persistence and concurrent-tab atomicity retained | Existing submission/database workflow tests; merged M5-A03/A04 plus EX-UX01 retry/no false success | PASS |
 | US04 submitted-only feedback/count/rating/comment and ownership | Real lecturer browser list/detail/empty/error tests retained; downgraded role no longer receives feedback | Existing completed19/20/21/ownership tests, EX-A02 and role-mutation proof | PASS |
-| US11 visible sign-out, denied protected access, Back and repeated logout | Student/lecturer/admin sign out; Back exposes only public login; repeated logout remains200; missing and over-age cookie denied | Existing keyboard/logout tests; EX-S01 (3 roles), EX-S02 actual signed-age expiry | PASS |
+| US11 visible sign-out, denied protected access, Back and repeated logout | Student/lecturer/admin sign out; Back exposes only public login without restoring the typed password; repeated logout remains200; missing and over-age cookie denied | Existing keyboard/logout tests; EX-S01 (3 roles), EX-S02 actual signed-age expiry | PASS |
 | Errors explain what happened and next action | Valid business messages unchanged; unreadable list/questions/submission replies now give fallback and working recovery | Six EX-UX01 cases plus existing network/permission/error tests | PASS |
 | Preserve established UI/evidence/contracts/schema | No template/CSS/requirements/schema edits; four normal before/after captures identical under controlled conditions; no historical images modified | `ui-comparison.json`, source diff and eight newly named screenshots | PASS |
 | Full existing regression suite retained | 298 baseline →318 final; new security/UX/clock assertions; no skip/deletion/expected-result weakening | Baseline/final JUnit and output; Ruff/diff checks | PASS |
@@ -87,7 +87,7 @@ protocol, not pytest duration or local request timings.
    and identical. External font stylesheet is neutralized equally before/after,
    with fixed clock/locale/viewport; this is controlled preservation evidence,
    not public-host font or physical-device certification.
-6. Full post-fix regression: 318 passed in114.33s, zero failures/errors/skips.
+6. Full post-fix regression: 318 passed in124.76s, zero failures/errors/skips.
    AST review found no duplicate module-level test-function names and no skip/xfail
    markers. An additional **279 non-browser API/DB/runtime/tool cases passed in
    reversed order in11.33s**; this is one extra ordering, not proof of every

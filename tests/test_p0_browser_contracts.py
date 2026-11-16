@@ -623,6 +623,7 @@ def test_private_history_and_expired_session_require_login(browser_app, email):
     # / is also the approved public login page; admin history can return there.
     expect(page.get_by_role("heading", name="Welcome back", exact=True)).to_be_visible()
     assert page.url in (url + "/", url + "/login")
+    expect(page.locator("#password")).to_have_value("")
     expect(page.get_by_role("button", name="Sign out", exact=True)).to_have_count(0)
     assert context.request.post(url + "/api/auth/logout").json() == {"authenticated": False}
     assert context.request.get(url + "/api/auth/me").status == 401
