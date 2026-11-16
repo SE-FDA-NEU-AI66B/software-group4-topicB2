@@ -1,0 +1,92 @@
+{
+  "captured_at": "2026-11-16T11:55:12.482607+07:00",
+  "base_main_sha": "b26dfc896f679841be7da442edb1590a85a10bdd",
+  "environment": {
+    "python": "3.14.8",
+    "browser": "Google Chrome 157, headless Playwright 1.65.2",
+    "platform": "local macOS",
+    "viewports": [
+      "1440x900",
+      "390x844"
+    ],
+    "data": "temporary synthetic SQLite per test; no production DB"
+  },
+  "result": {
+    "tests": "286",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "87.512"
+  },
+  "wall_time_seconds": 87.53,
+  "coverage_src_percent": 91,
+  "ruff": "passed",
+  "diff_check": "passed",
+  "repository": {
+    "default_branch": "main",
+    "homepage": null,
+    "permissions": {
+      "admin": false,
+      "push": true
+    }
+  },
+  "main_ci_at_capture": [
+    {
+      "conclusion": "success",
+      "databaseId": 43804267947,
+      "headSha": "b26dfc896f679841be7da442edb1590a85a10bdd",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43804267947"
+    }
+  ],
+  "effective_main_rules": [
+    {
+      "type": "deletion",
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "SE-FDA-NEU-AI66B",
+      "ruleset_id": 21540407
+    },
+    {
+      "type": "non_fast_forward",
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "SE-FDA-NEU-AI66B",
+      "ruleset_id": 21540407
+    },
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 1,
+        "dismiss_stale_reviews_on_push": false,
+        "required_reviewers": [],
+        "require_code_owner_review": false,
+        "require_last_push_approval": false,
+        "required_review_thread_resolution": false,
+        "require_extra_approval_for_unattributed_changes": true,
+        "allowed_merge_methods": [
+          "merge",
+          "squash",
+          "rebase"
+        ]
+      },
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "SE-FDA-NEU-AI66B",
+      "ruleset_id": 21540407
+    }
+  ],
+  "deployments_observed": 0,
+  "releases_observed": [],
+  "public_acceptance_verified": false,
+  "source_sha256": {
+    "src/app.py": "15c91fad1733a77c4b4527ce187135e71918aa9df416aa05568eaa83398ebfec",
+    "src/feedback_classifier.py": "3486dde076738a1fa9cf8f528cf0563c87cfa7e3ea8f61a0d94e68fbace9a606",
+    "tests/test_m5_p0_audit.py": "3c6e512e8e19502e2f454bdbc3a0e65cdc7e758e45a5f1f8c5d68e9dbab92e48",
+    "tests/test_feedback_classifier.py": "0831376ce98a4f46620f7a4705c363e61c9f3edbd9edbb882fc8648fb6c19cbb",
+    "tests/test_p0_browser_contracts.py": "dd11e2ecaf446420d0d59ee476cbf9c59b4484e944a8a0cc890dd081cf24324e"
+  },
+  "provenance": [
+    "Initial restricted run could not bind loopback; authorized baseline passed 278 tests in 79.57s.",
+    "Four P0 regression variants failed before the fix; a subsequent topic-fragment regression also failed. Existing-draft variant was added after the initial red capture.",
+    "The first new cross-role browser test used direct .check() on a radio covered by its visible label; corrected to focus + Space, as the existing keyboard flow does. Final full suite has zero failures/skips.",
+    "207 ResourceWarnings on Python 3.14 concern unclosed sqlite handles in test fixtures; they are not product error responses and are not represented as absent.",
+    "Local production smoke is not a Render mount/provisioning or public HTTPS/performance check."
+  ]
+}

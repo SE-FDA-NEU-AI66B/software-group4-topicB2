@@ -471,7 +471,7 @@ The main statuses are:
 
 - **Draft** – Evaluation is being prepared.
 - **Open** – Students can submit responses.
-- **Due Soon** – An unfinished evaluation has less than 24 hours remaining.
+- **Due soon** – An unfinished evaluation has less than 24 hours remaining (canonical display wording approved in #188).
 - **Closed** – The deadline has passed and new submissions are no longer accepted.
 - **Completed** – A student has successfully submitted the evaluation.
 

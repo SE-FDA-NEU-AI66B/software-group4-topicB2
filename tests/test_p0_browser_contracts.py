@@ -522,3 +522,43 @@ def test_grouped_feedback_expired_session(browser_app):
     expect(page.locator("#login-form")).to_be_visible()
     expect(page.locator(".topic-card")).to_have_count(0)
     page.close()
+
+
+@pytest.mark.parametrize("viewport", [{"width": 1440, "height": 900}, {"width": 390, "height": 844}], ids=["laptop", "phone"])
+def test_saved_feedback_cross_role_after_closure(browser_app, viewport):
+    """M5-A04: real US01→02→03→11→04 clicks, persisted feedback after closure."""
+    browser, url, database = browser_app
+    context = browser.new_context(viewport=viewport)
+    page = context.new_page()
+    sign_in(page, url)
+    page.get_by_role("link", name="Start evaluation").click()
+    rating = page.locator('input[type="radio"][value="5"]')
+    rating.focus()
+    page.keyboard.press("Space")
+    expect(rating).to_be_checked()
+    page.locator("textarea").fill("M5 audit saved feedback.")
+    page.locator("#reviewButtonMobile" if viewport["width"] < 600 else "#reviewButton").click()
+    page.get_by_role("button", name="Submit evaluation", exact=True).click()
+    expect(page.locator("#submissionSuccess")).to_be_visible()
+    with sqlite3.connect(database) as db:
+        db.execute("UPDATE evaluations SET status='closed', deadline='2020-01-01' WHERE id=1")
+    page.reload(wait_until="domcontentloaded")
+    expect(page.locator("#submissionSuccess")).to_be_visible()
+    expect(page.locator("#errorState")).not_to_be_visible()
+    page.get_by_role("button", name="Sign out", exact=True).click()
+    expect(page).to_have_url(url + "/login")
+    assert context.request.get(url + "/api/evaluations").status == 401
+    sign_in(page, url, "lecturer@test.com")
+    page.get_by_role("link", name="Review feedback: Test Evaluation", exact=True).click()
+    expect(page.locator("[data-completed-count]")).to_have_text("1")
+    expect(page.get_by_label("Feedback summary")).to_contain_text("5.0 / 5")
+    expect(page.get_by_text("M5 audit saved feedback.", exact=True)).to_be_visible()
+    assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+    if evidence_dir := os.environ.get("P0_SCREENSHOT_DIR"):
+        destination = Path(evidence_dir)
+        destination.mkdir(parents=True, exist_ok=True)
+        page.screenshot(path=str(destination / f"audit-cross-role-{viewport['width']}.png"), full_page=True)
+    page.get_by_role("button", name="Sign out", exact=True).click()
+    expect(page).to_have_url(url + "/login")
+    assert context.request.get(url + "/api/courses/1/feedback").status == 401
+    context.close()

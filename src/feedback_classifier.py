@@ -1,4 +1,4 @@
-
+import re
 from collections import Counter
 
 TOPICS = [
@@ -35,7 +35,7 @@ def classify_feedback(comment):
 
     text = comment.lower()
     scores = {
-        topic: sum(keyword in text for keyword in keywords)
+        topic: sum(bool(re.search(r"\b" + re.escape(keyword) + r"s?\b", text)) for keyword in keywords)
         for topic, keywords in KEYWORDS.items()
     }
 
