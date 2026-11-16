@@ -47,8 +47,12 @@ def copy_snapshot(source, url):
             # Restart identities transactionally; setval() itself is not rollback-safe.
             for table in TABLES:
                 maximum = db.execute(sql.SQL('SELECT COALESCE(MAX(id), 0) FROM {}').format(sql.Identifier(table))).fetchone()[0]
+                sequence = old.execute('SELECT seq FROM sqlite_sequence WHERE name=?', (table,)).fetchone()
+                # AUTOINCREMENT never reuses deleted IDs. MAX(id) alone loses
+                # SQLite's historical high watermark after deletions.
+                next_id = max(maximum, sequence[0] if sequence else 0) + 1
                 db.execute(sql.SQL('ALTER TABLE {} ALTER COLUMN id RESTART WITH {}').format(
-                    sql.Identifier(table), sql.Literal(maximum + 1)))
+                    sql.Identifier(table), sql.Literal(next_id)))
         return manifest
 
 
