@@ -40,6 +40,20 @@ jobs:
 
   python:
     name: Python tests
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: edusurvey_test_ci
+          POSTGRES_USER: postgres
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d edusurvey_test_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      EDUSURVEY_TEST_POSTGRES_URL: postgresql://postgres@127.0.0.1:5432/edusurvey_test_ci
     needs: detect
     if: needs.detect.outputs.python == 'true'
     runs-on: ubuntu-latest
@@ -54,7 +68,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt -r requirements-prod.txt
+          pip install -r requirements-dev.txt -r requirements-postgres.txt
           gunicorn --check-config --config gunicorn.conf.py src.app:app
           python -m playwright install --with-deps chromium
 
@@ -132,9 +146,9 @@ jobs:
 
       - name: No .env or database dumps
         run: |
-          # These three reviewed files contain schema/query source, not data dumps.
+          # Only these exact reviewed paths contain schema/query source, not data dumps.
           if git ls-files \
-          | grep -Ev '^src/(schema|feedback_queries|response_queries)\.sql$|^(.*/)?\.env\.example$' \
+          | grep -Ev '^src/(schema|feedback_queries|response_queries)\.sql$|^src/postgresql/001_initial\.sql$|^(.*/)?\.env\.example$' \
           | grep -Ei '^(.*/)?\.env($|\.)|\.(sql|sqlite3?|db|dump|pem|key)$' ; then
             echo "::error::Environment files, database dumps or key files must not be committed. Add them to .gitignore."
             exit 1

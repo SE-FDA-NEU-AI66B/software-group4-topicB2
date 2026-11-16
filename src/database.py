@@ -73,7 +73,13 @@ class PostgresConnection:
             raise PostgresError('Install requirements-postgres.txt for PostgreSQL support.')
         self.raw = psycopg.connect(database, row_factory=api_row, connect_timeout=5,
                                    prepare_threshold=None)
-        self.raw.execute("SET LOCAL TIME ZONE 'UTC'")
+        try:
+            self.raw.execute("SET LOCAL TIME ZONE 'UTC'")
+            self.raw.execute("SET LOCAL lock_timeout = '5s'")
+            self.raw.execute("SET LOCAL statement_timeout = '15s'")
+        except PostgresError:
+            self.raw.close()
+            raise
 
     def execute(self, statement, parameters=()):
         cursor = self.raw.execute(bind_sql(statement, parameters), parameters)
@@ -112,7 +118,8 @@ def reserve_submission(connection, evaluation_id, student_id):
     if isinstance(connection, PostgresConnection):
         # Transaction-scoped lock also covers the absent-response case. READ
         # COMMITTED sees the winning tab's commit after the lock is acquired.
-        connection.execute('SELECT pg_advisory_xact_lock(?, ?)', (evaluation_id, student_id))
+        connection.execute('SELECT pg_advisory_xact_lock(hashtextextended(?, 0))',
+                           (f'edusurvey/submission/{evaluation_id}/{student_id}',))
     else:
         connection.execute('BEGIN IMMEDIATE')
 
