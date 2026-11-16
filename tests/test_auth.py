@@ -395,3 +395,41 @@ def test_protected_html_redirects_after_logout(logout_client, email, paths):
         assert response.headers["Location"] == "/login"
         assert client.get(response.headers["Location"]).status_code == 200
     assert client.get("/api/evaluations").status_code == 401
+
+
+@pytest.mark.parametrize("email,path,accept,expected", [
+    ("student1@edusurvey.edu", "/evaluations", "text/html", 302),
+    ("student1@edusurvey.edu", "/evaluations/1/complete", "text/html", 302),
+    ("student1@edusurvey.edu", "/api/evaluations", "application/json", 401),
+    ("lecturer1@edusurvey.edu", "/lecturer/feedback", "text/html", 302),
+    ("lecturer1@edusurvey.edu", "/api/courses/1/feedback", "application/json", 401),
+    ("admin@edusurvey.edu", "/account", "text/html", 302),
+])
+def test_deleted_account_cannot_reuse_protected_session(client, email, path, accept, expected):
+    """EX-A01: deletion invalidates direct access without first visiting /auth/me."""
+    assert login(client, email).status_code == 200
+    with sqlite3.connect(app_module.DATABASE) as db:
+        db.execute("DELETE FROM users WHERE email=?", (email,))
+    result = client.get(path, headers={"Accept": accept})
+    assert result.status_code == expected
+    if expected == 302:
+        assert result.headers["Location"] == "/login"
+    else:
+        assert result.get_json()["error"]["code"] == "UNAUTHORIZED"
+    assert_anonymous(client)
+
+
+def test_expired_signed_session_cannot_access_protected_data(client, monkeypatch):
+    """EX-S02: a genuinely over-age signed cookie is rejected, not just removed."""
+    from itsdangerous import TimestampSigner
+
+    clock = {"timestamp": 1_700_000_000}
+    monkeypatch.setattr(TimestampSigner, 'get_timestamp', lambda self: clock['timestamp'])
+    assert login(client).status_code == 200
+    assert client.get('/api/auth/me').status_code == 200
+    clock['timestamp'] += int(app_module.app.permanent_session_lifetime.total_seconds()) + 1
+    assert client.get('/api/auth/me').status_code == 401
+    result = client.get('/api/evaluations')
+    assert result.status_code == 401
+    assert set(result.get_json()) == {'error'}
+    assert_anonymous(client)

@@ -217,3 +217,22 @@ def test_offset_deadlines_consistent_across_p0(api_client, monkeypatch, seconds,
     assert api_client.get("/api/evaluations/1/questions").status_code == (400 if seconds == 0 else 200)
     response = api_client.post("/api/submissions", json={"evaluation_id": 1, "answers": {"1": {"rating_value": 5}}})
     assert response.status_code == (400 if seconds == 0 else 201)
+
+
+def test_reassigned_role_cannot_keep_lecturer_feedback_access(api_client):
+    """EX-A02: real login cannot retain lecturer-only data after DB role reassignment."""
+    from werkzeug.security import generate_password_hash
+
+    with closing(sqlite3.connect(app_module.DATABASE)) as db, db:
+        db.execute("UPDATE users SET password_hash=? WHERE id=2", (generate_password_hash("Password123!"),))
+    result = api_client.post('/api/auth/login', json={'email':'lecturer@test.com','password':'Password123!'})
+    assert result.status_code == 200
+    with closing(sqlite3.connect(app_module.DATABASE)) as db, db:
+        db.execute("UPDATE users SET role='student' WHERE id=2")
+    for path in ['/api/courses/1/feedback', '/lecturer/feedback', '/lecturer/feedback/1',
+                 '/api/evaluations/1/feedback/topics', '/api/evaluations/1/feedback/topics/ranking',
+                 '/api/evaluations/1/statistics']:
+        response = api_client.get(path, headers={'Accept':'application/json'})
+        assert response.status_code == 403
+        assert response.get_json()['error']['code'] == 'FORBIDDEN'
+        assert b'The course content was very useful' not in response.data
