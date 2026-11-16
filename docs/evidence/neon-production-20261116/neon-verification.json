@@ -1,0 +1,61 @@
+{
+  "project_id": "steep-firefly-83236241",
+  "branch_id": "br-autumn-tooth-bd5zwmh1",
+  "database": "edusurvey",
+  "checked_at_utc": "2026-11-16T09:21:20.228247+00:00",
+  "scope": "Real Neon TLS, production Flask test client; no public host deployed",
+  "p0": {
+    "US01": "PASS: real password login and role for student, lecturer, administrator",
+    "US02": "PASS: real enrolled student list and three evaluation questions",
+    "US03": "PASS: student2 draft submitted, three answers saved, duplicate 409, completed on reload",
+    "US04": "PASS: assigned lecturer reads the exact committed response and synthetic feedback; role isolation",
+    "US11": "PASS: logout clears access to HTML/API for student and lecturer"
+  },
+  "direct_tls": true,
+  "seed_counts": {
+    "users": 6,
+    "courses": 5,
+    "course_enrollments": 7,
+    "course_lecturers": 5,
+    "evaluations": 10,
+    "questions": 30,
+    "responses": 6,
+    "response_answers": 14,
+    "deadline_reminders": 0
+  },
+  "demo_accounts": {
+    "count": 6,
+    "password_hashes_valid": true,
+    "roles": [
+      "administrator",
+      "lecturer",
+      "student"
+    ]
+  },
+  "foreign_keys": {
+    "validated": 12,
+    "orphan_rows": 0
+  },
+  "pooled_tls": true,
+  "migration_reapply_preserves_data": true,
+  "response_id": 2,
+  "fresh_process_restart": {
+    "runs": 2,
+    "all_nine_table_hashes_unchanged": true,
+    "scope": "Local application process with real Neon; Render restart pending"
+  },
+  "final_counts": {
+    "users": 6,
+    "courses": 5,
+    "course_enrollments": 7,
+    "course_lecturers": 5,
+    "evaluations": 10,
+    "questions": 30,
+    "responses": 6,
+    "response_answers": 16,
+    "deadline_reminders": 0
+  },
+  "student1_evaluation1_remains_available": true,
+  "code_sha": "da6fc76971b5c860d7a5dc2447e141c855ea72ba",
+  "verification_finished_at_utc": "2026-11-16T09:24:37.033836+00:00"
+}
