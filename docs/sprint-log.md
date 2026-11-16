@@ -28,7 +28,7 @@ Complete the Milestone 1 requirements by defining the product vision, personas, 
 | #69 Review requirements and prepare M1 submission | 2 | @tlduongducanh281-jpg |
 | #70 Sprint 1 wrap-up | 2 | @lesyhuy2k6-gif |
 
-**Total committed: 32 points**
+**Historical reported total committed: 32 points (unreconciled; listed rows sum to 29).**
 
 ### Result
 
@@ -45,7 +45,7 @@ Complete the Milestone 1 requirements by defining the product vision, personas, 
 | #69 | 2 | Done | |
 | #70 | 2 | Done | |
 
-**Completed: 32 points. Velocity this sprint: 32**
+**Historical reported completed/velocity: 32 (unverified; listed result rows sum to 29).**
 
 ### Sprint Review
 
@@ -187,6 +187,16 @@ The team completed the main Milestone 2 deliverables:
 Sprint 2 successfully delivered the Milestone 2 technical design and a working end-to-end EduSurvey walking skeleton backed by a real SQLite database.
 
 The final Sprint 2 Project Board contains 14 tracked issues with a final estimated scope of 40 points. All planned Sprint 2 work was completed.
+## Sprint 3 — retrospective evidence gap
+
+The current Board iteration is 2026-09-30–2026-10-13. Its present scope includes
+US01/02/03/04, implementation tasks #15–17/#19–25/#51/#53/#54 and M3 follow-ups
+#126–132. The [current Board snapshot](evidence/212/github-audit.json) records
+states; it does not establish what was committed at sprint start. No reliable
+committed/completed story-point baseline or Sprint 3 wrap-up was found. Velocity,
+capacity and ceremony attendance remain unverified. Do not infer points from
+estimated hours or retroactively claim the present Board was the planning board.
+
 ## Sprint 4
 
 **Evidence qualification (#190, 2026-11-15):** the narrative below is the
@@ -264,3 +274,40 @@ The current audit is recorded in [sprint4-backlog.md](sprint4-backlog.md), with 
 - After user-authorized Projects access, all **21 Board items** were updated and re-read successfully. Testing Sprint is Sprint 4 for all five P0 stories and all 16 tasks; Testing Priority, assignees and Estimated hours match the issue register. Existing development Sprint 3 values on closed stories and Point/Points values are preserved. #163 is In Review and closes through its reviewed PR; seven follow-ups remain Todo. The real Sprint 4 iteration (2026-11-01, 13 days, already completed) was reused without rewriting dates.
 
 The existing TBD velocity fields above remain pending verified planning/closure evidence; hours must not be substituted for story points.
+
+## Sprint 5 — delivery audit, wrap-up pending
+
+User-confirmed Scrum Master: Khuất Đình Trung. Goal: deliver all five P0 workflows
+and public M5 operations/release evidence. Current Board iteration: 2026-11-14–27;
+this does not change the instructor deadline or establish a late arrangement.
+
+The #200 core plan lists 13 issues (#200–212), totaling **43 estimated hours**.
+This is planned task effort, not story points, actual hours worked or capacity.
+At the captured audit eight are closed (#201–207/#210); #200/#208/#209/#211/#212
+remain open. Ten M5 PRs are merged with observed green head checks and independent
+approvals. Completed code includes student/lecturer navigation, backend contracts,
+demo database/recovery tooling, deployment configuration, health/logging,
+verification tooling and operations documentation. Closed tasks do not prove
+public deployment, live acceptance or final submission. See the
+[wrap-up audit](sprint5-wrap-up.md) for exact PR/review/issue links, owners and
+unfinished gates. No new ceremony attendance or capacity is asserted.
+
+Committed story points: **unverified**. Completed story points: **unverified**.
+Velocity: **not calculable from available evidence**. Recover a dated planning
+baseline and completion mapping; do not reuse the five P0 stories' 18 points as
+new Sprint 5 delivery credit or convert the 43 task-hours to points.
+
+### Five-sprint metrics audit
+
+| Sprint / current Board dates | Historical committed SP | Historical completed SP / velocity | Verified interpretation / unresolved evidence |
+|---|---|---|---|
+| 1 / Sep 2–15 | Reported 32; rows sum 29 | Reported 32/32; rows sum 29 | Arithmetic discrepancy unresolved. #61 was created/closed Sep 20, so its GitHub closure does not establish completion within these iteration dates. Its issue estimate is hours, not independent proof of SP. Preserve historical claims without certifying them. |
+| 2 / Sep 16–29 | Final retrospective estimate 40 | Reported 40/40 | Existing log explicitly says points were finalized at wrap-up. Not a verified contemporaneous commitment/velocity baseline. |
+| 3 / Sep 30–Oct 13 | Unknown | Unknown | Missing historical planning/closure point evidence; current Board scope alone is insufficient. |
+| 4 / Nov 1–13 | TBD | TBD | Existing log and refinement explicitly retain TBD; 43 task-hours and 18 P0 story estimates are not verified velocity. |
+| 5 / Nov 14–27 | Unknown | Unknown | 13 core tasks/43 estimated hours; eight closed issues at capture. No SP baseline or completed-point mapping. Public release and wrap-up remain pending. |
+
+The table reconciles source quality; it does not invent missing metrics. Current
+Point/Points fields in the captured Board snapshot cannot reconstruct historical
+planning decisions. Historical attendance/retro text above is retained as prior
+team reporting and is not independently re-attested by this audit.
