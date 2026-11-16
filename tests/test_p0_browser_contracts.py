@@ -565,16 +565,22 @@ def test_saved_feedback_cross_role_after_closure(browser_app, viewport):
 
 
 @pytest.mark.parametrize("step", ["list", "questions", "submit"])
-@pytest.mark.parametrize("failure", ["html-503", "malformed-200"])
+@pytest.mark.parametrize("failure", ["html-503", "malformed-200", "network"])
 def test_unreadable_api_response_has_useful_recovery(browser_app, step, failure):
     """EX-UX01: non-JSON backend/proxy failures explain recovery and never fake success."""
     browser, url, database = browser_app
     page = browser.new_page()
     endpoint = {"list": "/api/evaluations", "questions": "/api/evaluations/1/questions", "submit": "/api/submissions"}[step]
     pattern = "**" + endpoint
-    page.route(pattern, lambda route: route.fulfill(status=503 if failure == "html-503" else 200,
-               content_type="text/html" if failure == "html-503" else "application/json",
-               body="<html>UPSTREAM_PRIVATE_DIAGNOSTIC</html>" if failure == "html-503" else "{broken-json"))
+    def fail_request(route):
+        if failure == "network":
+            route.abort()
+        else:
+            route.fulfill(status=503 if failure == "html-503" else 200,
+                          content_type="text/html" if failure == "html-503" else "application/json",
+                          body="<html>UPSTREAM_PRIVATE_DIAGNOSTIC</html>" if failure == "html-503" else "{broken-json")
+
+    page.route(pattern, fail_request)
     sign_in(page, url)
     if step != "list":
         page.get_by_role("link", name="Start evaluation").click()
@@ -591,7 +597,7 @@ def test_unreadable_api_response_has_useful_recovery(browser_app, step, failure)
             assert db.execute('SELECT COUNT(*) FROM responses').fetchone()[0] == 0
     else:
         error = page.locator("#errorMessage")
-    expect(error).to_contain_text("The service returned an unreadable response.")
+    expect(error).to_contain_text("Unable to connect to the service." if failure == "network" else "The service returned an unreadable response.")
     expect(error).to_contain_text("try again")
     assert "UPSTREAM_PRIVATE" not in error.inner_text()
     page.unroute(pattern)

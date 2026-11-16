@@ -461,6 +461,12 @@ document.addEventListener("DOMContentLoaded", () => {
         elements.errorMessage.textContent = message;
     }
 
+    function requestErrorMessage(error) {
+        return error instanceof TypeError
+            ? "Unable to connect to the service. Check your connection and try again."
+            : error.message;
+    }
+
     async function readResponse(response) {
         try {
             const data = await response.json();
@@ -538,7 +544,7 @@ document.addEventListener("DOMContentLoaded", () => {
             renderQuestions();
 
         } catch (error) {
-            showError(error.message);
+            showError(requestErrorMessage(error));
         }
     }
 
@@ -609,7 +615,7 @@ document.addEventListener("DOMContentLoaded", () => {
             completeSubmission();
 
         } catch (error) {
-            elements.submitFeedback.textContent = `${error.message} If the connection failed, refresh My Evaluations to check whether your response was saved before retrying.`;
+            elements.submitFeedback.textContent = `${requestErrorMessage(error)} If the connection failed, refresh My Evaluations to check whether your response was saved before retrying.`;
 
         } finally {
             state.submitting = false;

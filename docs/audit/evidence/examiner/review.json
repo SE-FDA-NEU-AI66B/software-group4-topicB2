@@ -9,21 +9,21 @@
     "time": "91.887"
   },
   "final": {
-    "tests": "318",
+    "tests": "321",
     "failures": "0",
     "errors": "0",
     "skipped": "0",
-    "time": "124.603",
-    "reported_wall_seconds": 124.76
+    "time": "124.964",
+    "reported_wall_seconds": 124.97
   },
   "source_sha256": {
     "src/app.py": "bca0c73e8d565c37987438707991dfdb2c5bb72fb66c69f53777f62542b283f1",
-    "src/static/js/evaluations.js": "a610b2aeb7092d7df81f064089f1482e05d1555665442733a0570347c7242781",
-    "src/static/js/complete_evaluation.js": "ed1781d1a821f199b3ea534211ab6c06e536ad7a8bae968e1695d410b445ac7d",
+    "src/static/js/evaluations.js": "cdd528871ff8eabf57755d2297589ab0e4f3bd89046c9f7dbd88f59d14f90043",
+    "src/static/js/complete_evaluation.js": "965384b6939234a58ebe236dc045ed18296835e558b3a1bf610cc9006c72164a",
     "tests/conftest.py": "7bfa9bc4df89470c4dfe6758351fa22cced3ffc6465daafafcba7495e23233fa",
     "tests/test_auth.py": "d682778750fb44c77d903e10bcfc680640f02175ce1ac99a397ca5603029c428",
     "tests/test_backend_runtime.py": "54ec306033b9e2f8ba6649d184d99705d68e25f6dc6ad7db888998540c5a24d9",
-    "tests/test_p0_browser_contracts.py": "f205ef032972342d84246a7a87d4be9381b2ca0ee74d535a2d8e2d920f99d7a5"
+    "tests/test_p0_browser_contracts.py": "5aacf2d8ce8a7b99d74897d1c60a54063a76142416fa53678319028307ed4dad"
   },
   "unchanged_protected_files": {
     "docs/requirements.md": true,
@@ -45,12 +45,13 @@
   "production_db_touched": false,
   "numeric_grade_assigned": false,
   "provenance": [
-    "298 existing tests kept; 20 new variants. Existing expectations not weakened.",
+    "298 existing tests kept;23 added variants, including3 transport-failure cases added during continuation. Existing expectations not weakened.",
     "Shared fixture clock conversion corrected after two failed offset invariants; not a production default-timezone decision.",
     "New Back test corrected its invented admin /login-only assumption: / is also the approved login page. Login content/private-data denial still asserted.",
     "Initial temporary visual script callback was corrected; final captures use deterministic font fallback equally in both versions.",
     "Public host/SHA, general copied-cookie revocation, naive deadline zone, full accessibility/human contribution certification remain outside passing local checks.",
-    "Retained an additional passing assertion that Back after logout does not restore the typed password. Full suite rerun afterwards: 318 passed in124.76s."
+    "Retained an additional passing assertion that Back after logout does not restore the typed password. Full suite rerun afterwards: 318 passed in124.76s.",
+    "User requested continuation; transport abort exposed raw fetch jargon. Added three transport variants, preserved JSON/business errors,9 recovery variants passed, full suite321passed in124.97s. Final normal views match prior captures after paint stabilization; committed screenshots were not overwritten."
   ],
   "test_quality": {
     "duplicate_module_test_functions": 0,
@@ -58,7 +59,8 @@
     "reversed_non_browser_tests": 279,
     "reversed_exit_code": 0,
     "reversed_wall_seconds": 11.33,
-    "scope": "One reversed API/database/runtime/tool ordering; browser tests run in full and focused suites."
+    "scope": "One reversed API/database/runtime/tool ordering; browser tests run in full and focused suites.",
+    "reversed_capture_note": "Reversed run preceded3 added browser transport cases; the279 selected non-browser nodes are unchanged."
   },
   "operations_structure": {
     "ordered_sections": [

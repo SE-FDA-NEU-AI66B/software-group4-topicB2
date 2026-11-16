@@ -1,0 +1,67 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________ test_unreadable_api_response_has_useful_recovery[network-list] ________
+
+browser_app = (<Browser type=<BrowserType name=chromium executable_path=/Users/khuatdinhtrung/Library/Caches/ms-playwright/chromium-...tlvf7s3g16rntq7hy9zl5r0000gn/T/pytest-of-khuatdinhtrung/pytest-104/test_unreadable_api_response_h0/test_edusurvey.db'))
+step = 'list', failure = 'network'
+
+    @pytest.mark.parametrize("step", ["list", "questions", "submit"])
+    @pytest.mark.parametrize("failure", ["html-503", "malformed-200", "network"])
+    def test_unreadable_api_response_has_useful_recovery(browser_app, step, failure):
+        """EX-UX01: non-JSON backend/proxy failures explain recovery and never fake success."""
+        browser, url, database = browser_app
+        page = browser.new_page()
+        endpoint = {"list": "/api/evaluations", "questions": "/api/evaluations/1/questions", "submit": "/api/submissions"}[step]
+        pattern = "**" + endpoint
+        def fail_request(route):
+            if failure == "network":
+                route.abort()
+            else:
+                route.fulfill(status=503 if failure == "html-503" else 200,
+                              content_type="text/html" if failure == "html-503" else "application/json",
+                              body="<html>UPSTREAM_PRIVATE_DIAGNOSTIC</html>" if failure == "html-503" else "{broken-json")
+    
+        page.route(pattern, fail_request)
+        sign_in(page, url)
+        if step != "list":
+            page.get_by_role("link", name="Start evaluation").click()
+        if step == "submit":
+            rating = page.locator('input[type="radio"][value="5"]')
+            rating.focus()
+            page.keyboard.press("Space")
+            expect(rating).to_be_checked()
+            page.locator("#reviewButton").click()
+            page.get_by_role("button", name="Submit evaluation", exact=True).click()
+            error = page.locator("#submitFeedback")
+            expect(page.locator("#submissionSuccess")).not_to_be_visible()
+            with sqlite3.connect(database) as db:
+                assert db.execute('SELECT COUNT(*) FROM responses').fetchone()[0] == 0
+        else:
+            error = page.locator("#errorMessage")
+>       expect(error).to_contain_text("Unable to connect to the service." if failure == "network" else "The service returned an unreadable response.")
+E       AssertionError: Locator expected to contain text 'Unable to connect to the service.'
+E       Actual value: Failed to fetch 
+E       Call log:
+E         - Expect "to_contain_text" locator("#errorMessage") with timeout 5000ms
+E         - waiting for locator("#errorMessage")
+E           11 × locator resolved to <p id="errorMessage">Failed to fetch</p>
+E              - unexpected value "Failed to fetch"
+E       
+E       Aria snapshot:
+E       - paragraph: Failed to fetch
+
+tests/test_p0_browser_contracts.py:600: AssertionError
+------------------------------ Captured log call -------------------------------
+INFO     werkzeug:_internal.py:97 127.0.0.1 - - [16/Nov/2026 13:33:31] "GET / HTTP/1.1" 200 -
+INFO     werkzeug:_internal.py:97 127.0.0.1 - - [16/Nov/2026 13:33:31] "GET /static/css/session.css HTTP/1.1" 200 -
+INFO     werkzeug:_internal.py:97 127.0.0.1 - - [16/Nov/2026 13:33:31] "GET /static/js/login.js HTTP/1.1" 200 -
+INFO     werkzeug:_internal.py:97 127.0.0.1 - - [16/Nov/2026 13:33:31] "GET /static/css/login.css HTTP/1.1" 200 -
+INFO     werkzeug:_internal.py:97 127.0.0.1 - - [16/Nov/2026 13:33:32] "POST /api/auth/login HTTP/1.1" 200 -
+INFO     werkzeug:_internal.py:97 127.0.0.1 - - [16/Nov/2026 13:33:32] "GET /evaluations HTTP/1.1" 200 -
+INFO     werkzeug:_internal.py:97 127.0.0.1 - - [16/Nov/2026 13:33:32] "GET /static/css/session.css HTTP/1.1" 200 -
+INFO     werkzeug:_internal.py:97 127.0.0.1 - - [16/Nov/2026 13:33:32] "GET /static/css/evaluations.css HTTP/1.1" 200 -
+INFO     werkzeug:_internal.py:97 127.0.0.1 - - [16/Nov/2026 13:33:32] "GET /static/js/evaluations.js HTTP/1.1" 200 -
+INFO     werkzeug:_internal.py:97 127.0.0.1 - - [16/Nov/2026 13:33:32] "GET /static/js/session.js HTTP/1.1" 200 -
+=========================== short test summary info ============================
+FAILED tests/test_p0_browser_contracts.py::test_unreadable_api_response_has_useful_recovery[network-list]
+1 failed in 9.99s

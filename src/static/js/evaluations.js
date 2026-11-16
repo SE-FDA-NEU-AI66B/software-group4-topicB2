@@ -153,8 +153,9 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("EduSurvey API error:", error);
 
             showError(
-                error.message ||
-                "Something went wrong. Please try again."
+                error instanceof TypeError
+                    ? "Unable to connect to the service. Check your connection and try again."
+                    : error.message || "Something went wrong. Please try again."
             );
 
         } finally {

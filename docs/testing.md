@@ -88,7 +88,7 @@ Current behavior supersedes earlier dated 401-HTML/old-message snapshots below: 
 
 Scope and actual evidence: [examiner-review-and-fixes.md](audit/examiner-review-and-fixes.md).
 Baseline main `0f924cd`: **298 passed in 92.01s**. Final local suite:
-**318 passed in 124.76s**, zero failures/errors/skips; **20 added variants**.
+**321 passed in 124.97s**, zero failures/errors/skips; **23 added variants**.
 No old expected result, test or scenario was removed/skipped. The shared fixture's
 aware clock was corrected only after its inconsistent absolute instant was
 reproduced; this does not choose production semantics for naive deadlines.
@@ -97,7 +97,7 @@ reproduced; this does not choose production semantics for naive deadlines.
 |---|---|---|
 | EX-A01 | `tests/test_auth.py::test_deleted_account_cannot_reuse_protected_session` (6) | Real login/deletion; student/lecturer/admin protected direct requests deny and clear invalid session without first visiting /me; passed |
 | EX-A02 | `tests/test_backend_runtime.py::test_reassigned_role_cannot_keep_lecturer_feedback_access` | Real lecturer login, DB downgrade; six protected feedback/page/aggregate routes deny with403 and no feedback; passed |
-| EX-UX01 | `tests/test_p0_browser_contracts.py::test_unreadable_api_response_has_useful_recovery` (6) | HTML503/malformed200 on list/questions/submit; useful fallback, recovery controls, no fake success or saved response before retry; passed |
+| EX-UX01 | `tests/test_p0_browser_contracts.py::test_unreadable_api_response_has_useful_recovery` (9) | HTML503/malformed200/transport abort on list/questions/submit; useful fallback, recovery controls, no fake success or saved response before retry; passed |
 | EX-S01 | `tests/test_p0_browser_contracts.py::test_private_history_and_expired_session_require_login` (3) | Three role landings/sign-out/Back/repeated logout/missing-cookie navigation; public login content and protected denial; passed |
 | EX-S02 | `tests/test_auth.py::test_expired_signed_session_cannot_access_protected_data` | Advance actual signer age beyond configured lifetime; same signed cookie denied, not merely deleted; passed |
 | EX-UX02 | `tests/test_p0_browser_contracts.py::test_login_empty_and_invalid_inputs_are_actionable` | Real empty/invalid email form messages/focus, no bad request, valid retry succeeds; passed |

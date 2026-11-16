@@ -3,7 +3,7 @@
 Date: 2026-11-16, Asia/Ho_Chi_Minh. Baseline main:
 `0f924cdddf27a0d76881e3350897db87f91028b6`, after independently merged PRs
 #240/#241/#242. Baseline: **298 passed in 92.01s**, no skipped tests.
-Final local suite: **318 passed in 124.76s**, zero failures/errors/skips.
+Final local suite: **321 passed in 124.97s**, zero failures/errors/skips.
 **Overall M5 release readiness: BLOCKED**, despite local regression success.
 
 The review uses the supplied M5 brief and repository requirements/design/UI/
@@ -22,7 +22,7 @@ NOT VERIFIED. PASS means the scoped correction/check passed, not perfect product
 |---|---|---|---|---|---|---|
 | EX-A01 — CONFIRMED BUG: deleted account could still open protected pages/APIs with its signed session | High | Six reproduced failures before fix; only `/api/auth/me` previously checked whether the account still existed | Shared guard trusted presence of user_id; direct page/data requests skipped account existence | Verify account before granting access; clear deleted-account session, retain existing API 401/message and HTML login redirect | `test_auth.py::test_deleted_account_cannot_reuse_protected_session` (6 paths/roles); existing deleted-account `/me` assertion retained | PASS |
 | EX-A02 — CONFIRMED BUG: downgraded lecturer session still read assigned feedback | High | Real credential login, DB role changed to student, feedback API still returned 200; one pre-fix failure | Restricted routes checked cached cookie role without checking current DB role | Current DB role must also belong to allowed roles; return existing FORBIDDEN 403 without feedback; no role auto-switch or new API codes | `test_backend_runtime.py::test_reassigned_role_cannot_keep_lecturer_feedback_access` checks six page/API/aggregate routes and payload absence | PASS |
-| EX-UX01 — CONFIRMED BUG / SAFE UX FIX: HTML/malformed API replies exposed parser errors without useful recovery | Medium | Representative HTML-503 browser reproduction failed before fix; all six new combinations pass afterwards | `response.json()` failures escaped into raw UI messages; complete form also assumed an object root | Human-readable fallback only for unreadable replies; keep approved business errors and working labels; preserve retry/back/edit controls and do not fabricate submission success | `test_p0_browser_contracts.py::test_unreadable_api_response_has_useful_recovery` (list/questions/submit × HTML503/malformed200) | PASS |
+| EX-UX01 — CONFIRMED BUG / SAFE UX FIX: HTML/malformed API replies and transport failures exposed technical errors without useful recovery | Medium | Representative HTML-503 browser reproduction failed before fix; all nine new combinations pass afterwards | `response.json()` and fetch failures escaped into raw UI messages; complete form also assumed an object root | Human-readable fallback for unreadable replies and connection failures; keep approved business errors and working labels; preserve retry/back/edit controls and do not fabricate submission success | `test_p0_browser_contracts.py::test_unreadable_api_response_has_useful_recovery` (list/questions/submit × HTML503/malformed200/transport failure) | PASS |
 | EX-T01 — CONFIRMED BUG in test quality: shared frozen clock changed absolute instant between timezones | Medium | UTC−5 and UTC+7 invariant tests failed; fixture attached tzinfo rather than converting the same instant | Aware test clock returned the same wall hour in every zone | Convert the fixture's explicit UTC instant to requested zone; naive fixture value/old expected results remain unchanged; production timezone policy untouched | `test_backend_runtime.py::test_frozen_fixture_clock_represents_one_instant` (2); 96 related cases and full suite passed | PASS |
 | EX-D01 — SAFE UX FIX in documentation: current UI described US04/US11 as unimplemented | Low | Historical M3 prose contradicted merged pages and real browser tests | Old snapshot presented without current implementation qualification | Add dated current status/entry table; retain historical wireframes/screenshots and original snapshot context | Source/route inspection, existing click-through tests and local link checks | PASS |
 | EX-D02 — SAFE documentation correction: SETUP suggested rerunning initialization to repair missing tables | Medium | Initializer deliberately refuses existing targets; instruction cannot repair existing data safely | Walking-skeleton repair text predated fail-closed startup | Describe path/mount inspection and isolated recovery; link disposable demo launcher; explain CI3.12/local3.14 instead of exclusive3.14 prerequisite | Existing no-overwrite/recovery/launcher tests retained; guidance/link review | PASS |
@@ -49,9 +49,9 @@ is not newly promised by this fix.
 | US03 required fields, ratings/text boundaries, review/submit/receipt | Server refuses invalid/enrollment/deadline/duplicate requests; save/reload/cross-role persistence and concurrent-tab atomicity retained | Existing submission/database workflow tests; merged M5-A03/A04 plus EX-UX01 retry/no false success | PASS |
 | US04 submitted-only feedback/count/rating/comment and ownership | Real lecturer browser list/detail/empty/error tests retained; downgraded role no longer receives feedback | Existing completed19/20/21/ownership tests, EX-A02 and role-mutation proof | PASS |
 | US11 visible sign-out, denied protected access, Back and repeated logout | Student/lecturer/admin sign out; Back exposes only public login without restoring the typed password; repeated logout remains200; missing and over-age cookie denied | Existing keyboard/logout tests; EX-S01 (3 roles), EX-S02 actual signed-age expiry | PASS |
-| Errors explain what happened and next action | Valid business messages unchanged; unreadable list/questions/submission replies now give fallback and working recovery | Six EX-UX01 cases plus existing network/permission/error tests | PASS |
+| Errors explain what happened and next action | Valid business messages unchanged; unreadable list/questions/submission replies now give fallback and working recovery | Nine EX-UX01 cases plus existing network/permission/error tests | PASS |
 | Preserve established UI/evidence/contracts/schema | No template/CSS/requirements/schema edits; four normal before/after captures identical under controlled conditions; no historical images modified | `ui-comparison.json`, source diff and eight newly named screenshots | PASS |
-| Full existing regression suite retained | 298 baseline →318 final; new security/UX/clock assertions; no skip/deletion/expected-result weakening | Baseline/final JUnit and output; Ruff/diff checks | PASS |
+| Full existing regression suite retained | 298 baseline →321 final; new security/UX/clock assertions; no skip/deletion/expected-result weakening | Baseline/final JUnit and output; Ruff/diff checks | PASS |
 | Tests can detect a broken business/security rule | Actual detached-worktree role mutation and temporary-export boundary mutation turn red, then restore green | `role-mutation.json`, `deadline-mutation.json`; workspace unchanged | PASS |
 | Public HTTPS/private browser/physical phone/click-only deployed P0 | No verified origin/provider SHA supplied; local browser viewports do not satisfy public delivery | Current metadata and pending live ledger | BLOCKED |
 | Real hosted persistence/health/logs/monitoring/rollback | Local safety/readiness/restart/restore tests pass; no hosted drill certified | Existing operations/runtime tests and deployment audit; actual platform evidence absent | NOT VERIFIED |
@@ -78,7 +78,7 @@ protocol, not pytest duration or local request timings.
    variants failed; real role downgrade returned200 instead of403; representative
    HTML503 showed a raw parser failure; two frozen-clock invariants failed.
 3. Fixed only the shared access guard, unreadable-response paths and the incorrect
-   shared test clock. Related checks: 137 access/data cases passed, six unreadable
+   shared test clock. Related checks: 137 access/data cases passed, nine unreadable/transport
    recovery cases passed, and96 clock/submission/smoke cases passed.
 4. Continued beyond the first fixes: three role-history/expiry flows, repeated
    logout, actual signed-cookie age, and empty/invalid email keyboard-focus/retry
@@ -90,7 +90,7 @@ protocol, not pytest duration or local request timings.
    and identical. External font stylesheet is neutralized equally before/after,
    with fixed clock/locale/viewport; this is controlled preservation evidence,
    not public-host font or physical-device certification.
-6. Full post-fix regression: 318 passed in124.76s, zero failures/errors/skips.
+6. Full post-fix regression: 321 passed in124.97s, zero failures/errors/skips.
    AST review found no duplicate module-level test-function names and no skip/xfail
    markers. An additional **279 non-browser API/DB/runtime/tool cases passed in
    reversed order in11.33s**; this is one extra ordering, not proof of every
@@ -112,6 +112,8 @@ Images were visually inspected; a full accessibility audit is not claimed.
   [actual output](evidence/examiner/baseline.txt).
 - [Final JUnit](evidence/examiner/final.xml) /
   [actual output](evidence/examiner/final.txt).
+- [Transport failure red](evidence/examiner/network-before.txt);
+  [final visual recheck](evidence/examiner/ui-final-comparison.json), with original images preserved.
 - [Deleted account red](evidence/examiner/deleted-account-before.txt),
   [role red](evidence/examiner/role-before.txt),
   [unreadable UI red](evidence/examiner/unreadable-before.txt),
