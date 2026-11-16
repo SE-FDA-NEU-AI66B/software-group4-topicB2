@@ -1,0 +1,30 @@
+{
+  "client_date": "2026-11-16",
+  "workflow": {
+    "id": 342861060,
+    "name": "CI",
+    "path": ".github/workflows/ci.yml",
+    "state": "active",
+    "html_url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/blob/main/.github/workflows/ci.yml"
+  },
+  "branch": "main",
+  "event": "push",
+  "http_checks": [
+    {
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/workflows/ci.yml/badge.svg?branch=main&event=push",
+      "status": 200,
+      "final_url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/workflows/ci.yml/badge.svg?branch=main&event=push",
+      "content_type": "image/svg+xml; charset=utf-8",
+      "sha256": "ad5834178f7599af9fdda11629d49cae07f2997beec49821b2920eff5bfd50e7",
+      "svg_title": "CI - passing"
+    },
+    {
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/workflows/ci.yml?query=branch%3Amain+event%3Apush",
+      "status": 200,
+      "final_url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/workflows/ci.yml?query=branch%3Amain+event%3Apush",
+      "content_type": "text/html; charset=utf-8",
+      "sha256": "6fa3c663c2ad7624882aa641e51d8b1df5ab3f276654adb5a2c389000be3b78b"
+    }
+  ],
+  "public_application_check": false
+}

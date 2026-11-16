@@ -1,0 +1,97 @@
+{
+  "client_date": "2026-11-16",
+  "captured_at_utc": "2026-11-15T17:36:05.450142+00:00",
+  "operator": "OpenAI Codex; AI-assisted, not an independent teammate run",
+  "scope": "Local loopback HTTP, canonical synthetic M5 seed, fresh private Chromium context and temporary SQLite per viewport; not public HTTPS/deployed-account evidence",
+  "revision": "9c5d55c1a25509d8899102e45b0fd5481699d93c",
+  "app_clock": "2026-11-16T12:00:00; SQL default timestamps not frozen or asserted",
+  "python": "3.11.9",
+  "source_hashes": {
+    "src/init_db.py": "448be3a4cd667242fb9797788636e6fe71eec6711147121c4ce163b7f23ef01d",
+    "src/static/js/login.js": "4698398c71127857b98f32df89136c9aea64cd6eed28f1778b2ed92392ba39f3",
+    "README.md": "3312f45b33e25fdc6241de31392cebb2a85cfac313ab9b119591b47d0c64eb36"
+  },
+  "profiles": [
+    {
+      "viewport": "laptop",
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "fresh_context": true,
+      "first_page_login": true,
+      "verified_accounts": [
+        {
+          "email": "student1@edusurvey.edu",
+          "role": "student"
+        },
+        {
+          "email": "lecturer1@edusurvey.edu",
+          "role": "lecturer"
+        },
+        {
+          "email": "admin@edusurvey.edu",
+          "role": "administrator"
+        }
+      ],
+      "stories_verified": [
+        "US01",
+        "US02",
+        "US03",
+        "US04",
+        "US11"
+      ],
+      "submission_survived_reload": true,
+      "response_count": 1,
+      "answer_count": 3,
+      "lecturer_completed_count": 1,
+      "sign_out_returns_login_and_auth_me_401": true,
+      "screenshots": [
+        "student-reloaded-laptop.png",
+        "lecturer-feedback-laptop.png"
+      ]
+    },
+    {
+      "viewport": "phone",
+      "size": {
+        "width": 390,
+        "height": 844
+      },
+      "fresh_context": true,
+      "first_page_login": true,
+      "verified_accounts": [
+        {
+          "email": "student1@edusurvey.edu",
+          "role": "student"
+        },
+        {
+          "email": "lecturer1@edusurvey.edu",
+          "role": "lecturer"
+        },
+        {
+          "email": "admin@edusurvey.edu",
+          "role": "administrator"
+        }
+      ],
+      "stories_verified": [
+        "US01",
+        "US02",
+        "US03",
+        "US04",
+        "US11"
+      ],
+      "submission_survived_reload": true,
+      "response_count": 1,
+      "answer_count": 3,
+      "lecturer_completed_count": 1,
+      "sign_out_returns_login_and_auth_me_401": true,
+      "screenshots": [
+        "student-reloaded-phone.png",
+        "lecturer-feedback-phone.png"
+      ]
+    }
+  ],
+  "temporary_database_files_removed": true,
+  "public_url_verified": false,
+  "deployed_accounts_verified": false
+}

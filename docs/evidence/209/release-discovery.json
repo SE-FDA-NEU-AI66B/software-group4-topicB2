@@ -1,0 +1,29 @@
+{
+  "client_date": "2026-11-16",
+  "source": "GitHub metadata only; external hosting not ruled out",
+  "homepage": null,
+  "github_deployment_count": 0,
+  "release_count": 0,
+  "deployment_variable_names": [],
+  "environment_names": [],
+  "inspected_issues": [
+    {
+      "number": 200,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/200",
+      "comment_count": 0
+    },
+    {
+      "number": 205,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/205",
+      "comment_count": 0
+    },
+    {
+      "number": 209,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/209",
+      "comment_count": 0
+    }
+  ],
+  "public_url_verified": false,
+  "deployed_accounts_verified": false,
+  "user_url_request": "Pending answer; no URL invented"
+}

@@ -1,0 +1,30 @@
+{
+  "client_date": "2026-11-16",
+  "relative_files_and_anchors_checked": 17,
+  "p0_stories": [
+    "US01",
+    "US02",
+    "US03",
+    "US04",
+    "US11"
+  ],
+  "local_account_roles": [
+    "student",
+    "lecturer",
+    "administrator"
+  ],
+  "actual_badge_and_workflow_http_status": 200,
+  "badge_branch": "main",
+  "badge_event": "push",
+  "local_browser_profiles": [
+    "laptop",
+    "phone"
+  ],
+  "same_readme_hash_as_local_walkthrough": true,
+  "first_line_is_verified_public_url": false,
+  "public_absolute_ui_links_verified": false,
+  "deployed_accounts_verified": false,
+  "independent_review": "pending",
+  "structural_checks_passed": true,
+  "ready_to_close_209": false
+}
