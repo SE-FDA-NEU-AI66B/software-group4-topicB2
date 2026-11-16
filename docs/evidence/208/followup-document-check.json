@@ -1,0 +1,19 @@
+{
+  "date": "2026-11-16",
+  "ordered_sections": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6"
+  ],
+  "prose_words": 340,
+  "prose_limit": 800,
+  "risk_rows": 6,
+  "maintenance_rows": 5,
+  "lesson_rows": 4,
+  "local_links_checked": 14,
+  "final_signoff": false,
+  "review_note": "Independent approval and substantive PR comment verified; #212 Review changes requirement remains separate."
+}
