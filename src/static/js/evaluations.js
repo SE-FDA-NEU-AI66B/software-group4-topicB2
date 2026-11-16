@@ -99,7 +99,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 cache: "no-store"
             });
 
-            const data = await response.json();
+            let data;
+            try {
+                data = await response.json();
+            } catch (_) {
+                if (response.status === 401) window.location.replace("/login");
+                throw new Error("The service returned an unreadable response. Check your connection and try again.");
+            }
 
             if (!response.ok) {
                 const message =
