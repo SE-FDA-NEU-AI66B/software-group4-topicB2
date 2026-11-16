@@ -7,6 +7,7 @@ from pathlib import Path
 
 from flask import Flask
 
+from src.database import DATABASE_ERRORS, check_postgres, is_postgres
 from src.runtime import configure_runtime
 
 
@@ -14,6 +15,13 @@ def prepare_database():
     if os.environ.get("EDUSURVEY_ENV") != "production":
         raise RuntimeError("Startup preparation requires production configuration.")
     database = configure_runtime(Flask(__name__), "unused.db")
+    if is_postgres(database):
+        try:
+            check_postgres(database)
+        except (*DATABASE_ERRORS, OSError, ValueError):
+            raise RuntimeError("PostgreSQL unavailable or schema missing; startup never initializes storage.") from None
+        print("Production PostgreSQL ready; existing data preserved.")
+        return
     mount = Path(os.environ.get("EDUSURVEY_DATA_MOUNT", ""))
     if not mount.is_absolute() or not os.path.ismount(mount) or database.parent.resolve() != mount.resolve():
         raise RuntimeError("Database must be directly on the configured persistent mount.")
