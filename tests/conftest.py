@@ -3,7 +3,7 @@
 import sqlite3
 import sys
 from contextlib import closing
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -62,7 +62,7 @@ def fixed_app_clock(monkeypatch):
     class FixedDateTime(datetime):
         @classmethod
         def now(cls, tz=None):
-            return instant if tz is None else instant.replace(tzinfo=tz)
+            return instant if tz is None else instant.replace(tzinfo=UTC).astimezone(tz)
 
     monkeypatch.setattr(app_module, "datetime", FixedDateTime)
     return instant

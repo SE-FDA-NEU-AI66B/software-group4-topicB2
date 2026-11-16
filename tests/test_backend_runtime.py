@@ -236,3 +236,14 @@ def test_reassigned_role_cannot_keep_lecturer_feedback_access(api_client):
         assert response.status_code == 403
         assert response.get_json()['error']['code'] == 'FORBIDDEN'
         assert b'The course content was very useful' not in response.data
+
+
+@pytest.mark.parametrize("offset", [-5, 7])
+def test_frozen_fixture_clock_represents_one_instant(fixed_app_clock, offset):
+    """EX-T01: timezone-aware fixture clocks must not silently shift the frozen instant."""
+    from datetime import timedelta, timezone
+
+    utc_now = app_module.datetime.now(UTC)
+    local_now = app_module.datetime.now(timezone(timedelta(hours=offset)))
+    assert local_now.timestamp() == utc_now.timestamp()
+    assert app_module.datetime.now() == fixed_app_clock
