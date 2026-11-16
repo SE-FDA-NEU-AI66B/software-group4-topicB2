@@ -10,7 +10,8 @@ Ruff đạt. Log/JUnit riêng ở `/private/tmp/codex-recovery-20261116-verified
 Không sửa historical evidence để ghi đè kết quả cũ.
 
 **PostgreSQL 16 cục bộ đã chạy thật. Neon/Render thực tế chưa được cấp quyền,
-chưa provision, seed, deploy hay cutover.** CI remote chưa chạy branch này.
+chưa provision, seed, deploy hay cutover.** CI remote được kích hoạt khi push;
+trạng thái hiện tại xem checks của các draft PR bên dưới.
 Không coi kết quả local là chứng nhận Neon, public HTTPS hoặc persistence của host.
 
 ## Kiến trúc trước và sau
@@ -238,3 +239,16 @@ kiểm thử Neon SSL/pooled connection thực tế; remote CI xanh; review đ�
 operator mới quyết định deploy. Sau deploy kiểm /health, cả ba roles, 5 P0,
 reload/restart/redeploy giữ cùng response và feedback, cùng thử backup/restore
 và ghi deployed SHA. Các draft PR được chia theo dependency để review; không tự merge hoặc deploy.
+
+
+## Draft PR và thứ tự review
+
+1. [#244 — core database](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/244), base main.
+2. [#245 — integration tests](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/245), base core branch.
+3. [#246 — Render/runbook/evidence](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/246), base integration branch.
+
+Đây là stack để review diff nhỏ. Sau khi reviewer/operator quyết định merge
+PR trước, cần retarget/sync PR sau về main và chạy lại CI trước merge. Push CI
+chạy trên cả ba branch; pull_request trigger hiện chỉ nhắm main/develop.
+Không tự merge hoặc triển khai stack. [CI của branch tích hợp đầy đủ](https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/workflows/ci.yml?query=branch%3Afeature%2Fneon-postgresql-migration)
+phải được kiểm tra trước quyết định phát hành; local PASS không thay thế nó.
