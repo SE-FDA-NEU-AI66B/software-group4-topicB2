@@ -461,6 +461,25 @@ document.addEventListener("DOMContentLoaded", () => {
         elements.errorMessage.textContent = message;
     }
 
+    function requestErrorMessage(error) {
+        return error instanceof TypeError
+            ? "Unable to connect to the service. Check your connection and try again."
+            : error.message;
+    }
+
+    async function readResponse(response) {
+        try {
+            const data = await response.json();
+            if (!data || typeof data !== "object" || Array.isArray(data)) {
+                throw new Error("Invalid response object.");
+            }
+            return data;
+        } catch (_) {
+            if (response.status === 401) window.location.replace("/login");
+            throw new Error("The service returned an unreadable response. Check your connection and try again.");
+        }
+    }
+
     async function loadEvaluation() {
         if (!evaluationId || !/^\d+$/.test(evaluationId)) {
             showError("Invalid evaluation ID.");
@@ -480,7 +499,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             );
 
-            const data = await response.json();
+            const data = await readResponse(response);
 
             if (!response.ok) {
                 if (data?.error?.code === "DUPLICATE_SUBMISSION") {
@@ -525,7 +544,7 @@ document.addEventListener("DOMContentLoaded", () => {
             renderQuestions();
 
         } catch (error) {
-            showError(error.message);
+            showError(requestErrorMessage(error));
         }
     }
 
@@ -581,7 +600,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify(buildSubmissionPayload())
             });
 
-            const data = await response.json();
+            const data = await readResponse(response);
 
             if (!response.ok) {
                 if (data?.error?.code === "DUPLICATE_SUBMISSION") {
@@ -596,7 +615,7 @@ document.addEventListener("DOMContentLoaded", () => {
             completeSubmission();
 
         } catch (error) {
-            elements.submitFeedback.textContent = `${error.message} If the connection failed, refresh My Evaluations to check whether your response was saved before retrying.`;
+            elements.submitFeedback.textContent = `${requestErrorMessage(error)} If the connection failed, refresh My Evaluations to check whether your response was saved before retrying.`;
 
         } finally {
             state.submitting = false;

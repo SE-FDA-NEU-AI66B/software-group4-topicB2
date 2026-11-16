@@ -93,6 +93,27 @@ def login_required(roles=None):
                     "Log in with an account that has the required role.",
                 )
 
+            # A signed session identifies an account; it must not outlive deletion.
+            # Match /api/auth/me's existing invalid-account behavior on direct access.
+            with get_db_connection() as connection:
+                account = connection.execute(
+                    "SELECT id, role FROM users WHERE id = ?", (session["user_id"],)
+                ).fetchone()
+            if account is None:
+                session.clear()
+                wants_json = request.accept_mimetypes.best_match(["application/json", "text/html"]) == "application/json"
+                if not request.path.startswith("/api/") and not wants_json:
+                    return redirect("/login")
+                return api_error(
+                    401, "UNAUTHORIZED", "The authenticated user no longer exists.",
+                    "Log in again with a valid account.",
+                )
+            if allowed_roles is not None and account["role"] not in allowed_roles:
+                return api_error(
+                    403, "FORBIDDEN", "You do not have permission to access this resource.",
+                    "Log in with an account that has the required role.",
+                )
+
             return view(*args, **kwargs)
 
         return wrapped

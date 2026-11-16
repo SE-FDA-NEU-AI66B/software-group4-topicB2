@@ -1,0 +1,44 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_____________ test_frozen_fixture_clock_represents_one_instant[-5] _____________
+
+fixed_app_clock = datetime.datetime(2026, 11, 4, 12, 0), offset = -5
+
+    @pytest.mark.parametrize("offset", [-5, 7])
+    def test_frozen_fixture_clock_represents_one_instant(fixed_app_clock, offset):
+        """EX-T01: timezone-aware fixture clocks must not silently shift the frozen instant."""
+        from datetime import timedelta, timezone
+    
+        utc_now = app_module.datetime.now(UTC)
+        local_now = app_module.datetime.now(timezone(timedelta(hours=offset)))
+>       assert local_now.timestamp() == utc_now.timestamp()
+E       assert 1793811600.0 == 1793793600.0
+E        +  where 1793811600.0 = <built-in method timestamp of datetime.datetime object at 0x1096247b0>()
+E        +    where <built-in method timestamp of datetime.datetime object at 0x1096247b0> = datetime.datetime(2026, 11, 4, 12, 0, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=68400))).timestamp
+E        +  and   1793793600.0 = <built-in method timestamp of datetime.datetime object at 0x109624750>()
+E        +    where <built-in method timestamp of datetime.datetime object at 0x109624750> = datetime.datetime(2026, 11, 4, 12, 0, tzinfo=datetime.timezone.utc).timestamp
+
+tests/test_backend_runtime.py:248: AssertionError
+_____________ test_frozen_fixture_clock_represents_one_instant[7] ______________
+
+fixed_app_clock = datetime.datetime(2026, 11, 4, 12, 0), offset = 7
+
+    @pytest.mark.parametrize("offset", [-5, 7])
+    def test_frozen_fixture_clock_represents_one_instant(fixed_app_clock, offset):
+        """EX-T01: timezone-aware fixture clocks must not silently shift the frozen instant."""
+        from datetime import timedelta, timezone
+    
+        utc_now = app_module.datetime.now(UTC)
+        local_now = app_module.datetime.now(timezone(timedelta(hours=offset)))
+>       assert local_now.timestamp() == utc_now.timestamp()
+E       assert 1793768400.0 == 1793793600.0
+E        +  where 1793768400.0 = <built-in method timestamp of datetime.datetime object at 0x1095d3990>()
+E        +    where <built-in method timestamp of datetime.datetime object at 0x1095d3990> = datetime.datetime(2026, 11, 4, 12, 0, tzinfo=datetime.timezone(datetime.timedelta(seconds=25200))).timestamp
+E        +  and   1793793600.0 = <built-in method timestamp of datetime.datetime object at 0x1095d3ab0>()
+E        +    where <built-in method timestamp of datetime.datetime object at 0x1095d3ab0> = datetime.datetime(2026, 11, 4, 12, 0, tzinfo=datetime.timezone.utc).timestamp
+
+tests/test_backend_runtime.py:248: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_backend_runtime.py::test_frozen_fixture_clock_represents_one_instant[-5]
+FAILED tests/test_backend_runtime.py::test_frozen_fixture_clock_represents_one_instant[7]
+2 failed in 0.05s

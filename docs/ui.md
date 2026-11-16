@@ -1,5 +1,24 @@
 # EduSurvey – Milestone 3 UI Documentation
 
+## Current implementation clarification — 2026-11-16
+
+The M3 snapshot/wireframes below are historical. Their “not implemented” entries
+for US04/US11 no longer describe merged main `0f924cd`; they are retained rather
+than rewriting old evidence. Current local verification is:
+
+| Story | Implemented UI entry | Verification scope |
+|---|---|---|
+| US01 | `/` or `/login`, role-based landing | Real browser credential/validation/role tests |
+| US02 | `/evaluations`, assigned list/search/filter | Real browser and isolated boundary tests |
+| US03 | Start evaluation → answer/review/submit/receipt | Real persisted response and reload/cross-role tests |
+| US04 | Lecturer login → `/lecturer/feedback` → assigned detail | Ratings/comments/counts, ownership, empty/error states |
+| US11 | Visible Sign out in student/lecturer/account navigation | Three role landings, protected denial, keyboard/back/session checks |
+
+This clarification is not public deployment sign-off. See the
+[examiner review](audit/examiner-review-and-fixes.md) for current results and limits.
+No historical screenshots, wireframes, layout, styling or working labels are
+replaced by the error-handling/authentication fixes.
+
 ## 1. P0 Stories, Screens, Routes and Status
 
 ### 1.1. Overview

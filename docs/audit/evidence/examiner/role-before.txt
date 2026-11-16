@@ -1,0 +1,28 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________ test_reassigned_role_cannot_keep_lecturer_feedback_access ___________
+
+api_client = <FlaskClient <Flask 'src.app'>>
+
+    def test_reassigned_role_cannot_keep_lecturer_feedback_access(api_client):
+        """EX-A02: real login cannot retain lecturer-only data after DB role reassignment."""
+        from werkzeug.security import generate_password_hash
+    
+        with closing(sqlite3.connect(app_module.DATABASE)) as db, db:
+            db.execute("UPDATE users SET password_hash=? WHERE id=2", (generate_password_hash("Password123!"),))
+        result = api_client.post('/api/auth/login', json={'email':'lecturer@test.com','password':'Password123!'})
+        assert result.status_code == 200
+        with closing(sqlite3.connect(app_module.DATABASE)) as db, db:
+            db.execute("UPDATE users SET role='student' WHERE id=2")
+        for path in ['/api/courses/1/feedback', '/lecturer/feedback', '/lecturer/feedback/1',
+                     '/api/evaluations/1/feedback/topics', '/api/evaluations/1/feedback/topics/ranking',
+                     '/api/evaluations/1/statistics']:
+            response = api_client.get(path, headers={'Accept':'application/json'})
+>           assert response.status_code == 403
+E           assert 200 == 403
+E            +  where 200 = <WrapperTestResponse streamed [200 OK]>.status_code
+
+tests/test_backend_runtime.py:236: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_backend_runtime.py::test_reassigned_role_cannot_keep_lecturer_feedback_access
+1 failed in 0.21s

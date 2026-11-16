@@ -1,0 +1,154 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+_ test_deleted_account_cannot_reuse_protected_session[student1@edusurvey.edu-/evaluations-text/html-302] _
+
+client = <FlaskClient <Flask 'src.app'>>, email = 'student1@edusurvey.edu'
+path = '/evaluations', accept = 'text/html', expected = 302
+
+    @pytest.mark.parametrize("email,path,accept,expected", [
+        ("student1@edusurvey.edu", "/evaluations", "text/html", 302),
+        ("student1@edusurvey.edu", "/evaluations/1/complete", "text/html", 302),
+        ("student1@edusurvey.edu", "/api/evaluations", "application/json", 401),
+        ("lecturer1@edusurvey.edu", "/lecturer/feedback", "text/html", 302),
+        ("lecturer1@edusurvey.edu", "/api/courses/1/feedback", "application/json", 401),
+        ("admin@edusurvey.edu", "/account", "text/html", 302),
+    ])
+    def test_deleted_account_cannot_reuse_protected_session(client, email, path, accept, expected):
+        """EX-A01: deletion invalidates direct access without first visiting /auth/me."""
+        assert login(client, email).status_code == 200
+        with sqlite3.connect(app_module.DATABASE) as db:
+            db.execute("DELETE FROM users WHERE email=?", (email,))
+        result = client.get(path, headers={"Accept": accept})
+>       assert result.status_code == expected
+E       assert 200 == 302
+E        +  where 200 = <WrapperTestResponse streamed [200 OK]>.status_code
+
+tests/test_auth.py:414: AssertionError
+_ test_deleted_account_cannot_reuse_protected_session[student1@edusurvey.edu-/evaluations/1/complete-text/html-302] _
+
+client = <FlaskClient <Flask 'src.app'>>, email = 'student1@edusurvey.edu'
+path = '/evaluations/1/complete', accept = 'text/html', expected = 302
+
+    @pytest.mark.parametrize("email,path,accept,expected", [
+        ("student1@edusurvey.edu", "/evaluations", "text/html", 302),
+        ("student1@edusurvey.edu", "/evaluations/1/complete", "text/html", 302),
+        ("student1@edusurvey.edu", "/api/evaluations", "application/json", 401),
+        ("lecturer1@edusurvey.edu", "/lecturer/feedback", "text/html", 302),
+        ("lecturer1@edusurvey.edu", "/api/courses/1/feedback", "application/json", 401),
+        ("admin@edusurvey.edu", "/account", "text/html", 302),
+    ])
+    def test_deleted_account_cannot_reuse_protected_session(client, email, path, accept, expected):
+        """EX-A01: deletion invalidates direct access without first visiting /auth/me."""
+        assert login(client, email).status_code == 200
+        with sqlite3.connect(app_module.DATABASE) as db:
+            db.execute("DELETE FROM users WHERE email=?", (email,))
+        result = client.get(path, headers={"Accept": accept})
+>       assert result.status_code == expected
+E       assert 200 == 302
+E        +  where 200 = <WrapperTestResponse streamed [200 OK]>.status_code
+
+tests/test_auth.py:414: AssertionError
+_ test_deleted_account_cannot_reuse_protected_session[student1@edusurvey.edu-/api/evaluations-application/json-401] _
+
+client = <FlaskClient <Flask 'src.app'>>, email = 'student1@edusurvey.edu'
+path = '/api/evaluations', accept = 'application/json', expected = 401
+
+    @pytest.mark.parametrize("email,path,accept,expected", [
+        ("student1@edusurvey.edu", "/evaluations", "text/html", 302),
+        ("student1@edusurvey.edu", "/evaluations/1/complete", "text/html", 302),
+        ("student1@edusurvey.edu", "/api/evaluations", "application/json", 401),
+        ("lecturer1@edusurvey.edu", "/lecturer/feedback", "text/html", 302),
+        ("lecturer1@edusurvey.edu", "/api/courses/1/feedback", "application/json", 401),
+        ("admin@edusurvey.edu", "/account", "text/html", 302),
+    ])
+    def test_deleted_account_cannot_reuse_protected_session(client, email, path, accept, expected):
+        """EX-A01: deletion invalidates direct access without first visiting /auth/me."""
+        assert login(client, email).status_code == 200
+        with sqlite3.connect(app_module.DATABASE) as db:
+            db.execute("DELETE FROM users WHERE email=?", (email,))
+        result = client.get(path, headers={"Accept": accept})
+>       assert result.status_code == expected
+E       assert 200 == 401
+E        +  where 200 = <WrapperTestResponse streamed [200 OK]>.status_code
+
+tests/test_auth.py:414: AssertionError
+_ test_deleted_account_cannot_reuse_protected_session[lecturer1@edusurvey.edu-/lecturer/feedback-text/html-302] _
+
+client = <FlaskClient <Flask 'src.app'>>, email = 'lecturer1@edusurvey.edu'
+path = '/lecturer/feedback', accept = 'text/html', expected = 302
+
+    @pytest.mark.parametrize("email,path,accept,expected", [
+        ("student1@edusurvey.edu", "/evaluations", "text/html", 302),
+        ("student1@edusurvey.edu", "/evaluations/1/complete", "text/html", 302),
+        ("student1@edusurvey.edu", "/api/evaluations", "application/json", 401),
+        ("lecturer1@edusurvey.edu", "/lecturer/feedback", "text/html", 302),
+        ("lecturer1@edusurvey.edu", "/api/courses/1/feedback", "application/json", 401),
+        ("admin@edusurvey.edu", "/account", "text/html", 302),
+    ])
+    def test_deleted_account_cannot_reuse_protected_session(client, email, path, accept, expected):
+        """EX-A01: deletion invalidates direct access without first visiting /auth/me."""
+        assert login(client, email).status_code == 200
+        with sqlite3.connect(app_module.DATABASE) as db:
+            db.execute("DELETE FROM users WHERE email=?", (email,))
+        result = client.get(path, headers={"Accept": accept})
+>       assert result.status_code == expected
+E       assert 200 == 302
+E        +  where 200 = <WrapperTestResponse streamed [200 OK]>.status_code
+
+tests/test_auth.py:414: AssertionError
+_ test_deleted_account_cannot_reuse_protected_session[lecturer1@edusurvey.edu-/api/courses/1/feedback-application/json-401] _
+
+client = <FlaskClient <Flask 'src.app'>>, email = 'lecturer1@edusurvey.edu'
+path = '/api/courses/1/feedback', accept = 'application/json', expected = 401
+
+    @pytest.mark.parametrize("email,path,accept,expected", [
+        ("student1@edusurvey.edu", "/evaluations", "text/html", 302),
+        ("student1@edusurvey.edu", "/evaluations/1/complete", "text/html", 302),
+        ("student1@edusurvey.edu", "/api/evaluations", "application/json", 401),
+        ("lecturer1@edusurvey.edu", "/lecturer/feedback", "text/html", 302),
+        ("lecturer1@edusurvey.edu", "/api/courses/1/feedback", "application/json", 401),
+        ("admin@edusurvey.edu", "/account", "text/html", 302),
+    ])
+    def test_deleted_account_cannot_reuse_protected_session(client, email, path, accept, expected):
+        """EX-A01: deletion invalidates direct access without first visiting /auth/me."""
+        assert login(client, email).status_code == 200
+        with sqlite3.connect(app_module.DATABASE) as db:
+            db.execute("DELETE FROM users WHERE email=?", (email,))
+        result = client.get(path, headers={"Accept": accept})
+>       assert result.status_code == expected
+E       assert 404 == 401
+E        +  where 404 = <WrapperTestResponse streamed [404 NOT FOUND]>.status_code
+
+tests/test_auth.py:414: AssertionError
+_ test_deleted_account_cannot_reuse_protected_session[admin@edusurvey.edu-/account-text/html-302] _
+
+client = <FlaskClient <Flask 'src.app'>>, email = 'admin@edusurvey.edu'
+path = '/account', accept = 'text/html', expected = 302
+
+    @pytest.mark.parametrize("email,path,accept,expected", [
+        ("student1@edusurvey.edu", "/evaluations", "text/html", 302),
+        ("student1@edusurvey.edu", "/evaluations/1/complete", "text/html", 302),
+        ("student1@edusurvey.edu", "/api/evaluations", "application/json", 401),
+        ("lecturer1@edusurvey.edu", "/lecturer/feedback", "text/html", 302),
+        ("lecturer1@edusurvey.edu", "/api/courses/1/feedback", "application/json", 401),
+        ("admin@edusurvey.edu", "/account", "text/html", 302),
+    ])
+    def test_deleted_account_cannot_reuse_protected_session(client, email, path, accept, expected):
+        """EX-A01: deletion invalidates direct access without first visiting /auth/me."""
+        assert login(client, email).status_code == 200
+        with sqlite3.connect(app_module.DATABASE) as db:
+            db.execute("DELETE FROM users WHERE email=?", (email,))
+        result = client.get(path, headers={"Accept": accept})
+>       assert result.status_code == expected
+E       assert 200 == 302
+E        +  where 200 = <WrapperTestResponse streamed [200 OK]>.status_code
+
+tests/test_auth.py:414: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_auth.py::test_deleted_account_cannot_reuse_protected_session[student1@edusurvey.edu-/evaluations-text/html-302]
+FAILED tests/test_auth.py::test_deleted_account_cannot_reuse_protected_session[student1@edusurvey.edu-/evaluations/1/complete-text/html-302]
+FAILED tests/test_auth.py::test_deleted_account_cannot_reuse_protected_session[student1@edusurvey.edu-/api/evaluations-application/json-401]
+FAILED tests/test_auth.py::test_deleted_account_cannot_reuse_protected_session[lecturer1@edusurvey.edu-/lecturer/feedback-text/html-302]
+FAILED tests/test_auth.py::test_deleted_account_cannot_reuse_protected_session[lecturer1@edusurvey.edu-/api/courses/1/feedback-application/json-401]
+FAILED tests/test_auth.py::test_deleted_account_cannot_reuse_protected_session[admin@edusurvey.edu-/account-text/html-302]
+6 failed in 1.00s

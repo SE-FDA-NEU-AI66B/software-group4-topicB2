@@ -9,6 +9,7 @@ host or localhost address is presented as the released application.
 
 [Current M5 deployment readiness and manual setup](docs/audit/m5-deployment-readiness.md) ·
 [Pending live verification ledger](docs/audit/m5-live-verification.md).
+[Latest examiner review and fixes](docs/audit/examiner-review-and-fixes.md).
 
 EduSurvey collects university course evaluations and lets assigned lecturers
 review submitted feedback. The instructions below describe the implemented UI.

@@ -1,0 +1,28 @@
+{
+  "revision": "97d829c94006155571bad5f3204d56a28aa74dab",
+  "scope": "Actual detached disposable Git worktree; no production/current workspace mutation",
+  "node": "tests/test_backend_runtime.py::test_reassigned_role_cannot_keep_lecturer_feedback_access",
+  "original_condition": "if allowed_roles is not None and account[\"role\"] not in allowed_roles:",
+  "mutation": "Disable current database role authorization guard",
+  "stages": [
+    {
+      "stage": "baseline",
+      "exit_code": 0,
+      "output": ".                                                                        [100%]\n1 passed in 0.19s\n"
+    },
+    {
+      "stage": "mutated",
+      "exit_code": 1,
+      "output": "F                                                                        [100%]\n=================================== FAILURES ===================================\n__________ test_reassigned_role_cannot_keep_lecturer_feedback_access ___________\n\napi_client = <FlaskClient <Flask 'src.app'>>\n\n    def test_reassigned_role_cannot_keep_lecturer_feedback_access(api_client):\n        \"\"\"EX-A02: real login cannot retain lecturer-only data after DB role reassignment.\"\"\"\n        from werkzeug.security import generate_password_hash\n    \n        with closing(sqlite3.connect(app_module.DATABASE)) as db, db:\n            db.execute(\"UPDATE users SET password_hash=? WHERE id=2\", (generate_password_hash(\"Password123!\"),))\n        result = api_client.post('/api/auth/login', json={'email':'lecturer@test.com','password':'Password123!'})\n        assert result.status_code == 200\n        with closing(sqlite3.connect(app_module.DATABASE)) as db, db:\n            db.execute(\"UPDATE users SET role='student' WHERE id=2\")\n        for path in ['/api/courses/1/feedback', '/lecturer/feedback', '/lecturer/feedback/1',\n                     '/api/evaluations/1/feedback/topics', '/api/evaluations/1/feedback/topics/ranking',\n                     '/api/evaluations/1/statistics']:\n            response = api_client.get(path, headers={'Accept':'application/json'})\n>           assert response.status_code == 403\nE           assert 200 == 403\nE            +  where 200 = <WrapperTestResponse streamed [200 OK]>.status_code\n\ntests/test_backend_runtime.py:236: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_backend_runtime.py::test_reassigned_role_cannot_keep_lecturer_feedback_access\n1 failed in 0.18s\n"
+    },
+    {
+      "stage": "restored",
+      "exit_code": 0,
+      "output": ".                                                                        [100%]\n1 passed in 0.22s\n"
+    }
+  ],
+  "worktree_removed": true,
+  "workspace_source_unchanged": true,
+  "original_sha256": "bca0c73e8d565c37987438707991dfdb2c5bb72fb66c69f53777f62542b283f1",
+  "restored_sha256": "bca0c73e8d565c37987438707991dfdb2c5bb72fb66c69f53777f62542b283f1"
+}

@@ -562,3 +562,103 @@ def test_saved_feedback_cross_role_after_closure(browser_app, viewport):
     expect(page).to_have_url(url + "/login")
     assert context.request.get(url + "/api/courses/1/feedback").status == 401
     context.close()
+
+
+@pytest.mark.parametrize("step", ["list", "questions", "submit"])
+@pytest.mark.parametrize("failure", ["html-503", "malformed-200", "network"])
+def test_unreadable_api_response_has_useful_recovery(browser_app, step, failure):
+    """EX-UX01: non-JSON backend/proxy failures explain recovery and never fake success."""
+    browser, url, database = browser_app
+    page = browser.new_page()
+    endpoint = {"list": "/api/evaluations", "questions": "/api/evaluations/1/questions", "submit": "/api/submissions"}[step]
+    pattern = "**" + endpoint
+    def fail_request(route):
+        if failure == "network":
+            route.abort()
+        else:
+            route.fulfill(status=503 if failure == "html-503" else 200,
+                          content_type="text/html" if failure == "html-503" else "application/json",
+                          body="<html>UPSTREAM_PRIVATE_DIAGNOSTIC</html>" if failure == "html-503" else "{broken-json")
+
+    page.route(pattern, fail_request)
+    sign_in(page, url)
+    if step != "list":
+        page.get_by_role("link", name="Start evaluation").click()
+    if step == "submit":
+        rating = page.locator('input[type="radio"][value="5"]')
+        rating.focus()
+        page.keyboard.press("Space")
+        expect(rating).to_be_checked()
+        page.locator("#reviewButton").click()
+        page.get_by_role("button", name="Submit evaluation", exact=True).click()
+        error = page.locator("#submitFeedback")
+        expect(page.locator("#submissionSuccess")).not_to_be_visible()
+        with sqlite3.connect(database) as db:
+            assert db.execute('SELECT COUNT(*) FROM responses').fetchone()[0] == 0
+    else:
+        error = page.locator("#errorMessage")
+    expect(error).to_contain_text("Unable to connect to the service." if failure == "network" else "The service returned an unreadable response.")
+    expect(error).to_contain_text("try again")
+    assert "UPSTREAM_PRIVATE" not in error.inner_text()
+    page.unroute(pattern)
+    if step == "list":
+        page.locator("#retryButton").click()
+        expect(page.get_by_role("link", name="Start evaluation")).to_be_visible()
+    elif step == "questions":
+        page.locator("#errorState").get_by_role("link", name="Back to evaluations", exact=True).click()
+        page.get_by_role("link", name="Start evaluation").click()
+        expect(page.locator('input[type="radio"][value="5"]')).to_have_count(1)
+    else:
+        page.get_by_role("button", name="Submit evaluation", exact=True).click()
+        expect(page.locator("#submissionSuccess")).to_be_visible()
+    page.close()
+
+
+@pytest.mark.parametrize("email", ["student@test.com", "lecturer@test.com", "admin@test.com"])
+def test_private_history_and_expired_session_require_login(browser_app, email):
+    """EX-S01: real Back navigation/repeated logout/cookie expiry expose no private page."""
+    browser, url, _ = browser_app
+    context = browser.new_context()
+    page = context.new_page()
+    sign_in(page, url, email)
+    expect(page.get_by_role("button", name="Sign out", exact=True)).to_be_visible()
+    page.get_by_role("link", name="My account", exact=True).click()
+    page.get_by_role("button", name="Sign out", exact=True).click()
+    expect(page).to_have_url(url + "/login")
+    page.go_back(wait_until="domcontentloaded")
+    # / is also the approved public login page; admin history can return there.
+    expect(page.get_by_role("heading", name="Welcome back", exact=True)).to_be_visible()
+    assert page.url in (url + "/", url + "/login")
+    expect(page.locator("#password")).to_have_value("")
+    expect(page.get_by_role("button", name="Sign out", exact=True)).to_have_count(0)
+    assert context.request.post(url + "/api/auth/logout").json() == {"authenticated": False}
+    assert context.request.get(url + "/api/auth/me").status == 401
+    sign_in(page, url, email)
+    expect(page.get_by_role("button", name="Sign out", exact=True)).to_be_visible()
+    context.clear_cookies()
+    page.get_by_role("link", name="My account", exact=True).click()
+    expect(page).to_have_url(url + "/login")
+    expect(page.get_by_role("button", name="Sign out", exact=True)).to_have_count(0)
+    context.close()
+
+
+def test_login_empty_and_invalid_inputs_are_actionable(browser_app):
+    """EX-UX02: visible form validation, focus and retry without sending bad credentials."""
+    browser, url, _ = browser_app
+    page = browser.new_page()
+    sent = []
+    page.on("request", lambda request: sent.append(request.url) if request.url.endswith('/api/auth/login') else None)
+    page.goto(url)
+    page.get_by_role("button", name="Sign in", exact=True).click()
+    expect(page.locator("#email-error")).to_have_text("Please enter your email address.")
+    expect(page.locator("#password-error")).to_have_text("Please enter your password.")
+    expect(page.locator("#email")).to_be_focused()
+    page.locator("#email").fill("invalid-email")
+    page.locator("#password").fill("Password123!")
+    page.get_by_role("button", name="Sign in", exact=True).click()
+    expect(page.locator("#email-error")).to_have_text("Please enter a valid email address.")
+    assert sent == []
+    page.locator("#email").fill("student@test.com")
+    page.get_by_role("button", name="Sign in", exact=True).click()
+    expect(page).to_have_url(url + "/evaluations")
+    page.close()
