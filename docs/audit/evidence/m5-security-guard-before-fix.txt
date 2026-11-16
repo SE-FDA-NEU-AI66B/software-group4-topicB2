@@ -1,0 +1,164 @@
+.FFF..FF....                                                             [100%]
+=================================== FAILURES ===================================
+________ test_ci_rejects_sensitive_tracked_files[.env.production-False] ________
+
+tmp_path = PosixPath('/private/var/folders/jh/l1tlvf7s3g16rntq7hy9zl5r0000gn/T/pytest-of-khuatdinhtrung/pytest-77/test_ci_rejects_sensitive_trac1')
+filename = '.env.production', allowed = False
+
+    @pytest.mark.parametrize("filename,allowed", [
+        (".env", False), (".env.production", False), ("nested/.env.local", False),
+        ("data/demo.db", False), ("data/demo.sqlite3", False), ("backup.dump", False),
+        ("service.pem", False), ("service.key", False),
+        (".env.example", True), ("src/schema.sql", True),
+        ("src/feedback_queries.sql", True), ("README.md", True),
+    ])
+    def test_ci_rejects_sensitive_tracked_files(tmp_path, filename, allowed):
+        """M5-OPS01: even force-added env/DB/key files cannot bypass the CI guard."""
+        import subprocess
+    
+        workflow = yaml.load((ROOT / ".github/workflows/ci.yml").read_text(), Loader=yaml.BaseLoader)
+        step = next(s for s in workflow["jobs"]["secrets"]["steps"] if s.get("name") == "No .env or database dumps")
+        subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+        path = tmp_path / filename
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("synthetic fixture only\n")
+        subprocess.run(["git", "add", "--", filename], cwd=tmp_path, check=True)
+        result = subprocess.run(["bash", "-eo", "pipefail", "-c", step["run"]], cwd=tmp_path, capture_output=True, text=True)
+>       assert (result.returncode == 0) is allowed, result.stdout + result.stderr
+E       AssertionError: Clean.
+E         
+E       assert (0 == 0) is False
+E        +  where 0 = CompletedProcess(args=['bash', '-eo', 'pipefail', '-c', '# These three reviewed files contain schema/query source, not...ot be committed. Add them to .gitignore."\n  exit 1\nfi\necho "Clean."\n'], returncode=0, stdout='Clean.\n', stderr='').returncode
+
+tests/test_ci_gate.py:135: AssertionError
+_______ test_ci_rejects_sensitive_tracked_files[nested/.env.local-False] _______
+
+tmp_path = PosixPath('/private/var/folders/jh/l1tlvf7s3g16rntq7hy9zl5r0000gn/T/pytest-of-khuatdinhtrung/pytest-77/test_ci_rejects_sensitive_trac2')
+filename = 'nested/.env.local', allowed = False
+
+    @pytest.mark.parametrize("filename,allowed", [
+        (".env", False), (".env.production", False), ("nested/.env.local", False),
+        ("data/demo.db", False), ("data/demo.sqlite3", False), ("backup.dump", False),
+        ("service.pem", False), ("service.key", False),
+        (".env.example", True), ("src/schema.sql", True),
+        ("src/feedback_queries.sql", True), ("README.md", True),
+    ])
+    def test_ci_rejects_sensitive_tracked_files(tmp_path, filename, allowed):
+        """M5-OPS01: even force-added env/DB/key files cannot bypass the CI guard."""
+        import subprocess
+    
+        workflow = yaml.load((ROOT / ".github/workflows/ci.yml").read_text(), Loader=yaml.BaseLoader)
+        step = next(s for s in workflow["jobs"]["secrets"]["steps"] if s.get("name") == "No .env or database dumps")
+        subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+        path = tmp_path / filename
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("synthetic fixture only\n")
+        subprocess.run(["git", "add", "--", filename], cwd=tmp_path, check=True)
+        result = subprocess.run(["bash", "-eo", "pipefail", "-c", step["run"]], cwd=tmp_path, capture_output=True, text=True)
+>       assert (result.returncode == 0) is allowed, result.stdout + result.stderr
+E       AssertionError: Clean.
+E         
+E       assert (0 == 0) is False
+E        +  where 0 = CompletedProcess(args=['bash', '-eo', 'pipefail', '-c', '# These three reviewed files contain schema/query source, not...ot be committed. Add them to .gitignore."\n  exit 1\nfi\necho "Clean."\n'], returncode=0, stdout='Clean.\n', stderr='').returncode
+
+tests/test_ci_gate.py:135: AssertionError
+_________ test_ci_rejects_sensitive_tracked_files[data/demo.db-False] __________
+
+tmp_path = PosixPath('/private/var/folders/jh/l1tlvf7s3g16rntq7hy9zl5r0000gn/T/pytest-of-khuatdinhtrung/pytest-77/test_ci_rejects_sensitive_trac3')
+filename = 'data/demo.db', allowed = False
+
+    @pytest.mark.parametrize("filename,allowed", [
+        (".env", False), (".env.production", False), ("nested/.env.local", False),
+        ("data/demo.db", False), ("data/demo.sqlite3", False), ("backup.dump", False),
+        ("service.pem", False), ("service.key", False),
+        (".env.example", True), ("src/schema.sql", True),
+        ("src/feedback_queries.sql", True), ("README.md", True),
+    ])
+    def test_ci_rejects_sensitive_tracked_files(tmp_path, filename, allowed):
+        """M5-OPS01: even force-added env/DB/key files cannot bypass the CI guard."""
+        import subprocess
+    
+        workflow = yaml.load((ROOT / ".github/workflows/ci.yml").read_text(), Loader=yaml.BaseLoader)
+        step = next(s for s in workflow["jobs"]["secrets"]["steps"] if s.get("name") == "No .env or database dumps")
+        subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+        path = tmp_path / filename
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("synthetic fixture only\n")
+        subprocess.run(["git", "add", "--", filename], cwd=tmp_path, check=True)
+        result = subprocess.run(["bash", "-eo", "pipefail", "-c", step["run"]], cwd=tmp_path, capture_output=True, text=True)
+>       assert (result.returncode == 0) is allowed, result.stdout + result.stderr
+E       AssertionError: Clean.
+E         
+E       assert (0 == 0) is False
+E        +  where 0 = CompletedProcess(args=['bash', '-eo', 'pipefail', '-c', '# These three reviewed files contain schema/query source, not...ot be committed. Add them to .gitignore."\n  exit 1\nfi\necho "Clean."\n'], returncode=0, stdout='Clean.\n', stderr='').returncode
+
+tests/test_ci_gate.py:135: AssertionError
+__________ test_ci_rejects_sensitive_tracked_files[service.pem-False] __________
+
+tmp_path = PosixPath('/private/var/folders/jh/l1tlvf7s3g16rntq7hy9zl5r0000gn/T/pytest-of-khuatdinhtrung/pytest-77/test_ci_rejects_sensitive_trac6')
+filename = 'service.pem', allowed = False
+
+    @pytest.mark.parametrize("filename,allowed", [
+        (".env", False), (".env.production", False), ("nested/.env.local", False),
+        ("data/demo.db", False), ("data/demo.sqlite3", False), ("backup.dump", False),
+        ("service.pem", False), ("service.key", False),
+        (".env.example", True), ("src/schema.sql", True),
+        ("src/feedback_queries.sql", True), ("README.md", True),
+    ])
+    def test_ci_rejects_sensitive_tracked_files(tmp_path, filename, allowed):
+        """M5-OPS01: even force-added env/DB/key files cannot bypass the CI guard."""
+        import subprocess
+    
+        workflow = yaml.load((ROOT / ".github/workflows/ci.yml").read_text(), Loader=yaml.BaseLoader)
+        step = next(s for s in workflow["jobs"]["secrets"]["steps"] if s.get("name") == "No .env or database dumps")
+        subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+        path = tmp_path / filename
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("synthetic fixture only\n")
+        subprocess.run(["git", "add", "--", filename], cwd=tmp_path, check=True)
+        result = subprocess.run(["bash", "-eo", "pipefail", "-c", step["run"]], cwd=tmp_path, capture_output=True, text=True)
+>       assert (result.returncode == 0) is allowed, result.stdout + result.stderr
+E       AssertionError: Clean.
+E         
+E       assert (0 == 0) is False
+E        +  where 0 = CompletedProcess(args=['bash', '-eo', 'pipefail', '-c', '# These three reviewed files contain schema/query source, not...ot be committed. Add them to .gitignore."\n  exit 1\nfi\necho "Clean."\n'], returncode=0, stdout='Clean.\n', stderr='').returncode
+
+tests/test_ci_gate.py:135: AssertionError
+__________ test_ci_rejects_sensitive_tracked_files[service.key-False] __________
+
+tmp_path = PosixPath('/private/var/folders/jh/l1tlvf7s3g16rntq7hy9zl5r0000gn/T/pytest-of-khuatdinhtrung/pytest-77/test_ci_rejects_sensitive_trac7')
+filename = 'service.key', allowed = False
+
+    @pytest.mark.parametrize("filename,allowed", [
+        (".env", False), (".env.production", False), ("nested/.env.local", False),
+        ("data/demo.db", False), ("data/demo.sqlite3", False), ("backup.dump", False),
+        ("service.pem", False), ("service.key", False),
+        (".env.example", True), ("src/schema.sql", True),
+        ("src/feedback_queries.sql", True), ("README.md", True),
+    ])
+    def test_ci_rejects_sensitive_tracked_files(tmp_path, filename, allowed):
+        """M5-OPS01: even force-added env/DB/key files cannot bypass the CI guard."""
+        import subprocess
+    
+        workflow = yaml.load((ROOT / ".github/workflows/ci.yml").read_text(), Loader=yaml.BaseLoader)
+        step = next(s for s in workflow["jobs"]["secrets"]["steps"] if s.get("name") == "No .env or database dumps")
+        subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+        path = tmp_path / filename
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("synthetic fixture only\n")
+        subprocess.run(["git", "add", "--", filename], cwd=tmp_path, check=True)
+        result = subprocess.run(["bash", "-eo", "pipefail", "-c", step["run"]], cwd=tmp_path, capture_output=True, text=True)
+>       assert (result.returncode == 0) is allowed, result.stdout + result.stderr
+E       AssertionError: Clean.
+E         
+E       assert (0 == 0) is False
+E        +  where 0 = CompletedProcess(args=['bash', '-eo', 'pipefail', '-c', '# These three reviewed files contain schema/query source, not...ot be committed. Add them to .gitignore."\n  exit 1\nfi\necho "Clean."\n'], returncode=0, stdout='Clean.\n', stderr='').returncode
+
+tests/test_ci_gate.py:135: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_ci_gate.py::test_ci_rejects_sensitive_tracked_files[.env.production-False]
+FAILED tests/test_ci_gate.py::test_ci_rejects_sensitive_tracked_files[nested/.env.local-False]
+FAILED tests/test_ci_gate.py::test_ci_rejects_sensitive_tracked_files[data/demo.db-False]
+FAILED tests/test_ci_gate.py::test_ci_rejects_sensitive_tracked_files[service.pem-False]
+FAILED tests/test_ci_gate.py::test_ci_rejects_sensitive_tracked_files[service.key-False]
+5 failed, 7 passed in 0.52s

@@ -4,7 +4,7 @@ services:
     name: edusurvey
     runtime: python
     branch: main
-    plan: starter
+    plan: 0.5c-512mb
     region: singapore
     numInstances: 1
     autoDeployTrigger: 'off'

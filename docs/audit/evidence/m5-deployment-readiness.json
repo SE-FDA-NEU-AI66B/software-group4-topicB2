@@ -1,0 +1,374 @@
+{
+  "captured_at": "2026-11-16T12:08:02.137648+07:00",
+  "base_main_sha": "b26dfc896f679841be7da442edb1590a85a10bdd",
+  "branch": "docs/m5-deployment-readiness",
+  "repository": {
+    "default_branch": "main",
+    "homepage": null,
+    "html_url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2",
+    "permissions": {
+      "admin": false,
+      "maintain": false,
+      "pull": true,
+      "push": true,
+      "triage": true
+    }
+  },
+  "deployments": [],
+  "releases": [],
+  "variable_names": {
+    "total_count": 0,
+    "variables": []
+  },
+  "environments": {
+    "environments": [],
+    "total_count": 0
+  },
+  "effective_main_rules": [
+    {
+      "type": "deletion",
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "SE-FDA-NEU-AI66B",
+      "ruleset_id": 21540407
+    },
+    {
+      "type": "non_fast_forward",
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "SE-FDA-NEU-AI66B",
+      "ruleset_id": 21540407
+    },
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 1,
+        "dismiss_stale_reviews_on_push": false,
+        "required_reviewers": [],
+        "require_code_owner_review": false,
+        "require_last_push_approval": false,
+        "required_review_thread_resolution": false,
+        "require_extra_approval_for_unattributed_changes": true,
+        "allowed_merge_methods": [
+          "merge",
+          "squash",
+          "rebase"
+        ]
+      },
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "SE-FDA-NEU-AI66B",
+      "ruleset_id": 21540407
+    }
+  ],
+  "latest_green_main": {
+    "id": 43804267947,
+    "html_url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43804267947",
+    "head_sha": "b26dfc896f679841be7da442edb1590a85a10bdd",
+    "conclusion": "success",
+    "run_started_at": "2026-11-16T04:28:05Z",
+    "updated_at": "2026-11-16T04:30:03Z"
+  },
+  "main_ci_elapsed_seconds": 118,
+  "main_ci_jobs": [
+    {
+      "name": "No secrets committed",
+      "conclusion": "success",
+      "started_at": "2026-11-16T04:28:11Z",
+      "completed_at": "2026-11-16T04:28:19Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:28:12Z",
+          "completed_at": "2026-11-16T04:28:14Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:28:14Z",
+          "completed_at": "2026-11-16T04:28:17Z"
+        },
+        {
+          "name": "Scan for obvious credentials",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:28:17Z",
+          "completed_at": "2026-11-16T04:28:17Z"
+        },
+        {
+          "name": "No .env or database dumps",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:28:17Z",
+          "completed_at": "2026-11-16T04:28:17Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:28:17Z",
+          "completed_at": "2026-11-16T04:28:17Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:28:17Z",
+          "completed_at": "2026-11-16T04:28:17Z"
+        }
+      ]
+    },
+    {
+      "name": "Detect stack",
+      "conclusion": "success",
+      "started_at": "2026-11-16T04:28:11Z",
+      "completed_at": "2026-11-16T04:28:17Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:28:12Z",
+          "completed_at": "2026-11-16T04:28:12Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:28:12Z",
+          "completed_at": "2026-11-16T04:28:14Z"
+        },
+        {
+          "name": "Run if ls requirements.txt pyproject.toml setup.py 2>/dev/null | grep -q .; then",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:28:14Z",
+          "completed_at": "2026-11-16T04:28:14Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:28:14Z",
+          "completed_at": "2026-11-16T04:28:14Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:28:14Z",
+          "completed_at": "2026-11-16T04:28:14Z"
+        }
+      ]
+    },
+    {
+      "name": "Python tests",
+      "conclusion": "success",
+      "started_at": "2026-11-16T04:28:19Z",
+      "completed_at": "2026-11-16T04:29:51Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:28:20Z",
+          "completed_at": "2026-11-16T04:28:20Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:28:20Z",
+          "completed_at": "2026-11-16T04:28:21Z"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:28:21Z",
+          "completed_at": "2026-11-16T04:28:22Z"
+        },
+        {
+          "name": "Install dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:28:22Z",
+          "completed_at": "2026-11-16T04:28:47Z"
+        },
+        {
+          "name": "Lint",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:28:47Z",
+          "completed_at": "2026-11-16T04:28:47Z"
+        },
+        {
+          "name": "Test",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:28:47Z",
+          "completed_at": "2026-11-16T04:29:49Z"
+        },
+        {
+          "name": "Publish test summary",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:29:49Z",
+          "completed_at": "2026-11-16T04:29:49Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:29:49Z",
+          "completed_at": "2026-11-16T04:29:49Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:29:49Z",
+          "completed_at": "2026-11-16T04:29:50Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:29:50Z",
+          "completed_at": "2026-11-16T04:29:50Z"
+        }
+      ]
+    },
+    {
+      "name": "Node build and tests",
+      "conclusion": "skipped",
+      "started_at": "2026-11-16T04:28:17Z",
+      "completed_at": "2026-11-16T04:28:17Z",
+      "steps": []
+    },
+    {
+      "name": "CI gate",
+      "conclusion": "success",
+      "started_at": "2026-11-16T04:29:54Z",
+      "completed_at": "2026-11-16T04:30:02Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:29:54Z",
+          "completed_at": "2026-11-16T04:29:57Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:29:57Z",
+          "completed_at": "2026-11-16T04:30:00Z"
+        },
+        {
+          "name": "Require successful tests and security checks",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:30:00Z",
+          "completed_at": "2026-11-16T04:30:00Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:30:00Z",
+          "completed_at": "2026-11-16T04:30:00Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-16T04:30:00Z",
+          "completed_at": "2026-11-16T04:30:00Z"
+        }
+      ]
+    },
+    {
+      "name": "Deploy tested main to Render",
+      "conclusion": "skipped",
+      "started_at": "2026-11-16T04:30:03Z",
+      "completed_at": "2026-11-16T04:30:02Z",
+      "steps": []
+    }
+  ],
+  "pending_prs": [
+    {
+      "headRefOid": "dc0007545eb08343d01d060ae0921f644742b17b",
+      "mergeable": "MERGEABLE",
+      "reviewDecision": "REVIEW_REQUIRED",
+      "state": "OPEN",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/241"
+    },
+    {
+      "headRefOid": "388d4a8aba674b3029b46b6059d86ef0fac9857c",
+      "reviewDecision": "REVIEW_REQUIRED",
+      "state": "OPEN",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/240"
+    }
+  ],
+  "validation": {
+    "ruff": "passed",
+    "gunicorn_config": "passed",
+    "workflow_yaml_parse": "passed",
+    "blueprint_local_parse": "passed; provider-side validation not performed",
+    "sensitive_filename_guard": "12 passed; 5 red variants before fix",
+    "current_tracked_credential_pattern_scan": "passed; filename-only output; limited scan",
+    "local_markdown_links": "passed",
+    "ui_requirements_p0_schema_modified": false
+  },
+  "python": "3.14.8",
+  "public_url": null,
+  "public_https_verified": false,
+  "provider_sha": null,
+  "release_v1_0_verified": false,
+  "mutating_external_actions": [],
+  "source_hashes": {
+    ".github/workflows/ci.yml": "77aa67f313e3ceef9e0868d64b79555fc266c2e68199c8b3cfd566558eb6dd81",
+    "render.yaml": "0cd68138985084cf7c3ea859d462c3f8614c33127d2ebcdd5cb1ffac37363fdc",
+    "src/app.py": "a34e7609a5ab1e2be3dcf9462ba972a2c217fcb870c7c2eafe662416f1dbfd0a",
+    "src/runtime.py": "abc2498ad18abeec3577ab539727697d13f3be0f699ac70ebb4615d7673c41d6",
+    "src/schema.sql": "24278b984f12a5d09e64c3ef79a1e5cdf31c54f783cab3048dcb43b6d72d6d51",
+    "docs/requirements.md": "7578968745e71d4acd64a98f461ded9efea7faa9e2f7bfc893efac401e5ca49c",
+    "tests/test_ci_gate.py": "5b5c2a8f38aa54619b9ca867c4d2f3d9ba2c13ef0eac2c82da634cc4ccb88c34"
+  },
+  "local_tests": {
+    "tests": "290",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "81.573",
+    "reported_wall_seconds": 81.61
+  },
+  "no_remote_mutations": [
+    "No production deploy or host provisioning",
+    "No GitHub settings change",
+    "No production DB change",
+    "No tag/release publication or course submission",
+    "No final PDF with fabricated metadata"
+  ],
+  "test_environment": {
+    "python": "3.14.8",
+    "playwright": "1.65.2",
+    "browser": "installed Google Chrome 157",
+    "data": "temporary synthetic SQLite, fake-provider cases and real local browser/Gunicorn HTTP",
+    "scope": "local macOS, not physical phone or public-host verification"
+  },
+  "workflow_sha256": "77aa67f313e3ceef9e0868d64b79555fc266c2e68199c8b3cfd566558eb6dd81",
+  "blueprint_sha256": "0cd68138985084cf7c3ea859d462c3f8614c33127d2ebcdd5cb1ffac37363fdc",
+  "final_pdf_guard": {
+    "exit_code": 2,
+    "final_pdf_created": false,
+    "reason": "Real pending metadata rejected before PDF export"
+  },
+  "classic_branch_protection": {
+    "http_status": 404,
+    "verified": false,
+    "interpretation": "Legacy branch-protection endpoint unavailable to this non-admin actor or protection absent; 404 is not treated as proof of absence. Ruleset read-back remains separately recorded."
+  }
+}

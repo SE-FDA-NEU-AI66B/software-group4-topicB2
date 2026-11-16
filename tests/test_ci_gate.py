@@ -111,3 +111,25 @@ def test_non_admin_cannot_apply_ruleset(monkeypatch):
     with pytest.raises(RuntimeError, match="admin access"):
         main_protection.apply_ruleset()
     assert calls == [(f"repos/{main_protection.REPOSITORY}", "GET")]
+
+
+@pytest.mark.parametrize("filename,allowed", [
+    (".env", False), (".env.production", False), ("nested/.env.local", False),
+    ("data/demo.db", False), ("data/demo.sqlite3", False), ("backup.dump", False),
+    ("service.pem", False), ("service.key", False),
+    (".env.example", True), ("src/schema.sql", True),
+    ("src/feedback_queries.sql", True), ("README.md", True),
+])
+def test_ci_rejects_sensitive_tracked_files(tmp_path, filename, allowed):
+    """M5-OPS01: even force-added env/DB/key files cannot bypass the CI guard."""
+    import subprocess
+
+    workflow = yaml.load((ROOT / ".github/workflows/ci.yml").read_text(), Loader=yaml.BaseLoader)
+    step = next(s for s in workflow["jobs"]["secrets"]["steps"] if s.get("name") == "No .env or database dumps")
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+    path = tmp_path / filename
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("synthetic fixture only\n")
+    subprocess.run(["git", "add", "--", filename], cwd=tmp_path, check=True)
+    result = subprocess.run(["bash", "-eo", "pipefail", "-c", step["run"]], cwd=tmp_path, capture_output=True, text=True, check=False)
+    assert (result.returncode == 0) is allowed, result.stdout + result.stderr

@@ -1,0 +1,17 @@
+{
+  "health_sequence": [
+    200,
+    503,
+    200
+  ],
+  "missing_db_not_recreated": true,
+  "scope": "Local Gunicorn production-mode HTTP smoke with temporary synthetic DB; Cookie sent explicitly for loopback only. Not public HTTPS acceptance or persistent-mount provisioning.",
+  "health": {
+    "database": "ok",
+    "status": "ok"
+  },
+  "login_status": 200,
+  "secure_httponly_samesite_cookie": true,
+  "list_status": 200,
+  "evaluation_count": 3
+}

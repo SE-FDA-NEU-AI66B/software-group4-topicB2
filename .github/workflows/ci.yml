@@ -134,9 +134,9 @@ jobs:
         run: |
           # These three reviewed files contain schema/query source, not data dumps.
           if git ls-files \
-          | grep -Ev '^src/(schema|feedback_queries|response_queries)\.sql$' \
-          | grep -E '^(.*/)?\.env$|\.sql$|\.sqlite3?$|\.dump$' ; then
-            echo "::error::Environment files or database dumps must not be committed. Add them to .gitignore."
+          | grep -Ev '^src/(schema|feedback_queries|response_queries)\.sql$|^(.*/)?\.env\.example$' \
+          | grep -Ei '^(.*/)?\.env($|\.)|\.(sql|sqlite3?|db|dump|pem|key)$' ; then
+            echo "::error::Environment files, database dumps or key files must not be committed. Add them to .gitignore."
             exit 1
           fi
           echo "Clean."

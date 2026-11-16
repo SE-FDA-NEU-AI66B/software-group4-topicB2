@@ -83,6 +83,34 @@ separately; the historical red-main result is not rewritten.
 Current behavior supersedes earlier dated 401-HTML/old-message snapshots below: approved #214 uses canonical API messages, and #215 redirects anonymous protected HTML navigation to `/login` while APIs/JSON clients retain JSON 401. Existing denial scenarios and all old test IDs are retained; their HTML-only assertions are deliberately updated. Topic/ranking/statistics APIs now require assigned lecturer access. [Backend file/route map](backend.md) and [runtime handover](backend-runtime.md) explain the implementation and remaining deployment/security limits.
 
 
+## M5 deployment-readiness configuration audit — 2026-11-16
+
+Coordination #200; [readiness report](audit/m5-deployment-readiness.md). P0
+application/UI/requirements/schema are unchanged on this branch. Pending P0
+fixes remain PR #241 and are not counted as merged by this audit.
+
+| ID | Actual pytest node | Expected / actual |
+|---|---|---|
+| M5-OPS01 | `tests/test_ci_gate.py::test_ci_rejects_sensitive_tracked_files` (12 filename variants) | Execute the real workflow guard in temporary Git repos; reject forced tracked env variants, DB/dump/key files while allowing template/schema/query/README; 12 passed |
+
+The old guard reproduced **5 failed / 7 passed** across the new variants; the
+fix retained the existing gate/security suite. After the final CI/Blueprint
+configuration, full `python -m pytest -q --junitxml=junit.xml` produced
+**290 passed in 81.61s**, zero failures/errors/skips. Actual
+[JUnit](audit/evidence/m5-readiness-pytest.xml) and
+[output](audit/evidence/m5-readiness-pytest.txt) are retained. Local installed Chrome
+was selected by PLAYWRIGHT_CHROMIUM_EXECUTABLE; existing browser E2E, health,
+DB-safety/restart/backup/restore and fake-provider orchestration cases ran.
+
+Ruff, Gunicorn config, workflow/Blueprint YAML/config checks, local links, current
+tracked-file/limited credential-pattern scans and diff checks passed. Separate
+real local production-mode Gunicorn HTTP verified health 200→503→200, missing DB
+not recreated, usable demo login/list and secure cookie attributes. The database
+was temporary synthetic data. No actual public/private-browser/physical-phone,
+provider persistence/rollback, final timing, tag/release or final PDF/submission
+result is claimed. Required main settings are inspected, not modified.
+
+
 ## 1. What we test, and why
 
 Evidence reviewed on 2026-11-15: original M4 documentation (#164), US01 tests (#165), US02 tests (#166 where present), and the team’s US11 work on fetched main `ecc0727`. Integration preserves all original case IDs, the four M4 sections, pending-case markers and historical mutation/run evidence. New verification results below are separate from those historical runs. The later #172/#173 integration adds the already-existing PR lecturer-page routes while preserving main’s shared business functions; unrelated local changes are untouched.
