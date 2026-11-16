@@ -208,6 +208,9 @@ Full run dùng `python -m pytest -q
 --junitxml=/private/tmp/edusurvey-neon-final.xml`, với test URL của cluster
 local mới và Chrome được truyền bằng environment. Kết quả mới ở
 `/private/tmp/edusurvey-neon-final.log` và `.xml`; không ghi đè evidence cũ.
+Bằng chứng mới được lưu riêng: [console](evidence/postgresql-migration/pytest.txt)
+và [JUnit](evidence/postgresql-migration/pytest.xml).
+
 37 variants mới gồm constraint/FK/unique/rollback, atomic seed/refusal/identity,
 credentials, phân quyền/deleted account, exact JSON parity, deadline ±1 giây
 và offset, Due soon ±24h, concurrent new/draft submit, persisted responses,
@@ -234,4 +237,4 @@ Còn cần: cấp quyền Neon mới qua secret settings; chạy migration/seed 
 kiểm thử Neon SSL/pooled connection thực tế; remote CI xanh; review độc lập;
 operator mới quyết định deploy. Sau deploy kiểm /health, cả ba roles, 5 P0,
 reload/restart/redeploy giữ cùng response và feedback, cùng thử backup/restore
-và ghi deployed SHA. Không tự merge, push hay deploy trong phiên triển khai này.
+và ghi deployed SHA. Các draft PR được chia theo dependency để review; không tự merge hoặc deploy.
