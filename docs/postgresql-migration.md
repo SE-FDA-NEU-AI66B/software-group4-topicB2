@@ -1,5 +1,12 @@
 # EduSurvey: SQLite local và Neon PostgreSQL production
 
+**Cập nhật production 2026-11-16:** đã xác minh và migrate/seed synthetic một lần
+trên project hiện có `steep-firefly-83236241`, database `edusurvey`.
+Không tạo project mới hoặc chuyển dữ liệu cũ. PR đã sẵn sàng review;
+chưa merge/deploy. Chi tiết trạng thái mới, kiểm thử và cấu hình secrets/Render:
+[Neon production handoff](neon-production-handoff.md). Các kết quả baseline
+và trạng thái lịch sử bên dưới được giữ để đối chiếu.
+
 ## Trạng thái và baseline — 2026-11-16
 
 Branch triển khai: `feature/neon-postgresql-migration`. Baseline sạch:
