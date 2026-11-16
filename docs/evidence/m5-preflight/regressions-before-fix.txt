@@ -1,0 +1,115 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+__________________ test_team_taught_course_has_one_evaluation __________________
+
+audit_client = <FlaskClient <Flask 'src.app'>>
+
+    def test_team_taught_course_has_one_evaluation(audit_client):
+        """M5-A01 / US02: team teaching cannot duplicate cards or inflate totals."""
+        student_session(audit_client)
+        with sqlite3.connect(app_module.DATABASE) as db:
+            db.execute("INSERT INTO users (id,email,password_hash,full_name,role) VALUES (9,'co@test.com','unused','Co Lecturer','lecturer')")
+            db.execute('INSERT INTO course_lecturers (lecturer_id,course_id) VALUES (9,1)')
+        result = audit_client.get('/api/evaluations').get_json()
+>       assert result['count'] == 1
+E       assert 2 == 1
+
+tests/test_m5_p0_audit.py:34: AssertionError
+__________ test_saved_completion_survives_evaluation_closure[expired] __________
+
+audit_client = <FlaskClient <Flask 'src.app'>>, closed = False
+
+    @pytest.mark.parametrize('closed', [False, True], ids=['expired','closed'])
+    def test_saved_completion_survives_evaluation_closure(audit_client, closed):
+        """M5-A02 / US03: a saved receipt stays available after the deadline/closure."""
+        student_session(audit_client)
+        payload = {'evaluation_id': 1, 'answers': {'1': {'rating_value': 5}, '2': {'text_value': 'Saved feedback.'}}}
+        assert audit_client.post('/api/submissions', json=payload).status_code == 201
+        with sqlite3.connect(app_module.DATABASE) as db:
+            db.execute("UPDATE evaluations SET deadline='2020-01-01', status=? WHERE id=1", ('closed' if closed else 'open',))
+        result = audit_client.get('/api/evaluations/1/questions')
+>       assert result.status_code == 409
+E       assert 400 == 409
+E        +  where 400 = <WrapperTestResponse streamed [400 BAD REQUEST]>.status_code
+
+tests/test_m5_p0_audit.py:49: AssertionError
+__________ test_saved_completion_survives_evaluation_closure[closed] ___________
+
+audit_client = <FlaskClient <Flask 'src.app'>>, closed = True
+
+    @pytest.mark.parametrize('closed', [False, True], ids=['expired','closed'])
+    def test_saved_completion_survives_evaluation_closure(audit_client, closed):
+        """M5-A02 / US03: a saved receipt stays available after the deadline/closure."""
+        student_session(audit_client)
+        payload = {'evaluation_id': 1, 'answers': {'1': {'rating_value': 5}, '2': {'text_value': 'Saved feedback.'}}}
+        assert audit_client.post('/api/submissions', json=payload).status_code == 201
+        with sqlite3.connect(app_module.DATABASE) as db:
+            db.execute("UPDATE evaluations SET deadline='2020-01-01', status=? WHERE id=1", ('closed' if closed else 'open',))
+        result = audit_client.get('/api/evaluations/1/questions')
+>       assert result.status_code == 409
+E       assert 400 == 409
+E        +  where 400 = <WrapperTestResponse streamed [400 BAD REQUEST]>.status_code
+
+tests/test_m5_p0_audit.py:49: AssertionError
+__________ test_simultaneous_submission_is_conflict_not_server_error ___________
+
+audit_client = <FlaskClient <Flask 'src.app'>>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x108d3d370>
+
+    def test_simultaneous_submission_is_conflict_not_server_error(audit_client, monkeypatch):
+        """M5-A03 / US03: competing tabs save once and receive a canonical 409."""
+        original = app_module.get_db_connection
+        first_write = Event()
+        second_write = Event()
+        lock = Lock()
+        writes = 0
+    
+        def connection():
+            db = original()
+    
+            def trace(sql):
+                nonlocal writes
+                if 'INSERT INTO responses' not in sql:
+                    return
+                with lock:
+                    writes += 1
+                    ordinal = writes
+                if ordinal == 1:
+                    # Hold just before persistence: without a write transaction the
+                    # other tab can pass its duplicate SELECT on a stale snapshot.
+                    first_write.set()
+                    second_write.wait(timeout=0.5)
+                else:
+                    second_write.set()
+    
+            db.set_trace_callback(trace)
+            return db
+    
+        monkeypatch.setattr(app_module, 'get_db_connection', connection)
+    
+        def submit(rating):
+            with app_module.app.test_client() as client:
+                student_session(client)
+                result = client.post('/api/submissions', json={'evaluation_id': 1, 'answers': {'1': {'rating_value': rating}, '2': {'text_value': 'Concurrent feedback.'}}})
+                return result.status_code, result.get_json()
+    
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            first = pool.submit(submit, 4)
+            assert first_write.wait(timeout=5)
+            second = pool.submit(submit, 5)
+            results = [first.result(timeout=10), second.result(timeout=10)]
+>       assert sorted(status for status, _ in results) == [201, 409]
+E       assert [201, 503] == [201, 409]
+E         
+E         At index 1 diff: 503 != 409
+E         Use -v to get more diff
+
+tests/test_m5_p0_audit.py:98: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    src.app:runtime.py:26 {"endpoint": "create_submission", "event": "database_unavailable", "request_id": "2a9a826db63949cc94f139f039bb805d", "timestamp": "2026-11-16T04:47:00.895+00:00"}
+=========================== short test summary info ============================
+FAILED tests/test_m5_p0_audit.py::test_team_taught_course_has_one_evaluation
+FAILED tests/test_m5_p0_audit.py::test_saved_completion_survives_evaluation_closure[expired]
+FAILED tests/test_m5_p0_audit.py::test_saved_completion_survives_evaluation_closure[closed]
+FAILED tests/test_m5_p0_audit.py::test_simultaneous_submission_is_conflict_not_server_error
+4 failed in 0.23s

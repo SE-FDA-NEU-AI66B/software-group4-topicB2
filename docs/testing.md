@@ -1220,3 +1220,33 @@ PLAYWRIGHT_CHROMIUM_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/G
 The forbidden variant was then strengthened from a presentation-only 403 interception to real assignment loss/restoration; focused rerun: **1 passed in 3.38s**. CI verifies the final tree. Whole-repository `ruff check .` and `git diff --check` pass. There are 257 retained baseline items plus 8 added variants, no skips. The existing US04 script-injection assertion now checks that no inline script exists rather than hard-coding one script tag, since the topic component introduces a second legitimate external script. The original XSS, ownership, filtering, session, P0 and operations scenarios are retained.
 
 The first full collection attempt identified missing PyYAML in the reused local venv; installing the current committed requirements resolved it. No test was skipped to bypass the dependency. Screenshots in [ui.md](ui.md) were captured through real local interactions and visually inspected. Public deployment/physical mobile, browser timing, classification accuracy, copied-cookie revocation and a full accessibility audit are not established by these checks.
+
+## Pre-submission M5 regression audit — 2026-11-16
+
+Related coordination #200 and US01/02/03/04/11. Full results and release limits:
+[m5-preflight-audit.md](m5-preflight-audit.md). Tests use isolated SQLite;
+API tests freeze the application clock through the shared fixture. Browser
+checks use temporary loopback servers, headless Chromium and synthetic accounts.
+
+| Case ID | Automated pytest node | Scenario / actual result |
+|---|---|---|
+| M5-A01 | `tests/test_m5_p0_audit.py::test_team_taught_course_has_one_evaluation` | US02: two assigned lecturers produce one evaluation/card count and consistent primary lecturer; passed |
+| M5-A02 | `tests/test_m5_p0_audit.py::test_saved_completion_survives_evaluation_closure[expired]`, `[closed]` | US03/US02: existing completion takes precedence for receipt retrieval, remains Completed with one saved response; both passed |
+| M5-A03 | `tests/test_m5_p0_audit.py::test_simultaneous_submission_is_conflict_not_server_error[new-response]`, `[existing-draft]` | US03: concurrent tabs yield 201 + canonical 409, exactly one submitted response/two saved answers; both passed |
+| M5-A04 | `tests/test_p0_browser_contracts.py::test_saved_feedback_cross_role_after_closure[laptop]`, `[phone]` | US01→02→03→11→04: real browser submission, closure/reload receipt, lecturer reads persisted count/rating/comment and logs out; both passed |
+| M5-A05 | `tests/test_feedback_classifier.py::test_keyword_fragments_do_not_create_assessment_topics` | US05 ancillary classifier: examples/latest/contest are not assessment; exam plural remains recognized; passed |
+
+Command: `python -m pytest -q --cov=src --cov-report=term-missing --junitxml=junit.xml`
+with the installed local Chrome executable via `PLAYWRIGHT_CHROMIUM_EXECUTABLE`.
+Actual final result: **286 passed in 87.53s**, zero failures/errors/skips, 91% src
+coverage. Ruff and diff checks passed. Baseline was 278 passed. The first new
+browser test used a direct radio click intercepted by its styled label; corrected
+to genuine keyboard focus + Space, then passed. Initial sandbox binding failures
+were environmental and resolved by the authorized localhost run. ResourceWarnings
+from SQLite test handles on Python 3.14 remain disclosed in the audit metadata.
+
+[JUnit](evidence/m5-preflight/pytest.xml) and
+[coverage summary](evidence/m5-preflight/pytest-summary.txt) retain the actual
+results. Local production Gunicorn health/login/list checks passed. No public
+HTTPS deployment, physical phone, final browser performance, copied-cookie
+revocation, release v1.0 or course submission is certified by these results.

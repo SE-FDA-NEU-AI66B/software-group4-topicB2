@@ -1,4 +1,4 @@
-
+import re
 import sqlite3
 from datetime import UTC, datetime, timedelta
 from functools import wraps
@@ -112,7 +112,14 @@ def get_student_evaluations():
                 e.id,
                 e.title AS survey_title,
                 c.course_name,
-                lecturer.full_name AS lecturer_name,
+                (
+                    SELECT u.full_name
+                    FROM course_lecturers AS cl
+                    JOIN users AS u ON u.id = cl.lecturer_id
+                    WHERE cl.course_id = c.id
+                    ORDER BY u.id
+                    LIMIT 1
+                ) AS lecturer_name,
                 e.deadline AS submission_deadline,
                 e.status AS evaluation_status,
                 EXISTS (
@@ -127,10 +134,6 @@ def get_student_evaluations():
                 ON c.id = e.course_id
             JOIN course_enrollments AS ce
                 ON ce.course_id = c.id
-            LEFT JOIN course_lecturers AS cl
-                ON cl.course_id = c.id
-            LEFT JOIN users AS lecturer
-                ON lecturer.id = cl.lecturer_id
             WHERE ce.student_id = ?
               AND LOWER(e.status) IN ('open', 'closed')
             ORDER BY e.deadline ASC, e.id ASC
@@ -313,7 +316,7 @@ def classify_feedback(comment):
     }
 
     for topic, keywords in topic_keywords.items():
-        if any(keyword in text for keyword in keywords):
+        if any(re.search(r"\b" + re.escape(keyword) + r"s?\b", text) for keyword in keywords):
             return topic
 
     return "Other"
@@ -1051,6 +1054,25 @@ def get_evaluation_questions(evaluation_id):
                 "Select an evaluation assigned to one of your courses.",
             )
 
+        existing = connection.execute(
+            """
+            SELECT id
+            FROM responses
+            WHERE evaluation_id = ?
+              AND student_id = ?
+              AND status = 'submitted'
+            """,
+            (evaluation_id, student_id),
+        ).fetchone()
+
+        if existing:
+            return api_error(
+                409,
+                "DUPLICATE_SUBMISSION",
+                "You have already completed this evaluation.",
+                "Check your submission status instead.",
+            )
+
         if evaluation["status"].lower() != "open":
             return api_error(
                 400,
@@ -1079,25 +1101,6 @@ def get_evaluation_questions(evaluation_id):
                     "The submission deadline has passed.",
                     "Contact the lecturer if you need further assistance.",
                 )
-
-        existing = connection.execute(
-            """
-            SELECT id
-            FROM responses
-            WHERE evaluation_id = ?
-              AND student_id = ?
-              AND status = 'submitted'
-            """,
-            (evaluation_id, student_id),
-        ).fetchone()
-
-        if existing:
-            return api_error(
-                409,
-                "DUPLICATE_SUBMISSION",
-                "You have already completed this evaluation.",
-                "Check your submission status instead.",
-            )
 
         questions = connection.execute(
             """
@@ -1204,6 +1207,11 @@ def create_submission():
                 "Only students can submit course evaluations.",
                 "Log in with a student account.",
             )
+
+        # Reserve the SQLite writer before reading evaluation/duplicate state.
+        # A second tab waits for commit, then observes the saved response (409)
+        # instead of racing an INSERT or overwriting a now-submitted draft.
+        connection.execute("BEGIN IMMEDIATE")
 
         # Verify evaluation and student enrollment.
         evaluation = connection.execute(
