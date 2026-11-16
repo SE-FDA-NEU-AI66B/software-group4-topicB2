@@ -1,0 +1,4148 @@
+{
+  "captured_at": "2026-11-16T10:16:44.337606+07:00",
+  "main_sha": "7c0b06e36fff7690db9f6cec3d9d28a4e0503c92",
+  "scope": "Core M5 #200–212 plus current Board Sprint 5 issues / milestone #2. Exact PR authors and submitted Review records; issue comments are not reviews. Current Board is not historical planning proof.",
+  "query_has_more_prs": true,
+  "board_total": 113,
+  "board_issue_items": [
+    {
+      "number": 54,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/54",
+      "title": "[Task] Design and implement lecturer feedback review interface",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dx-M",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 12,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/12",
+      "title": "[Story]  Define Product Vision for EduSurvey",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7NmYw",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "f03def78",
+        "startDate": "2026-09-02",
+        "title": "Sprint 1"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": 3,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 61,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/61",
+      "title": "[Task] Product Vision & Personas",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7zmes",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "f03def78",
+        "startDate": "2026-09-02",
+        "title": "Sprint 1"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 62,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/62",
+      "title": "[Task] Scenarios",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7zpi0",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "f03def78",
+        "startDate": "2026-09-02",
+        "title": "Sprint 1"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 63,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/63",
+      "title": "[Task] User Stories & Acceptance Criteria",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7zqyU",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "f03def78",
+        "startDate": "2026-09-02",
+        "title": "Sprint 1"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 64,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/64",
+      "title": "[Task] Business Rules",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7zrHQ",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "f03def78",
+        "startDate": "2026-09-02",
+        "title": "Sprint 1"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 65,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/65",
+      "title": "[Task] Screens & Flow Diagram",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7zrvg",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "f03def78",
+        "startDate": "2026-09-02",
+        "title": "Sprint 1"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 66,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/66",
+      "title": "[Task] README & Sprint Log",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7zsQM",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "f03def78",
+        "startDate": "2026-09-02",
+        "title": "Sprint 1"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 67,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/67",
+      "title": "[Task] Create and Refine GitHub Story Issues",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7zsfs",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "f03def78",
+        "startDate": "2026-09-02",
+        "title": "Sprint 1"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg",
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 68,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/68",
+      "title": "[Chore] Refine backlog for Sprint 1",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7zs3I",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "f03def78",
+        "startDate": "2026-09-02",
+        "title": "Sprint 1"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 70,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/70",
+      "title": "[Chore] Sprint 1 wrap-up",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7zxrA",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "f03def78",
+        "startDate": "2026-09-02",
+        "title": "Sprint 1"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif",
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 69,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/69",
+      "title": "[Task] Review requirements and prepare M1 submission",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7ztuI",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "f03def78",
+        "startDate": "2026-09-02",
+        "title": "Sprint 1"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg",
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 15,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/15",
+      "title": "[Task] Design and implement login user interface",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7cdH4",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 16,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/16",
+      "title": "[Task] Develop authentication API and login functionality",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7cfzs",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 17,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/17",
+      "title": "[Task] Design user authentication and role database structure",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7chjU",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 19,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/19",
+      "title": "[Task] Design and implement student survey list interface",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7ctS4",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 20,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/20",
+      "title": "[Task] Develop API for retrieving assigned student evaluations",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7cvyU",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 21,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/21",
+      "title": "[Task] Implement evaluation deadline and status logic",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7cwvw",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 23,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/23",
+      "title": "[Task] Design and implement course evaluation answering interface",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7c7oo",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 24,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/24",
+      "title": "[Task] Develop API for submitting course evaluation responses",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7c9J0",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 25,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/25",
+      "title": "[Task] Design evaluation response data structure and submission rules",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7c-h8",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 27,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/27",
+      "title": "[Task] Design grouped feedback analysis interface",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dDhI",
+      "status": "In Review",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 28,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/28",
+      "title": "[Task] Develop API for grouping feedback by topic",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dItg",
+      "status": "In Progress",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 29,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/29",
+      "title": "[Task] Implement feedback topic classification logic",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dKzo",
+      "status": "Done",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 31,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/31",
+      "title": "[Task] Design feedback statistics dashboard",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dQNw",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 32,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/32",
+      "title": "[Task] Develop API for calculating evaluation statistics",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dRzg",
+      "status": "Done",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 33,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/33",
+      "title": "[Task] Implement response count and average rating queries",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dTk0",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 35,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/35",
+      "title": "[Task] Design common issues ranking interface",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dYKo",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 36,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/36",
+      "title": "[Task] Develop API for ranking feedback issue frequencies",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dZTI",
+      "status": "In Progress",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 37,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/37",
+      "title": "[Task] Implement feedback topic frequency aggregation",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dZz4",
+      "status": "Done",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 39,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/39",
+      "title": "[Task] Create course evaluation form",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dbts",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 40,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/40",
+      "title": "[Task] Create evaluation API",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dcVI",
+      "status": "Done",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 41,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/41",
+      "title": "[Task] Add evaluation and question database structure",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7ddE4",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 43,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/43",
+      "title": "[Task] Add evaluation deadline editing interface",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dhMc",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 44,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/44",
+      "title": "[Task] Develop evaluation deadline update API",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dhnw",
+      "status": "In Progress",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 45,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/45",
+      "title": "[Task] Store evaluation deadline and status",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7diEQ",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 47,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/47",
+      "title": "[Task] Show survey deadline reminder status",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dmQw",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 48,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/48",
+      "title": "[Task] Implement deadline reminder logic",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dnuY",
+      "status": "In Progress",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 49,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/49",
+      "title": "[Task] Add reminder tracking data",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dpng",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 51,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/51",
+      "title": "[Task] Develop API for retrieving lecturer course feedback",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dvRg",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 53,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/53",
+      "title": "[Task] Implement course ownership and feedback access queries",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dw5Q",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 89,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/89",
+      "title": "[Task] Clarify Lecturer and Administrator roles and responsibilities",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg-j-AE",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "9f2483d4",
+        "startDate": "2026-09-16",
+        "title": "Sprint 2"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": 2,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 90,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/90",
+      "title": "[Task] Add administrator management and authentication requirements",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg-j_To",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "9f2483d4",
+        "startDate": "2026-09-16",
+        "title": "Sprint 2"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": 2,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 91,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/91",
+      "title": "[Task] Add scenarios for key EduSurvey workflows",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg-j_yo",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "9f2483d4",
+        "startDate": "2026-09-16",
+        "title": "Sprint 2"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": 3,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 92,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/92",
+      "title": "[Task] Define EduSurvey response time requirements",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg-ktEI",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "9f2483d4",
+        "startDate": "2026-09-16",
+        "title": "Sprint 2"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": 1,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 93,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/93",
+      "title": "[Task] Update UML diagrams and link tasks to Pull Requests",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg-kvzw",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "9f2483d4",
+        "startDate": "2026-09-16",
+        "title": "Sprint 2"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif",
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": 3,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 98,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/98",
+      "title": "[Task] Design EduSurvey architecture and API",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg-nqXo",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "9f2483d4",
+        "startDate": "2026-09-16",
+        "title": "Sprint 2"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": 5,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 99,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/99",
+      "title": "[Task] Design EduSurvey ERD and database schema",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg-nsFQ",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "9f2483d4",
+        "startDate": "2026-09-16",
+        "title": "Sprint 2"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": 5,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 100,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/100",
+      "title": "[Task] Implement database initialization and seed data",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg-nsxM",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "9f2483d4",
+        "startDate": "2026-09-16",
+        "title": "Sprint 2"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": 3,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 101,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/101",
+      "title": "[Task] Implement EduSurvey walking skeleton",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg-ntpg",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "9f2483d4",
+        "startDate": "2026-09-16",
+        "title": "Sprint 2"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": 5,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 102,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/102",
+      "title": "[Task] Create SETUP guide and test on a fresh machine",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg-nu_0",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "9f2483d4",
+        "startDate": "2026-09-16",
+        "title": "Sprint 2"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg",
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": 3,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 103,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/103",
+      "title": "[Task] Document design decisions and M1 changes",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg-nwIY",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "9f2483d4",
+        "startDate": "2026-09-16",
+        "title": "Sprint 2"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": 3,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 104,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/104",
+      "title": "[Chore] Refine backlog for Sprint 2",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg-nw48",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "9f2483d4",
+        "startDate": "2026-09-16",
+        "title": "Sprint 2"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": 3,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 105,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/105",
+      "title": "[Chore] Sprint 2 wrap-up",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg-ny5Y",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "9f2483d4",
+        "startDate": "2026-09-16",
+        "title": "Sprint 2"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": 1,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 119,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/119",
+      "title": "[Chore] Fix CI checks for database schema and Python tests",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg-rqiM",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "9f2483d4",
+        "startDate": "2026-09-16",
+        "title": "Sprint 2"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": 1,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 14,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/14",
+      "title": "[Story] US01 - User Login and Authentication",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7caGw",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 18,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/18",
+      "title": "[Story] US02 - View Available Surveys",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7cnO0",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 22,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/22",
+      "title": "[Story] US03 - Complete Course Evaluation",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7c5ro",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 50,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/50",
+      "title": "[Story] US04 - Review Submitted Feedback",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dtpQ",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 126,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/126",
+      "title": "[Task] [Chore] Refine backlog for Sprint 3",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhCM2Vs",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 127,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/127",
+      "title": "[Task] Create M3 UI documentation and wireframes",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhCM4m4",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 128,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/128",
+      "title": "[Task] Update README with P0 entry points",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhCM5oY",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 129,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/129",
+      "title": "[Task] Implement user-facing error messages and update API design",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhCM6g0",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 130,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/130",
+      "title": "[Task] Test P0 workflows and business rule validation",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhCM72U",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 131,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/131",
+      "title": "[Task] Verify fresh database setup and update SETUP guide",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhCM9XM",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 132,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/132",
+      "title": "[Task] Prepare realistic P0 demo data and verify database constraints",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhCM-W8",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "7d82f1c7",
+        "startDate": "2026-09-30",
+        "title": "Sprint 3"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 163,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/163",
+      "title": "[Chore] Refine backlog for Sprint 4",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhFxRA4",
+      "status": "Done",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 2,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 164,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/164",
+      "title": "[Task] Create M4 automated testing documentation",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhFxT4M",
+      "status": "Done",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 3,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 165,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/165",
+      "title": "[Task] Write automated authentication tests for US01",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhFxUnM",
+      "status": "Done",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 3,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 166,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/166",
+      "title": "[Task] Write automated evaluation list tests for US02",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhFxVUI",
+      "status": "Done",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 3,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 167,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/167",
+      "title": "[Task] Write automated evaluation submission tests for US03",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhFxWFQ",
+      "status": "Done",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 4,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 168,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/168",
+      "title": "[Task] Write automated lecturer feedback tests for US04]",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhFxW6Y",
+      "status": "Done",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 3,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 169,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/169",
+      "title": "[Task] Build test fixtures and write sign-out tests for US11",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhFxX-o",
+      "status": "Done",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 4,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 170,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/170",
+      "title": "[Task] Update setup guide with automated testing instructions",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhFxYlQ",
+      "status": "In Progress",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 2,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 171,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/171",
+      "title": "[Chore] Sprint 4 wrap-up",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhFxZYk",
+      "status": "Done",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 2,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 184,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/184",
+      "title": "[Task] Complete US03 rating, text and required-answer boundaries",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI34ko",
+      "status": "Done",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 4,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 185,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/185",
+      "title": "[Task] Verify US04 completed counts with 19, 20 and 21 responses",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI34nI",
+      "status": "Done",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 2,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 187,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/187",
+      "title": "[Task] Verify the US02 three-active-evaluation acceptance example",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI34pk",
+      "status": "Done",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 1,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 186,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/186",
+      "title": "[Task] Complete role-specific post-logout and idempotent logout tests",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI3_z4",
+      "status": "Done",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 2,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 188,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/188",
+      "title": "[Task] Reconcile P0 acceptance messages, logout navigation and timing evidence",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI3_1I",
+      "status": "Done",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 3,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 189,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/189",
+      "title": "[Task] Audit isolated database fixtures, foreign keys and rollback coverage",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI3_2c",
+      "status": "Done",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 3,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 190,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/190",
+      "title": "[Task] Complete M4 clean-clone and independent review evidence",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI3_38",
+      "status": "Done",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 2,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 26,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/26",
+      "title": "[Story] US05 - Group Feedback by Topic",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dCRM",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 34,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/34",
+      "title": "[Story] US06 - Highlight Common Issues",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dXG4",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 30,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/30",
+      "title": "[Story] US07 - View Feedback Statistics",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dNe4",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 38,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/38",
+      "title": "[Story] US08 - Create Course Evaluation",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dbHU",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 42,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/42",
+      "title": "[Story] US09 - Manage Evaluation Deadline",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7df-A",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 46,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/46",
+      "title": "[Story] US10 - Send Deadline Reminder",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzg7dkhE",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 183,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/183",
+      "title": "[Story] US11 - User Sign Out",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI3_5E",
+      "status": "Todo",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 192,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/192",
+      "title": "[Story] US12 - Administrator System Management",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4Ldk",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 194,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/194",
+      "title": "[Task] US12 - Design and implement administrator user-role and settings interface",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4Lfk",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 4,
+      "milestone": null
+    },
+    {
+      "number": 195,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/195",
+      "title": "[Task] US12 - Implement administrator access, user-role and settings APIs with tests",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4Lf0",
+      "status": "In Progress",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 5,
+      "milestone": null
+    },
+    {
+      "number": 193,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/193",
+      "title": "[Story] US13 - Lecturer Creates Course Evaluation",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4LgI",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": null,
+      "milestone": null
+    },
+    {
+      "number": 196,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/196",
+      "title": "[Task] US12 - Implement and verify administrator role-update and system-settings persistence",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4Lgg",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 3,
+      "milestone": null
+    },
+    {
+      "number": 197,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/197",
+      "title": "[Task] US13 - Implement lecturer course-evaluation creation form and confirmation",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4LiQ",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 3,
+      "milestone": null
+    },
+    {
+      "number": 198,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/198",
+      "title": "[Task] US13 - Complete lecturer evaluation creation, ownership validation and automated tests",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4LiU",
+      "status": "In Progress",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 3,
+      "milestone": null
+    },
+    {
+      "number": 199,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/199",
+      "title": "[Task] US13 - Verify lecturer course-ownership queries and atomic evaluation-question storage",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4Lis",
+      "status": "Todo",
+      "iteration": null,
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 2,
+      "milestone": null
+    },
+    {
+      "number": 200,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/200",
+      "title": "[Chore] Plan and track Sprint 5 M5 delivery",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4Wpk",
+      "status": "Todo",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "641167ee",
+        "startDate": "2026-11-14",
+        "title": "Sprint 5"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 2,
+      "milestone": "Sprint 5 - M5 Public Release and Operations"
+    },
+    {
+      "number": 201,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/201",
+      "title": "[Task] Complete public student P0 navigation and sign-out",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4Wrs",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "641167ee",
+        "startDate": "2026-11-14",
+        "title": "Sprint 5"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 4,
+      "milestone": "Sprint 5 - M5 Public Release and Operations"
+    },
+    {
+      "number": 202,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/202",
+      "title": "[Task] Complete public lecturer P0 feedback navigation and error UX",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4Wr8",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "641167ee",
+        "startDate": "2026-11-14",
+        "title": "Sprint 5"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 3,
+      "milestone": "Sprint 5 - M5 Public Release and Operations"
+    },
+    {
+      "number": 203,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/203",
+      "title": "[Task] Capture two verified UI improvements from M3 feedback",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4Wsg",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "641167ee",
+        "startDate": "2026-11-14",
+        "title": "Sprint 5"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 2,
+      "milestone": "Sprint 5 - M5 Public Release and Operations"
+    },
+    {
+      "number": 204,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/204",
+      "title": "[Task] Prepare production database, demo data and backup recovery",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4Ws8",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "641167ee",
+        "startDate": "2026-11-14",
+        "title": "Sprint 5"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 5,
+      "milestone": "Sprint 5 - M5 Public Release and Operations"
+    },
+    {
+      "number": 205,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/205",
+      "title": "[Task] Deploy EduSurvey to a public HTTPS URL with green-gated releases",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4WtY",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "641167ee",
+        "startDate": "2026-11-14",
+        "title": "Sprint 5"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 5,
+      "milestone": "Sprint 5 - M5 Public Release and Operations"
+    },
+    {
+      "number": 206,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/206",
+      "title": "[Task] Implement database-aware health checks and sanitized request monitoring",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4Wtg",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "641167ee",
+        "startDate": "2026-11-14",
+        "title": "Sprint 5"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 3,
+      "milestone": "Sprint 5 - M5 Public Release and Operations"
+    },
+    {
+      "number": 207,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/207",
+      "title": "[Task] Gate production deployment with CI and protect main",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4WuE",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "641167ee",
+        "startDate": "2026-11-14",
+        "title": "Sprint 5"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 4,
+      "milestone": "Sprint 5 - M5 Public Release and Operations"
+    },
+    {
+      "number": 208,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/208",
+      "title": "[Task] Write and review M5 operations handover",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4Wug",
+      "status": "Todo",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "641167ee",
+        "startDate": "2026-11-14",
+        "title": "Sprint 5"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 4,
+      "milestone": "Sprint 5 - M5 Public Release and Operations"
+    },
+    {
+      "number": 209,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/209",
+      "title": "[Task] Publish M5 README entry point and safe demo access guide",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4Wu4",
+      "status": "In Review",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "641167ee",
+        "startDate": "2026-11-14",
+        "title": "Sprint 5"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 2,
+      "milestone": "Sprint 5 - M5 Public Release and Operations"
+    },
+    {
+      "number": 210,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/210",
+      "title": "[Task] Verify every P0 on the deployed URL and rehearse M4 test evidence",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4Wvg",
+      "status": "Done",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "641167ee",
+        "startDate": "2026-11-14",
+        "title": "Sprint 5"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 4,
+      "milestone": "Sprint 5 - M5 Public Release and Operations"
+    },
+    {
+      "number": 211,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/211",
+      "title": "[Task] Prepare v1.0 release, final demo and M5 submission PDF",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4Wv0",
+      "status": "In Review",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "641167ee",
+        "startDate": "2026-11-14",
+        "title": "Sprint 5"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 3,
+      "milestone": "Sprint 5 - M5 Public Release and Operations"
+    },
+    {
+      "number": 212,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/212",
+      "title": "[Chore] Sprint 5 wrap-up",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4WwQ",
+      "status": "Todo",
+      "iteration": {
+        "duration": 14,
+        "iterationId": "641167ee",
+        "startDate": "2026-11-14",
+        "title": "Sprint 5"
+      },
+      "testing_sprint": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 2,
+      "milestone": "Sprint 5 - M5 Public Release and Operations"
+    },
+    {
+      "number": 214,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/214",
+      "title": "[Task] Align approved P0 login and duplicate API messages",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4pdg",
+      "status": "Done",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 2,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 215,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/215",
+      "title": "[Task] Implement approved HTML login redirects while preserving JSON API errors",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4pfY",
+      "status": "Done",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 2,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    },
+    {
+      "number": 216,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/216",
+      "title": "[Task] Decide copied-cookie logout revocation policy with reproducible evidence",
+      "item_id": "PVTI_lADOEyHouM4BhhrJzhI4ph8",
+      "status": "Todo",
+      "iteration": {
+        "duration": 13,
+        "iterationId": "d031835f",
+        "startDate": "2026-11-01",
+        "title": "Sprint 4"
+      },
+      "testing_sprint": "Sprint 4",
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "point": null,
+      "points": null,
+      "estimated_hours": 3,
+      "milestone": "Sprint 4 - M4 Automated Testing"
+    }
+  ],
+  "iterations": {
+    "Sprint 3": {
+      "duration": 14,
+      "iterationId": "7d82f1c7",
+      "startDate": "2026-09-30",
+      "title": "Sprint 3",
+      "end_date": "2026-10-13"
+    },
+    "Sprint 1": {
+      "duration": 14,
+      "iterationId": "f03def78",
+      "startDate": "2026-09-02",
+      "title": "Sprint 1",
+      "end_date": "2026-09-15"
+    },
+    "Sprint 2": {
+      "duration": 14,
+      "iterationId": "9f2483d4",
+      "startDate": "2026-09-16",
+      "title": "Sprint 2",
+      "end_date": "2026-09-29"
+    },
+    "Sprint 4": {
+      "duration": 13,
+      "iterationId": "d031835f",
+      "startDate": "2026-11-01",
+      "title": "Sprint 4",
+      "end_date": "2026-11-13"
+    },
+    "Sprint 5": {
+      "duration": 14,
+      "iterationId": "641167ee",
+      "startDate": "2026-11-14",
+      "title": "Sprint 5",
+      "end_date": "2026-11-27"
+    }
+  },
+  "prs": [
+    {
+      "number": 238,
+      "title": "[#211] Prepare Team04 release demo and submission pack",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/238",
+      "state": "OPEN",
+      "milestone": {
+        "number": 2,
+        "title": "Sprint 5 - M5 Public Release and Operations"
+      },
+      "author": {
+        "login": "khuatnhatminhcfpro-cmyk"
+      },
+      "mergedBy": null,
+      "mergedAt": null,
+      "headRefOid": "8c00ab0419430eb94ca165c94ce5a0d690469769",
+      "reviews": {
+        "pageInfo": {
+          "hasNextPage": false
+        },
+        "nodes": []
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "8c00ab0419430eb94ca165c94ce5a0d690469769",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": []
+      },
+      "scope_links": [
+        200,
+        211
+      ],
+      "independent_approvals": [],
+      "check_state": "SUCCESS",
+      "merger_is_author": false
+    },
+    {
+      "number": 235,
+      "title": "[#209] Prepare M5 README entry point and safe demo access guide",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/235",
+      "state": "OPEN",
+      "milestone": null,
+      "author": {
+        "login": "lesyhuy2k6-gif"
+      },
+      "mergedBy": null,
+      "mergedAt": null,
+      "headRefOid": "8508ff96aed699e2fc617bad6dceb7371f930583",
+      "reviews": {
+        "pageInfo": {
+          "hasNextPage": false
+        },
+        "nodes": [
+          {
+            "id": "PRR_kwDOT0W7zs8AAAABYGLWDw",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/235#pullrequestreview-5912057359",
+            "state": "APPROVED",
+            "body": "",
+            "submittedAt": "2026-11-15T18:00:19Z",
+            "author": {
+              "login": "tlduongducanh281-jpg"
+            },
+            "commit": {
+              "oid": "8c24429231b7a06484a2621faa3289c21e9b39a6"
+            },
+            "comments": {
+              "pageInfo": {
+                "hasNextPage": false
+              },
+              "nodes": []
+            },
+            "recorded_independent_review": true,
+            "content_present": false,
+            "substantive_assessment": "No substantive independent content observed in this review record"
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "8508ff96aed699e2fc617bad6dceb7371f930583",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": []
+      },
+      "scope_links": [
+        200,
+        201,
+        202,
+        205,
+        207,
+        209
+      ],
+      "independent_approvals": [
+        "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/235#pullrequestreview-5912057359"
+      ],
+      "check_state": "SUCCESS",
+      "merger_is_author": false
+    },
+    {
+      "number": 233,
+      "title": "[#208] Prepare six-section M5 operations handover and evidence register",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/233",
+      "state": "MERGED",
+      "milestone": null,
+      "author": {
+        "login": "lesyhuy2k6-gif"
+      },
+      "mergedBy": {
+        "login": "lesyhuy2k6-gif"
+      },
+      "mergedAt": "2026-11-15T17:58:18Z",
+      "headRefOid": "26fbc21623570f350556920527c5840b95601083",
+      "reviews": {
+        "pageInfo": {
+          "hasNextPage": false
+        },
+        "nodes": [
+          {
+            "id": "PRR_kwDOT0W7zs8AAAABYGKz8w",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/233#pullrequestreview-5912048627",
+            "state": "APPROVED",
+            "body": "",
+            "submittedAt": "2026-11-15T17:58:00Z",
+            "author": {
+              "login": "tlduongducanh281-jpg"
+            },
+            "commit": {
+              "oid": "26fbc21623570f350556920527c5840b95601083"
+            },
+            "comments": {
+              "pageInfo": {
+                "hasNextPage": false
+              },
+              "nodes": []
+            },
+            "recorded_independent_review": true,
+            "content_present": false,
+            "substantive_assessment": "No substantive independent content observed in this review record"
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "26fbc21623570f350556920527c5840b95601083",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": []
+      },
+      "scope_links": [
+        200,
+        204,
+        205,
+        206,
+        207,
+        208,
+        210
+      ],
+      "independent_approvals": [
+        "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/233#pullrequestreview-5912048627"
+      ],
+      "check_state": "SUCCESS",
+      "merger_is_author": true
+    },
+    {
+      "number": 234,
+      "title": "[#195] Implement US12 administrator role and settings APIs",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/234",
+      "state": "OPEN",
+      "milestone": null,
+      "author": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedBy": null,
+      "mergedAt": null,
+      "headRefOid": "3e6db7be11b6357499e73101e931cbff3427c0cb",
+      "reviews": {
+        "pageInfo": {
+          "hasNextPage": false
+        },
+        "nodes": []
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "3e6db7be11b6357499e73101e931cbff3427c0cb",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 195,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/195",
+            "state": "OPEN",
+            "closedAt": null
+          }
+        ]
+      },
+      "scope_links": [
+        207
+      ],
+      "independent_approvals": [],
+      "check_state": "SUCCESS",
+      "merger_is_author": false
+    },
+    {
+      "number": 232,
+      "title": "[#207] Gate production releases and prepare enforced main protection",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/232",
+      "state": "MERGED",
+      "milestone": null,
+      "author": {
+        "login": "lesyhuy2k6-gif"
+      },
+      "mergedBy": {
+        "login": "lesyhuy2k6-gif"
+      },
+      "mergedAt": "2026-11-15T17:09:43Z",
+      "headRefOid": "cb9129665f3656850c04e88f1405ae0a64ed8a13",
+      "reviews": {
+        "pageInfo": {
+          "hasNextPage": false
+        },
+        "nodes": [
+          {
+            "id": "PRR_kwDOT0W7zs8AAAABYF_mvA",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/232#pullrequestreview-5911865020",
+            "state": "APPROVED",
+            "body": "",
+            "submittedAt": "2026-11-15T17:09:31Z",
+            "author": {
+              "login": "tlduongducanh281-jpg"
+            },
+            "commit": {
+              "oid": "cb9129665f3656850c04e88f1405ae0a64ed8a13"
+            },
+            "comments": {
+              "pageInfo": {
+                "hasNextPage": false
+              },
+              "nodes": []
+            },
+            "recorded_independent_review": true,
+            "content_present": false,
+            "substantive_assessment": "No substantive independent content observed in this review record"
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "cb9129665f3656850c04e88f1405ae0a64ed8a13",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 207,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/207",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T17:09:45Z"
+          }
+        ]
+      },
+      "scope_links": [
+        200,
+        205,
+        207,
+        208
+      ],
+      "independent_approvals": [
+        "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/232#pullrequestreview-5911865020"
+      ],
+      "check_state": "SUCCESS",
+      "merger_is_author": true
+    },
+    {
+      "number": 230,
+      "title": "[#210] Record P0 verification and safe M4 mutation rehearsal",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/230",
+      "state": "MERGED",
+      "milestone": null,
+      "author": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedBy": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedAt": "2026-11-15T17:00:07Z",
+      "headRefOid": "a4f3c40d12691c76cd176d9e27a5f8fdb3d821c5",
+      "reviews": {
+        "pageInfo": {
+          "hasNextPage": false
+        },
+        "nodes": [
+          {
+            "id": "PRR_kwDOT0W7zs8AAAABYF9djw",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/230#pullrequestreview-5911829903",
+            "state": "APPROVED",
+            "body": "Reviewed the scope and verification plan for #210. The task covers the key P0 workflows, deployed UI validation, database persistence, and M4 test evidence. The proposed approach is consistent with the acceptance criteria and existing test dependencies. However, the evidence for browser-level response times and the controlled mutation test could be documented more clearly, particularly the actual results and recovery steps. Overall, the verification plan is well-structured, with a few minor improvements needed to strengthen the final evidence before approval.",
+            "submittedAt": "2026-11-15T16:59:49Z",
+            "author": {
+              "login": "lesyhuy2k6-gif"
+            },
+            "commit": {
+              "oid": "a4f3c40d12691c76cd176d9e27a5f8fdb3d821c5"
+            },
+            "comments": {
+              "pageInfo": {
+                "hasNextPage": false
+              },
+              "nodes": []
+            },
+            "recorded_independent_review": true,
+            "content_present": true,
+            "substantive_assessment": "Substantive independent Review changes: identifies concrete verification/traceability gaps. Approval does not prove those gaps resolved."
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "a4f3c40d12691c76cd176d9e27a5f8fdb3d821c5",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 210,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/210",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T17:00:08Z"
+          }
+        ]
+      },
+      "scope_links": [
+        200,
+        201,
+        202,
+        204,
+        205,
+        206,
+        209,
+        210
+      ],
+      "independent_approvals": [
+        "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/230#pullrequestreview-5911829903"
+      ],
+      "check_state": "SUCCESS",
+      "merger_is_author": true
+    },
+    {
+      "number": 229,
+      "title": "[#204] Prepare safe production SQLite and verified backup recovery",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/229",
+      "state": "MERGED",
+      "milestone": null,
+      "author": {
+        "login": "lesyhuy2k6-gif"
+      },
+      "mergedBy": {
+        "login": "lesyhuy2k6-gif"
+      },
+      "mergedAt": "2026-11-15T16:49:08Z",
+      "headRefOid": "2085dc5fd3a2dbf1992e3adc7269395f952cb73a",
+      "reviews": {
+        "pageInfo": {
+          "hasNextPage": false
+        },
+        "nodes": [
+          {
+            "id": "PRR_kwDOT0W7zs8AAAABYF7FbQ",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/229#pullrequestreview-5911790957",
+            "state": "APPROVED",
+            "body": "",
+            "submittedAt": "2026-11-15T16:48:53Z",
+            "author": {
+              "login": "tlduongducanh281-jpg"
+            },
+            "commit": {
+              "oid": "2085dc5fd3a2dbf1992e3adc7269395f952cb73a"
+            },
+            "comments": {
+              "pageInfo": {
+                "hasNextPage": false
+              },
+              "nodes": []
+            },
+            "recorded_independent_review": true,
+            "content_present": false,
+            "substantive_assessment": "No substantive independent content observed in this review record"
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "2085dc5fd3a2dbf1992e3adc7269395f952cb73a",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 204,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/204",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T16:49:10Z"
+          }
+        ]
+      },
+      "scope_links": [
+        200,
+        204,
+        205,
+        206,
+        207,
+        208
+      ],
+      "independent_approvals": [
+        "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/229#pullrequestreview-5911790957"
+      ],
+      "check_state": "SUCCESS",
+      "merger_is_author": true
+    },
+    {
+      "number": 228,
+      "title": "[#206] Add database readiness and sanitized request monitoring",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/228",
+      "state": "MERGED",
+      "milestone": null,
+      "author": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedBy": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedAt": "2026-11-15T16:33:58Z",
+      "headRefOid": "2db8f6cd490eb5e5588d3f39dc635d4b625826d1",
+      "reviews": {
+        "pageInfo": {
+          "hasNextPage": false
+        },
+        "nodes": [
+          {
+            "id": "PRR_kwDOT0W7zs8AAAABYFxsmw",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/228#pullrequestreview-5911637147",
+            "state": "APPROVED",
+            "body": "Reviewed the requirements for #206. The proposed health checks and request monitoring cover the main objectives, including database availability, proper HTTP status codes, and sanitized logging. However, the error rate and response time thresholds should be documented more clearly, and the database failure tests need sufficient evidence to confirm that sensitive information is not exposed. Overall, the approach is reasonable, with a few minor improvements needed before final approval.",
+            "submittedAt": "2026-11-15T16:07:05Z",
+            "author": {
+              "login": "lesyhuy2k6-gif"
+            },
+            "commit": {
+              "oid": "4d4df851b3be9f1451c8a2a2f769675d230bf32b"
+            },
+            "comments": {
+              "pageInfo": {
+                "hasNextPage": false
+              },
+              "nodes": []
+            },
+            "recorded_independent_review": true,
+            "content_present": true,
+            "substantive_assessment": "Substantive independent Review changes: identifies concrete verification/traceability gaps. Approval does not prove those gaps resolved."
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "2db8f6cd490eb5e5588d3f39dc635d4b625826d1",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 206,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/206",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T16:34:00Z"
+          }
+        ]
+      },
+      "scope_links": [
+        200,
+        204,
+        205,
+        206,
+        210
+      ],
+      "independent_approvals": [
+        "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/228#pullrequestreview-5911637147"
+      ],
+      "check_state": "SUCCESS",
+      "merger_is_author": true
+    },
+    {
+      "number": 226,
+      "title": "[#205] Prepare persistent Render deployment and green-gated releases",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/226",
+      "state": "MERGED",
+      "milestone": null,
+      "author": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedBy": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedAt": "2026-11-15T15:45:05Z",
+      "headRefOid": "c92a17176cd2f25d904eb56ec9b4df0ccfafaaa4",
+      "reviews": {
+        "pageInfo": {
+          "hasNextPage": false
+        },
+        "nodes": [
+          {
+            "id": "PRR_kwDOT0W7zs8AAAABYFrSwA",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/226#pullrequestreview-5911532224",
+            "state": "APPROVED",
+            "body": "Reviewed the deployment requirements for #205. The deployment approach covers the main objectives, including public HTTPS access, CI-gated releases, secure environment configuration, and rollback support. However, the evidence for blocking deployments when CI fails could be documented more clearly, and the rollback verification steps need a bit more detail. These are minor points to address before final approval, while the overall approach aligns well with the Sprint 5 requirements.",
+            "submittedAt": "2026-11-15T15:40:55Z",
+            "author": {
+              "login": "lesyhuy2k6-gif"
+            },
+            "commit": {
+              "oid": "c92a17176cd2f25d904eb56ec9b4df0ccfafaaa4"
+            },
+            "comments": {
+              "pageInfo": {
+                "hasNextPage": false
+              },
+              "nodes": []
+            },
+            "recorded_independent_review": true,
+            "content_present": true,
+            "substantive_assessment": "Substantive independent Review changes: identifies concrete verification/traceability gaps. Approval does not prove those gaps resolved."
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "c92a17176cd2f25d904eb56ec9b4df0ccfafaaa4",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 205,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/205",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T15:45:06Z"
+          }
+        ]
+      },
+      "scope_links": [
+        200,
+        204,
+        205,
+        207,
+        210
+      ],
+      "independent_approvals": [
+        "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/226#pullrequestreview-5911532224"
+      ],
+      "check_state": "SUCCESS",
+      "merger_is_author": true
+    },
+    {
+      "number": 225,
+      "title": "[#203] Prepare UI before/after evidence and identify missing M3 sources",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/225",
+      "state": "MERGED",
+      "milestone": null,
+      "author": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedBy": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedAt": "2026-11-15T15:37:19Z",
+      "headRefOid": "c6faca556d235319deb477aceadfe4b3e55544bc",
+      "reviews": {
+        "pageInfo": {
+          "hasNextPage": false
+        },
+        "nodes": [
+          {
+            "id": "PRR_kwDOT0W7zs8AAAABYFqWVw",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/225#pullrequestreview-5911516759",
+            "state": "APPROVED",
+            "body": "Reviewed the work for #203. The two UI improvements are clearly presented and aligned with the M3 feedback requirements. The before-and-after comparisons help demonstrate the changes effectively, and the supporting evidence is generally well-organized. However, the links to the original feedback and implementation PRs could be documented more clearly to improve traceability. Overall, the work meets the main objectives, with only minor documentation improvements suggested.",
+            "submittedAt": "2026-11-15T15:36:47Z",
+            "author": {
+              "login": "lesyhuy2k6-gif"
+            },
+            "commit": {
+              "oid": "c6faca556d235319deb477aceadfe4b3e55544bc"
+            },
+            "comments": {
+              "pageInfo": {
+                "hasNextPage": false
+              },
+              "nodes": []
+            },
+            "recorded_independent_review": true,
+            "content_present": true,
+            "substantive_assessment": "Substantive independent Review changes: identifies concrete verification/traceability gaps. Approval does not prove those gaps resolved."
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "c6faca556d235319deb477aceadfe4b3e55544bc",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 203,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/203",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T15:37:21Z"
+          }
+        ]
+      },
+      "scope_links": [
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        210
+      ],
+      "independent_approvals": [
+        "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/225#pullrequestreview-5911516759"
+      ],
+      "check_state": "SUCCESS",
+      "merger_is_author": true
+    },
+    {
+      "number": 223,
+      "title": "[#214] Complete P0 backend contracts and M5 runtime readiness",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/223",
+      "state": "MERGED",
+      "milestone": {
+        "number": 2,
+        "title": "Sprint 5 - M5 Public Release and Operations"
+      },
+      "author": {
+        "login": "khuatnhatminhcfpro-cmyk"
+      },
+      "mergedBy": {
+        "login": "khuatnhatminhcfpro-cmyk"
+      },
+      "mergedAt": "2026-11-15T14:51:04Z",
+      "headRefOid": "f19f6abd8519b8ac55d95d6bdeda466bed623759",
+      "reviews": {
+        "pageInfo": {
+          "hasNextPage": false
+        },
+        "nodes": [
+          {
+            "id": "PRR_kwDOT0W7zs8AAAABYFewcQ",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/223#pullrequestreview-5911326833",
+            "state": "APPROVED",
+            "body": "Can we double-check the database backup behavior? Since this PR adds backup and recovery support, I want to make sure a failed backup won't affect the original database, and that restoring data won't accidentally overwrite an existing database. The tests are passing, but I think this part is worth checking before merging.",
+            "submittedAt": "2026-11-15T14:48:45Z",
+            "author": {
+              "login": "lesyhuy2k6-gif"
+            },
+            "commit": {
+              "oid": "f19f6abd8519b8ac55d95d6bdeda466bed623759"
+            },
+            "comments": {
+              "pageInfo": {
+                "hasNextPage": false
+              },
+              "nodes": []
+            },
+            "recorded_independent_review": true,
+            "content_present": true,
+            "substantive_assessment": "Substantive independent Review changes: identifies concrete verification/traceability gaps. Approval does not prove those gaps resolved."
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "f19f6abd8519b8ac55d95d6bdeda466bed623759",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 214,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/214",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T14:51:05Z"
+          },
+          {
+            "number": 215,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/215",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T14:51:08Z"
+          }
+        ]
+      },
+      "scope_links": [
+        200,
+        204,
+        206,
+        208,
+        210
+      ],
+      "independent_approvals": [
+        "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/223#pullrequestreview-5911326833"
+      ],
+      "check_state": "SUCCESS",
+      "merger_is_author": true
+    },
+    {
+      "number": 222,
+      "title": "[#185] Verify US04 completed counts with 19, 20 and 21 responses",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/222",
+      "state": "MERGED",
+      "milestone": null,
+      "author": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedBy": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedAt": "2026-11-15T14:24:32Z",
+      "headRefOid": "4b7ac88b4d8c68a437d372d637d49eb244579e82",
+      "reviews": {
+        "pageInfo": {
+          "hasNextPage": false
+        },
+        "nodes": [
+          {
+            "id": "PRR_kwDOT0W7zs8AAAABYFZCzA",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/222#pullrequestreview-5911233228",
+            "state": "APPROVED",
+            "body": "Reviewed the implementation for #185. The test cases effectively cover the 19, 20, and 21 completed-response scenarios, ensuring accurate evaluation counts while excluding draft submissions. Both API responses and lecturer dashboard counts are consistently validated, with proper test isolation and no impact on existing functionality. The implementation aligns with the acceptance criteria, and no blocking issues were identified.",
+            "submittedAt": "2026-11-15T14:23:50Z",
+            "author": {
+              "login": "khuatnhatminhcfpro-cmyk"
+            },
+            "commit": {
+              "oid": "4b7ac88b4d8c68a437d372d637d49eb244579e82"
+            },
+            "comments": {
+              "pageInfo": {
+                "hasNextPage": false
+              },
+              "nodes": []
+            },
+            "recorded_independent_review": true,
+            "content_present": true,
+            "substantive_assessment": "Manual content assessment required"
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "4b7ac88b4d8c68a437d372d637d49eb244579e82",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 185,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/185",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T14:24:33Z"
+          }
+        ]
+      },
+      "scope_links": [
+        202
+      ],
+      "independent_approvals": [
+        "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/222#pullrequestreview-5911233228"
+      ],
+      "check_state": "SUCCESS",
+      "merger_is_author": true
+    },
+    {
+      "number": 220,
+      "title": "[#184] Complete US03 rating, text and required-answer boundaries",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/220",
+      "state": "MERGED",
+      "milestone": null,
+      "author": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedBy": {
+        "login": "khuatnhatminhcfpro-cmyk"
+      },
+      "mergedAt": "2026-11-15T14:15:58Z",
+      "headRefOid": "17467068897e726633e059cbb2f2a06c0c0da6ed",
+      "reviews": {
+        "pageInfo": {
+          "hasNextPage": false
+        },
+        "nodes": [
+          {
+            "id": "PRR_kwDOT0W7zs8AAAABYFRklg",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/220#pullrequestreview-5911110806",
+            "state": "APPROVED",
+            "body": "Reviewed the implementation for #184. All rating, text length, and required-answer boundary cases are properly covered. The tests follow the specified requirements, invalid submissions are handled correctly, and existing functionality remains unaffected. No blocking issues found.",
+            "submittedAt": "2026-11-15T14:03:05Z",
+            "author": {
+              "login": "khuatnhatminhcfpro-cmyk"
+            },
+            "commit": {
+              "oid": "884d2b5348c0bf6bbe2871119a8395e0aa86cf03"
+            },
+            "comments": {
+              "pageInfo": {
+                "hasNextPage": false
+              },
+              "nodes": []
+            },
+            "recorded_independent_review": true,
+            "content_present": true,
+            "substantive_assessment": "Manual content assessment required"
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "17467068897e726633e059cbb2f2a06c0c0da6ed",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 184,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/184",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T14:15:59Z"
+          }
+        ]
+      },
+      "scope_links": [
+        202
+      ],
+      "independent_approvals": [
+        "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/220#pullrequestreview-5911110806"
+      ],
+      "check_state": "SUCCESS",
+      "merger_is_author": false
+    },
+    {
+      "number": 219,
+      "title": "[#202] Complete lecturer feedback navigation and error UX",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/219",
+      "state": "MERGED",
+      "milestone": {
+        "number": 2,
+        "title": "Sprint 5 - M5 Public Release and Operations"
+      },
+      "author": {
+        "login": "khuatnhatminhcfpro-cmyk"
+      },
+      "mergedBy": {
+        "login": "khuatnhatminhcfpro-cmyk"
+      },
+      "mergedAt": "2026-11-15T14:00:40Z",
+      "headRefOid": "82811a81ed7b4767c126d1d7d5e9037eb6a662bb",
+      "reviews": {
+        "pageInfo": {
+          "hasNextPage": false
+        },
+        "nodes": [
+          {
+            "id": "PRR_kwDOT0W7zs8AAAABYFQLOg",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/219#pullrequestreview-5911087930",
+            "state": "APPROVED",
+            "body": "",
+            "submittedAt": "2026-11-15T13:59:43Z",
+            "author": {
+              "login": "tlduongducanh281-jpg"
+            },
+            "commit": {
+              "oid": "82811a81ed7b4767c126d1d7d5e9037eb6a662bb"
+            },
+            "comments": {
+              "pageInfo": {
+                "hasNextPage": false
+              },
+              "nodes": []
+            },
+            "recorded_independent_review": true,
+            "content_present": false,
+            "substantive_assessment": "No substantive independent content observed in this review record"
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "82811a81ed7b4767c126d1d7d5e9037eb6a662bb",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 202,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/202",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T14:00:42Z"
+          }
+        ]
+      },
+      "scope_links": [
+        200,
+        201,
+        202,
+        204,
+        205,
+        210
+      ],
+      "independent_approvals": [
+        "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/219#pullrequestreview-5911087930"
+      ],
+      "check_state": "SUCCESS",
+      "merger_is_author": true
+    },
+    {
+      "number": 217,
+      "title": "[#188] Reconcile P0 contracts and timing evidence",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/217",
+      "state": "MERGED",
+      "milestone": null,
+      "author": {
+        "login": "khuatnhatminhcfpro-cmyk"
+      },
+      "mergedBy": {
+        "login": "khuatnhatminhcfpro-cmyk"
+      },
+      "mergedAt": "2026-11-15T13:25:23Z",
+      "headRefOid": "9f4f254aeaec3f115b4defa063b3a83c15f4033b",
+      "reviews": {
+        "pageInfo": {
+          "hasNextPage": false
+        },
+        "nodes": [
+          {
+            "id": "PRR_kwDOT0W7zs8AAAABYFDxzw",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/217#pullrequestreview-5910884815",
+            "state": "APPROVED",
+            "body": "",
+            "submittedAt": "2026-11-15T13:10:11Z",
+            "author": {
+              "login": "tlduongducanh281-jpg"
+            },
+            "commit": {
+              "oid": "83f181aab660705770c93614f8120b764280b86a"
+            },
+            "comments": {
+              "pageInfo": {
+                "hasNextPage": false
+              },
+              "nodes": []
+            },
+            "recorded_independent_review": true,
+            "content_present": false,
+            "substantive_assessment": "No substantive independent content observed in this review record"
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "9f4f254aeaec3f115b4defa063b3a83c15f4033b",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 188,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/188",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T13:25:25Z"
+          }
+        ]
+      },
+      "scope_links": [
+        201,
+        202,
+        205,
+        206,
+        210
+      ],
+      "independent_approvals": [
+        "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/217#pullrequestreview-5910884815"
+      ],
+      "check_state": "SUCCESS",
+      "merger_is_author": true
+    },
+    {
+      "number": 218,
+      "title": "[#201] Complete student P0 navigation and sign-out",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/218",
+      "state": "MERGED",
+      "milestone": {
+        "number": 2,
+        "title": "Sprint 5 - M5 Public Release and Operations"
+      },
+      "author": {
+        "login": "khuatnhatminhcfpro-cmyk"
+      },
+      "mergedBy": {
+        "login": "khuatnhatminhcfpro-cmyk"
+      },
+      "mergedAt": "2026-11-15T13:21:06Z",
+      "headRefOid": "318113ac974de3df0f0cb6a70a07cfc8ebf18ec1",
+      "reviews": {
+        "pageInfo": {
+          "hasNextPage": false
+        },
+        "nodes": [
+          {
+            "id": "PRR_kwDOT0W7zs8AAAABYFD-fA",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/218#pullrequestreview-5910888060",
+            "state": "APPROVED",
+            "body": "",
+            "submittedAt": "2026-11-15T13:11:07Z",
+            "author": {
+              "login": "tlduongducanh281-jpg"
+            },
+            "commit": {
+              "oid": "3f69215da3a6887c3f56a071d4ff93627a2ebb8a"
+            },
+            "comments": {
+              "pageInfo": {
+                "hasNextPage": false
+              },
+              "nodes": []
+            },
+            "recorded_independent_review": true,
+            "content_present": false,
+            "substantive_assessment": "No substantive independent content observed in this review record"
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "318113ac974de3df0f0cb6a70a07cfc8ebf18ec1",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 201,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/201",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T13:21:07Z"
+          }
+        ]
+      },
+      "scope_links": [
+        200,
+        201,
+        204,
+        205,
+        210
+      ],
+      "independent_approvals": [
+        "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/218#pullrequestreview-5910888060"
+      ],
+      "check_state": "SUCCESS",
+      "merger_is_author": true
+    }
+  ],
+  "issues": [
+    {
+      "number": 184,
+      "title": "[Task] Complete US03 rating, text and required-answer boundaries",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/184",
+      "state": "closed",
+      "created_at": "2026-11-15T11:00:59Z",
+      "closed_at": "2026-11-15T14:15:59Z",
+      "closed_by": "khuatnhatminhcfpro-cmyk",
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "estimated_hours": 4,
+      "body_sha256": "5cdad4340113ac66c1bd6f86bd115aa827116d513f9def337a75d156660d8edd"
+    },
+    {
+      "number": 185,
+      "title": "[Task] Verify US04 completed counts with 19, 20 and 21 responses",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/185",
+      "state": "closed",
+      "created_at": "2026-11-15T11:01:00Z",
+      "closed_at": "2026-11-15T14:24:33Z",
+      "closed_by": "tlduongducanh281-jpg",
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "estimated_hours": 2,
+      "body_sha256": "65b0f0ff5d7e6c22a06fcbbf04388fe9bca2d12ef89d3407b1b450ec51895e5d"
+    },
+    {
+      "number": 188,
+      "title": "[Task] Reconcile P0 acceptance messages, logout navigation and timing evidence",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/188",
+      "state": "closed",
+      "created_at": "2026-11-15T11:01:07Z",
+      "closed_at": "2026-11-15T13:25:25Z",
+      "closed_by": "khuatnhatminhcfpro-cmyk",
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "estimated_hours": 3,
+      "body_sha256": "ab1c048a66e57ebd7bfbc73a5e509e0d5ac36483f0b1a001d8d328fc46d4110b"
+    },
+    {
+      "number": 195,
+      "title": "[Task] US12 - Implement administrator access, user-role and settings APIs with tests",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/195",
+      "state": "open",
+      "created_at": "2026-11-15T11:36:52Z",
+      "closed_at": null,
+      "closed_by": null,
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "estimated_hours": 5,
+      "body_sha256": "c6f32de9fd0440e6a7992b936b3be9e62f7018216c8b1d8657ab9ce0c3f10562"
+    },
+    {
+      "number": 200,
+      "title": "[Chore] Plan and track Sprint 5 M5 delivery",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/200",
+      "state": "open",
+      "created_at": "2026-11-15T11:54:35Z",
+      "closed_at": null,
+      "closed_by": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "estimated_hours": 2,
+      "body_sha256": "ff7978efb8981abb4edc8ff2fb7f07525ed7aa7d37a4aa24977780c5ecb462e8"
+    },
+    {
+      "number": 201,
+      "title": "[Task] Complete public student P0 navigation and sign-out",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/201",
+      "state": "closed",
+      "created_at": "2026-11-15T11:54:37Z",
+      "closed_at": "2026-11-15T13:21:07Z",
+      "closed_by": "khuatnhatminhcfpro-cmyk",
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "estimated_hours": 4,
+      "body_sha256": "43822b0bef9f3ee3266a8d08da3b51bb53f90ce0646d57e885eb2229b8ce13a6"
+    },
+    {
+      "number": 202,
+      "title": "[Task] Complete public lecturer P0 feedback navigation and error UX",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/202",
+      "state": "closed",
+      "created_at": "2026-11-15T11:54:40Z",
+      "closed_at": "2026-11-15T14:00:42Z",
+      "closed_by": "khuatnhatminhcfpro-cmyk",
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "estimated_hours": 3,
+      "body_sha256": "741f246f53f9b36f57ed745bda9a9243defbbda0cc23e354d8989f94523d6c28"
+    },
+    {
+      "number": 203,
+      "title": "[Task] Capture two verified UI improvements from M3 feedback",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/203",
+      "state": "closed",
+      "created_at": "2026-11-15T11:54:44Z",
+      "closed_at": "2026-11-15T15:37:21Z",
+      "closed_by": "tlduongducanh281-jpg",
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "estimated_hours": 2,
+      "body_sha256": "d29137b86d4fed24ce2669589c8f1db0763d54a3a8a854b4a0b66d67e0a81da0"
+    },
+    {
+      "number": 204,
+      "title": "[Task] Prepare production database, demo data and backup recovery",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/204",
+      "state": "closed",
+      "created_at": "2026-11-15T11:54:48Z",
+      "closed_at": "2026-11-15T16:49:10Z",
+      "closed_by": "lesyhuy2k6-gif",
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "estimated_hours": 5,
+      "body_sha256": "d86a1338da79082f11dc1fce3e8f9a82337c17607013fda62bc1824807f0d6d8"
+    },
+    {
+      "number": 205,
+      "title": "[Task] Deploy EduSurvey to a public HTTPS URL with green-gated releases",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/205",
+      "state": "closed",
+      "created_at": "2026-11-15T11:54:51Z",
+      "closed_at": "2026-11-15T15:45:06Z",
+      "closed_by": "tlduongducanh281-jpg",
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "estimated_hours": 5,
+      "body_sha256": "3c55c87bf14e46579a0541aef036cba34e2f11037c9626686dc9896a1b2a536c"
+    },
+    {
+      "number": 206,
+      "title": "[Task] Implement database-aware health checks and sanitized request monitoring",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/206",
+      "state": "closed",
+      "created_at": "2026-11-15T11:54:54Z",
+      "closed_at": "2026-11-15T16:34:00Z",
+      "closed_by": "tlduongducanh281-jpg",
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "estimated_hours": 3,
+      "body_sha256": "3f3f02b1d2851d820ec5580f466a75a1554e31ed215e56f225f78818a2c1ec7f"
+    },
+    {
+      "number": 207,
+      "title": "[Task] Gate production deployment with CI and protect main",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/207",
+      "state": "closed",
+      "created_at": "2026-11-15T11:54:57Z",
+      "closed_at": "2026-11-15T17:09:45Z",
+      "closed_by": "lesyhuy2k6-gif",
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "estimated_hours": 4,
+      "body_sha256": "3ccb801a314c95ed23344aecda686d56627403a7808d3a24418e06a3bf1b5d91"
+    },
+    {
+      "number": 208,
+      "title": "[Task] Write and review M5 operations handover",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/208",
+      "state": "open",
+      "created_at": "2026-11-15T11:55:00Z",
+      "closed_at": null,
+      "closed_by": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "estimated_hours": 4,
+      "body_sha256": "ad800881e4787a3611a4035e56d3ad8f944ba92972c28408aabefe69d8908fc4"
+    },
+    {
+      "number": 209,
+      "title": "[Task] Publish M5 README entry point and safe demo access guide",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/209",
+      "state": "open",
+      "created_at": "2026-11-15T11:55:03Z",
+      "closed_at": null,
+      "closed_by": null,
+      "assignees": [
+        "lesyhuy2k6-gif"
+      ],
+      "estimated_hours": 2,
+      "body_sha256": "a3680fefd3f8b8ffcba642bb50797f189dd7833a26bd8f95ecef9608d22cfb38"
+    },
+    {
+      "number": 210,
+      "title": "[Task] Verify every P0 on the deployed URL and rehearse M4 test evidence",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/210",
+      "state": "closed",
+      "created_at": "2026-11-15T11:55:06Z",
+      "closed_at": "2026-11-15T17:00:08Z",
+      "closed_by": "tlduongducanh281-jpg",
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "estimated_hours": 4,
+      "body_sha256": "a43cb58385b3392993f9eecb1d28b44ba7e9e154a209dbe5d74e88f5c56368d4"
+    },
+    {
+      "number": 211,
+      "title": "[Task] Prepare v1.0 release, final demo and M5 submission PDF",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/211",
+      "state": "open",
+      "created_at": "2026-11-15T11:55:09Z",
+      "closed_at": null,
+      "closed_by": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "estimated_hours": 3,
+      "body_sha256": "d7745d1a22f7d185c6571c0ebe40c1850efd6fe07043b9f244177e031513ca97"
+    },
+    {
+      "number": 212,
+      "title": "[Chore] Sprint 5 wrap-up",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/212",
+      "state": "open",
+      "created_at": "2026-11-15T11:55:12Z",
+      "closed_at": null,
+      "closed_by": null,
+      "assignees": [
+        "khuatnhatminhcfpro-cmyk"
+      ],
+      "estimated_hours": 2,
+      "body_sha256": "5517d1048b5cc0fe91c5d620332b77709c1f149e8b360b552fa5f32be4c4bc43"
+    },
+    {
+      "number": 214,
+      "title": "[Task] Align approved P0 login and duplicate API messages",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/214",
+      "state": "closed",
+      "created_at": "2026-11-15T12:30:02Z",
+      "closed_at": "2026-11-15T14:51:05Z",
+      "closed_by": "khuatnhatminhcfpro-cmyk",
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "estimated_hours": 2,
+      "body_sha256": "ee832fd58b75a1524e78ed6055826bd9abcdaf367c6607eabd18180bfb1d0384"
+    },
+    {
+      "number": 215,
+      "title": "[Task] Implement approved HTML login redirects while preserving JSON API errors",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/215",
+      "state": "closed",
+      "created_at": "2026-11-15T12:30:05Z",
+      "closed_at": "2026-11-15T14:51:08Z",
+      "closed_by": "khuatnhatminhcfpro-cmyk",
+      "assignees": [
+        "tlduongducanh281-jpg"
+      ],
+      "estimated_hours": 2,
+      "body_sha256": "cf64974afbc59bb71f35794b72300a7f5b486669281ec402e0a910004dc61521"
+    }
+  ],
+  "green_main_ci": {
+    "conclusion": "success",
+    "databaseId": 43744066081,
+    "headSha": "7c0b06e36fff7690db9f6cec3d9d28a4e0503c92",
+    "status": "completed",
+    "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43744066081"
+  },
+  "repository_homepage": null,
+  "deployments": [],
+  "releases": [],
+  "effective_main_rules": [
+    {
+      "type": "deletion",
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "SE-FDA-NEU-AI66B",
+      "ruleset_id": 21540407
+    },
+    {
+      "type": "non_fast_forward",
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "SE-FDA-NEU-AI66B",
+      "ruleset_id": 21540407
+    },
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 1,
+        "dismiss_stale_reviews_on_push": false,
+        "required_reviewers": [],
+        "require_code_owner_review": false,
+        "require_last_push_approval": false,
+        "required_review_thread_resolution": false,
+        "require_extra_approval_for_unattributed_changes": true,
+        "allowed_merge_methods": [
+          "merge",
+          "squash",
+          "rebase"
+        ]
+      },
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "SE-FDA-NEU-AI66B",
+      "ruleset_id": 21540407
+    }
+  ],
+  "public_release_verified": false,
+  "deployed_sha_verified": false,
+  "submission_verified": false,
+  "keep_online_date_confirmed": false,
+  "velocity_verified": false,
+  "wrap_up_ready_to_close": false,
+  "counted_sprint5_prs": [
+    218,
+    219,
+    223,
+    225,
+    226,
+    228,
+    229,
+    230,
+    232,
+    233
+  ],
+  "excluded_cross_story_prs": {
+    "217": "Sprint 4 contract review #188",
+    "220": "Sprint 4 submission boundaries #184",
+    "222": "Sprint 4 lecturer count boundaries #185"
+  },
+  "contribution_gate": "Pending: no substantive Sprint 5 Review changes content observed for Trung or Duc Anh; empty approvals excluded from this requirement.",
+  "sprint5_window_pr_index": [
+    {
+      "author": {
+        "id": "U_kgDODsn10g",
+        "is_bot": false,
+        "login": "khuatnhatminhcfpro-cmyk",
+        "name": "Khuất Đình Trung"
+      },
+      "createdAt": "2026-11-15T18:36:36Z",
+      "number": 238,
+      "state": "OPEN",
+      "title": "[#211] Prepare Team04 release demo and submission pack"
+    },
+    {
+      "author": {
+        "id": "U_kgDODr1GyA",
+        "is_bot": false,
+        "login": "tlduongducanh281-jpg",
+        "name": "DucAnh"
+      },
+      "createdAt": "2026-11-15T17:44:16Z",
+      "number": 237,
+      "state": "OPEN",
+      "title": "[#198] Complete lecturer creation ownership and atomic storage"
+    },
+    {
+      "author": {
+        "id": "U_kgDODsn10g",
+        "is_bot": false,
+        "login": "khuatnhatminhcfpro-cmyk",
+        "name": "Khuất Đình Trung"
+      },
+      "createdAt": "2026-11-15T17:42:13Z",
+      "number": 236,
+      "state": "OPEN",
+      "title": "[#27] Add lecturer grouped feedback analysis interface"
+    },
+    {
+      "author": {
+        "id": "U_kgDODoA-vA",
+        "is_bot": false,
+        "login": "lesyhuy2k6-gif",
+        "name": ""
+      },
+      "createdAt": "2026-11-15T17:40:31Z",
+      "number": 235,
+      "state": "OPEN",
+      "title": "[#209] Prepare M5 README entry point and safe demo access guide"
+    },
+    {
+      "author": {
+        "id": "U_kgDODr1GyA",
+        "is_bot": false,
+        "login": "tlduongducanh281-jpg",
+        "name": "DucAnh"
+      },
+      "createdAt": "2026-11-15T17:30:21Z",
+      "number": 234,
+      "state": "OPEN",
+      "title": "[#195] Implement US12 administrator role and settings APIs"
+    },
+    {
+      "author": {
+        "id": "U_kgDODoA-vA",
+        "is_bot": false,
+        "login": "lesyhuy2k6-gif",
+        "name": ""
+      },
+      "createdAt": "2026-11-15T17:23:45Z",
+      "number": 233,
+      "state": "MERGED",
+      "title": "[#208] Prepare six-section M5 operations handover and evidence register"
+    },
+    {
+      "author": {
+        "id": "U_kgDODoA-vA",
+        "is_bot": false,
+        "login": "lesyhuy2k6-gif",
+        "name": ""
+      },
+      "createdAt": "2026-11-15T16:15:48Z",
+      "number": 232,
+      "state": "MERGED",
+      "title": "[#207] Gate production releases and prepare enforced main protection"
+    },
+    {
+      "author": {
+        "id": "U_kgDODoA-vA",
+        "is_bot": false,
+        "login": "lesyhuy2k6-gif",
+        "name": ""
+      },
+      "createdAt": "2026-11-15T16:08:15Z",
+      "number": 231,
+      "state": "CLOSED",
+      "title": "[#207] DO NOT MERGE: intentional failing CI gate rehearsal"
+    },
+    {
+      "author": {
+        "id": "U_kgDODr1GyA",
+        "is_bot": false,
+        "login": "tlduongducanh281-jpg",
+        "name": "DucAnh"
+      },
+      "createdAt": "2026-11-15T15:58:11Z",
+      "number": 230,
+      "state": "MERGED",
+      "title": "[#210] Record P0 verification and safe M4 mutation rehearsal"
+    },
+    {
+      "author": {
+        "id": "U_kgDODoA-vA",
+        "is_bot": false,
+        "login": "lesyhuy2k6-gif",
+        "name": ""
+      },
+      "createdAt": "2026-11-15T15:57:11Z",
+      "number": 229,
+      "state": "MERGED",
+      "title": "[#204] Prepare safe production SQLite and verified backup recovery"
+    },
+    {
+      "author": {
+        "id": "U_kgDODr1GyA",
+        "is_bot": false,
+        "login": "tlduongducanh281-jpg",
+        "name": "DucAnh"
+      },
+      "createdAt": "2026-11-15T15:32:13Z",
+      "number": 228,
+      "state": "MERGED",
+      "title": "[#206] Add database readiness and sanitized request monitoring"
+    },
+    {
+      "author": {
+        "id": "U_kgDODoA-vA",
+        "is_bot": false,
+        "login": "lesyhuy2k6-gif",
+        "name": ""
+      },
+      "createdAt": "2026-11-15T15:24:03Z",
+      "number": 227,
+      "state": "MERGED",
+      "title": "[#190] Record M4 evidence and fix database audit CI failures"
+    },
+    {
+      "author": {
+        "id": "U_kgDODr1GyA",
+        "is_bot": false,
+        "login": "tlduongducanh281-jpg",
+        "name": "DucAnh"
+      },
+      "createdAt": "2026-11-15T15:11:19Z",
+      "number": 226,
+      "state": "MERGED",
+      "title": "[#205] Prepare persistent Render deployment and green-gated releases"
+    },
+    {
+      "author": {
+        "id": "U_kgDODr1GyA",
+        "is_bot": false,
+        "login": "tlduongducanh281-jpg",
+        "name": "DucAnh"
+      },
+      "createdAt": "2026-11-15T14:45:04Z",
+      "number": 225,
+      "state": "MERGED",
+      "title": "[#203] Prepare UI before/after evidence and identify missing M3 sources"
+    },
+    {
+      "author": {
+        "id": "U_kgDODr1GyA",
+        "is_bot": false,
+        "login": "tlduongducanh281-jpg",
+        "name": "DucAnh"
+      },
+      "createdAt": "2026-11-15T14:33:41Z",
+      "number": 224,
+      "state": "MERGED",
+      "title": "[#189] Audit isolated database fixtures, foreign keys and rollback coverage"
+    },
+    {
+      "author": {
+        "id": "U_kgDODsn10g",
+        "is_bot": false,
+        "login": "khuatnhatminhcfpro-cmyk",
+        "name": "Khuất Đình Trung"
+      },
+      "createdAt": "2026-11-15T14:26:11Z",
+      "number": 223,
+      "state": "MERGED",
+      "title": "[#214] Complete P0 backend contracts and M5 runtime readiness"
+    },
+    {
+      "author": {
+        "id": "U_kgDODr1GyA",
+        "is_bot": false,
+        "login": "tlduongducanh281-jpg",
+        "name": "DucAnh"
+      },
+      "createdAt": "2026-11-15T13:52:18Z",
+      "number": 222,
+      "state": "MERGED",
+      "title": "[#185] Verify US04 completed counts with 19, 20 and 21 responses"
+    },
+    {
+      "author": {
+        "id": "U_kgDODsn10g",
+        "is_bot": false,
+        "login": "khuatnhatminhcfpro-cmyk",
+        "name": "Khuất Đình Trung"
+      },
+      "createdAt": "2026-11-15T13:44:09Z",
+      "number": 221,
+      "state": "MERGED",
+      "title": "[#186] Cover role-specific and idempotent logout"
+    },
+    {
+      "author": {
+        "id": "U_kgDODr1GyA",
+        "is_bot": false,
+        "login": "tlduongducanh281-jpg",
+        "name": "DucAnh"
+      },
+      "createdAt": "2026-11-15T13:40:36Z",
+      "number": 220,
+      "state": "MERGED",
+      "title": "[#184] Complete US03 rating, text and required-answer boundaries"
+    },
+    {
+      "author": {
+        "id": "U_kgDODsn10g",
+        "is_bot": false,
+        "login": "khuatnhatminhcfpro-cmyk",
+        "name": "Khuất Đình Trung"
+      },
+      "createdAt": "2026-11-15T13:37:55Z",
+      "number": 219,
+      "state": "MERGED",
+      "title": "[#202] Complete lecturer feedback navigation and error UX"
+    },
+    {
+      "author": {
+        "id": "U_kgDODsn10g",
+        "is_bot": false,
+        "login": "khuatnhatminhcfpro-cmyk",
+        "name": "Khuất Đình Trung"
+      },
+      "createdAt": "2026-11-15T13:02:47Z",
+      "number": 218,
+      "state": "MERGED",
+      "title": "[#201] Complete student P0 navigation and sign-out"
+    },
+    {
+      "author": {
+        "id": "U_kgDODsn10g",
+        "is_bot": false,
+        "login": "khuatnhatminhcfpro-cmyk",
+        "name": "Khuất Đình Trung"
+      },
+      "createdAt": "2026-11-15T12:35:49Z",
+      "number": 217,
+      "state": "MERGED",
+      "title": "[#188] Reconcile P0 contracts and timing evidence"
+    },
+    {
+      "author": {
+        "id": "U_kgDODsn10g",
+        "is_bot": false,
+        "login": "khuatnhatminhcfpro-cmyk",
+        "name": "Khuất Đình Trung"
+      },
+      "createdAt": "2026-11-15T12:15:47Z",
+      "number": 213,
+      "state": "MERGED",
+      "title": "[#187] Verify three active student evaluations"
+    },
+    {
+      "author": {
+        "id": "U_kgDODsn10g",
+        "is_bot": false,
+        "login": "khuatnhatminhcfpro-cmyk",
+        "name": "Khuất Đình Trung"
+      },
+      "createdAt": "2026-11-15T11:08:09Z",
+      "number": 191,
+      "state": "MERGED",
+      "title": "[#163] Refine Sprint 4 backlog and test coverage plans"
+    },
+    {
+      "author": {
+        "id": "U_kgDODsn10g",
+        "is_bot": false,
+        "login": "khuatnhatminhcfpro-cmyk",
+        "name": "Khuất Đình Trung"
+      },
+      "createdAt": "2026-11-15T10:04:40Z",
+      "number": 182,
+      "state": "MERGED",
+      "title": "[#166] Write automated evaluation list tests for US02"
+    },
+    {
+      "author": {
+        "id": "U_kgDODsn10g",
+        "is_bot": false,
+        "login": "khuatnhatminhcfpro-cmyk",
+        "name": "Khuất Đình Trung"
+      },
+      "createdAt": "2026-11-15T09:54:53Z",
+      "number": 181,
+      "state": "MERGED",
+      "title": "[#165] Write automated authentication tests for US01"
+    },
+    {
+      "author": {
+        "id": "U_kgDODsn10g",
+        "is_bot": false,
+        "login": "khuatnhatminhcfpro-cmyk",
+        "name": "Khuất Đình Trung"
+      },
+      "createdAt": "2026-11-15T09:44:47Z",
+      "number": 180,
+      "state": "MERGED",
+      "title": "[#164] Create M4 automated testing documentation"
+    },
+    {
+      "author": {
+        "id": "U_kgDODoA-vA",
+        "is_bot": false,
+        "login": "lesyhuy2k6-gif",
+        "name": ""
+      },
+      "createdAt": "2026-11-15T01:03:41Z",
+      "number": 179,
+      "state": "MERGED",
+      "title": "update Sprint 4 log"
+    },
+    {
+      "author": {
+        "id": "U_kgDODoA-vA",
+        "is_bot": false,
+        "login": "lesyhuy2k6-gif",
+        "name": ""
+      },
+      "createdAt": "2026-11-15T00:51:02Z",
+      "number": 178,
+      "state": "MERGED",
+      "title": "build: add development testing dependencies"
+    },
+    {
+      "author": {
+        "id": "U_kgDODoA-vA",
+        "is_bot": false,
+        "login": "lesyhuy2k6-gif",
+        "name": ""
+      },
+      "createdAt": "2026-11-15T00:43:38Z",
+      "number": 177,
+      "state": "MERGED",
+      "title": "docs: update setup guide with automated testing instructions"
+    }
+  ],
+  "coverage_note": "100 most recently updated open/merged PRs, cross-checked with all 30 PRs created since 2026-11-14. Counts use explicit M5 core scope, not all date-window PRs. Closed unmerged #231 is an intentional negative CI rehearsal, not delivered work."
+}
