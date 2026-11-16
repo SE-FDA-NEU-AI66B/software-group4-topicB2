@@ -7,6 +7,9 @@ found in connected repository/deployment metadata. #205/#209 must supply and
 verify it before this README can be a final public-demo entry point. No guessed
 host or localhost address is presented as the released application.
 
+[Current M5 deployment readiness and manual setup](docs/audit/m5-deployment-readiness.md) ·
+[Pending live verification ledger](docs/audit/m5-live-verification.md).
+
 EduSurvey collects university course evaluations and lets assigned lecturers
 review submitted feedback. The instructions below describe the implemented UI.
 Public testers will need only the verified URL and a private browser, not an install.

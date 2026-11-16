@@ -69,3 +69,7 @@ The [readiness/contribution/rules sources](../evidence/211/README.md) explicitly
 retain public-origin/deployed-SHA/release, official student-ID, M3 attribution,
 team rehearsal, late-submission and final per-person evidence gaps. No successful
 public tour, copied-cookie revocation, tag/release or course submission is claimed.
+
+Latest deployment preparation: [M5 readiness audit](../audit/m5-deployment-readiness.md)
+and [live verification ledger](../audit/m5-live-verification.md). These do not
+turn the existing draft into a final release/PDF or a submitted document.
