@@ -1,0 +1,73 @@
+{
+  "captured_at": "2026-11-16T01:19:38.137710+07:00",
+  "scope": "Read-only repository snapshot; not public deployment/rehearsal/submission verification.",
+  "main_sha": "7c0b06e36fff7690db9f6cec3d9d28a4e0503c92",
+  "homepage": null,
+  "github_deployments": [],
+  "published_releases": [],
+  "latest_observed_green_main_ci": {
+    "conclusion": "success",
+    "databaseId": 43744066081,
+    "headSha": "7c0b06e36fff7690db9f6cec3d9d28a4e0503c92",
+    "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/actions/runs/43744066081"
+  },
+  "green_ci_pytest_summary": {
+    "passed": 257,
+    "seconds": 52.3
+  },
+  "dependencies": [
+    {
+      "number": 203,
+      "state": "CLOSED",
+      "title": "[Task] Capture two verified UI improvements from M3 feedback",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/203"
+    },
+    {
+      "number": 205,
+      "state": "CLOSED",
+      "title": "[Task] Deploy EduSurvey to a public HTTPS URL with green-gated releases",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/205"
+    },
+    {
+      "number": 208,
+      "state": "OPEN",
+      "title": "[Task] Write and review M5 operations handover",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/208"
+    },
+    {
+      "number": 209,
+      "state": "OPEN",
+      "title": "[Task] Publish M5 README entry point and safe demo access guide",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/209"
+    },
+    {
+      "number": 210,
+      "state": "CLOSED",
+      "title": "[Task] Verify every P0 on the deployed URL and rehearse M4 test evidence",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/210"
+    },
+    {
+      "number": 211,
+      "state": "OPEN",
+      "title": "[Task] Prepare v1.0 release, final demo and M5 submission PDF",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/211"
+    },
+    {
+      "number": 212,
+      "state": "OPEN",
+      "title": "[Chore] Sprint 5 wrap-up",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/212"
+    }
+  ],
+  "public_origin_verified": false,
+  "deployed_sha_verified": false,
+  "release_v1_0_published": false,
+  "team_number_and_student_ids_confirmed": false,
+  "human_team_rehearsal_completed": false,
+  "late_submission_agreement_confirmed": false,
+  "pdf_submitted": false,
+  "finalization_ready": false,
+  "confirmed_team_number": 4,
+  "team_number_source": "User confirmation, 2026-11-16",
+  "student_id_search": "Not found in current tracked text, README/process/design/requirements history search, issue #69, relevant project profile bios, or the only tracked historical PDF docs/evidence/190/m4-evidence.pdf."
+}

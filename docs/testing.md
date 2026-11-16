@@ -238,6 +238,9 @@ The existing lecturer routes/template now provide useful HTML errors, recovery l
 
 ## 3. Automated tests
 
+M5 release/PDF guard tests and actual preparation evidence are registered separately in
+[the #211 preparation pack](m5/README.md#verification-register--211), without changing the P0/M4 case matrix.
+
 From the repository root, use Python 3.12 (the CI version; the setup guide currently suggests 3.14):
 
 ```bash

@@ -1,0 +1,32 @@
+{
+  "team_number": 4,
+  "team_source": "User confirmation in this task, 2026-11-16",
+  "member_names_source": "docs/process.md (three names in project team description), README.md historical team table",
+  "members": [
+    {
+      "name": "Khuất Đình Trung",
+      "github": "khuatnhatminhcfpro-cmyk",
+      "student_id": null
+    },
+    {
+      "name": "Dương Đức Anh",
+      "github": "tlduongducanh281-jpg",
+      "student_id": null
+    },
+    {
+      "name": "Lê Sỹ Huy",
+      "github": "lesyhuy2k6-gif",
+      "student_id": null
+    }
+  ],
+  "student_ids_found": false,
+  "searches": [
+    "Tracked README/docs/md/json/txt/csv excluding generated submission data",
+    "Git history regex over README/process/requirements/design",
+    "All historical PDF/Word filenames (only M4 evidence PDF present)",
+    "Text extracted from M4 evidence PDF",
+    "M1 preparation issue #69 body/comments",
+    "Relevant GitHub profile names/bios (no student IDs)"
+  ],
+  "constraint": "Do not infer student IDs from repository name, GitHub numeric account IDs, synthetic database user IDs or commit emails."
+}

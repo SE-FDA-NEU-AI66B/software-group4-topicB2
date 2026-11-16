@@ -1,0 +1,56 @@
+{
+  "captured_at": "2026-11-15T18:23:22.432781+00:00",
+  "revision": "7c0b06e36fff7690db9f6cec3d9d28a4e0503c92",
+  "environment": {
+    "platform": "Darwin",
+    "python": "3.14.8"
+  },
+  "scope": "Local temporary-copy mutation, not a deployment or a production defect fix",
+  "source": "src/app.py",
+  "original_expression": "deadline < comparison_now + timedelta(hours=24)",
+  "mutated_expression": "deadline <= comparison_now + timedelta(hours=24)",
+  "original_sha256": "a34e7609a5ab1e2be3dcf9462ba972a2c217fcb870c7c2eafe662416f1dbfd0a",
+  "mutated_sha256": "84f2dc4a849b87dc23a3c4c4afb7d4592a5259274b3436e4dc9cad699a73f5ba",
+  "restored_sha256": "a34e7609a5ab1e2be3dcf9462ba972a2c217fcb870c7c2eafe662416f1dbfd0a",
+  "workspace_source_unchanged": true,
+  "stages": [
+    {
+      "stage": "baseline",
+      "command": "python -m pytest -q tests/test_student_evaluations.py::test_student_evaluations_due_soon_24_hour_boundary --junitxml=<temporary-report>",
+      "exit_code": 0,
+      "tests": 3,
+      "failed_nodes": [],
+      "passed": 3,
+      "errors": 0,
+      "skipped": 0,
+      "elapsed_seconds": 0.39,
+      "output": "...                                                                      [100%]\n3 passed in 0.07s\n"
+    },
+    {
+      "stage": "mutated",
+      "command": "python -m pytest -q tests/test_student_evaluations.py::test_student_evaluations_due_soon_24_hour_boundary --junitxml=<temporary-report>",
+      "exit_code": 1,
+      "tests": 3,
+      "failed_nodes": [
+        "test_student_evaluations_due_soon_24_hour_boundary[TC-09-at]"
+      ],
+      "passed": 2,
+      "errors": 0,
+      "skipped": 0,
+      "elapsed_seconds": 0.365,
+      "output": ".F.                                                                      [100%]\n=================================== FAILURES ===================================\n_________ test_student_evaluations_due_soon_24_hour_boundary[TC-09-at] _________\n\nclient = <FlaskClient <Flask 'src.app'>>, seconds = 86400, expected = 'Active'\n\n    @pytest.mark.parametrize(\n        \"seconds,expected\",\n        [\n            pytest.param(86399, \"Due soon\", id=\"TC-08-below\"),\n            pytest.param(86400, \"Active\", id=\"TC-09-at\"),\n            pytest.param(86401, \"Active\", id=\"TC-10-above\"),\n        ],\n    )\n    def test_student_evaluations_due_soon_24_hour_boundary(client, seconds, expected):\n        with sqlite3.connect(app_module.DATABASE) as connection:\n            connection.execute(\n                \"UPDATE evaluations SET deadline = ? WHERE id = 1\",\n                ((NOW + timedelta(seconds=seconds)).isoformat(),),\n            )\n        login_as(client)\n>       assert evaluation(client, 1)[\"survey_status\"] == expected\nE       AssertionError: assert 'Due soon' == 'Active'\nE         \nE         - Active\nE         + Due soon\n\ntests/test_student_evaluations.py:272: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_student_evaluations.py::test_student_evaluations_due_soon_24_hour_boundary[TC-09-at]\n1 failed, 2 passed in 0.16s\n"
+    },
+    {
+      "stage": "restored",
+      "command": "python -m pytest -q tests/test_student_evaluations.py::test_student_evaluations_due_soon_24_hour_boundary --junitxml=<temporary-report>",
+      "exit_code": 0,
+      "tests": 3,
+      "failed_nodes": [],
+      "passed": 3,
+      "errors": 0,
+      "skipped": 0,
+      "elapsed_seconds": 0.256,
+      "output": "...                                                                      [100%]\n3 passed in 0.04s\n"
+    }
+  ]
+}

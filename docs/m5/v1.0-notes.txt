@@ -1,0 +1,3 @@
+Deliver student authentication, assigned evaluations, persisted submissions, lecturer feedback and visible sign-out.
+Include isolated automated tests, reviewed CI gating, database readiness and sanitized runtime monitoring.
+Provide demo access, deployment/rollback guidance, backup recovery and maintenance handover.

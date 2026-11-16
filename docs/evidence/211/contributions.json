@@ -1,0 +1,703 @@
+{
+  "scope": "Current merged PRs linked by milestone #2 or explicit title task ID #200–212; actual actors, not assignments. Coverage is this declared M5 subset, not all repository history or final acceptance.",
+  "milestone": "Sprint 5 - M5 Public Release and Operations",
+  "merged_prs": [
+    {
+      "number": 233,
+      "title": "[#208] Prepare six-section M5 operations handover and evidence register",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/233",
+      "milestone": null,
+      "author": {
+        "login": "lesyhuy2k6-gif"
+      },
+      "mergedBy": {
+        "login": "lesyhuy2k6-gif"
+      },
+      "mergedAt": "2026-11-15T17:58:18Z",
+      "headRefOid": "26fbc21623570f350556920527c5840b95601083",
+      "reviews": {
+        "nodes": [
+          {
+            "author": {
+              "login": "tlduongducanh281-jpg"
+            },
+            "state": "APPROVED",
+            "submittedAt": "2026-11-15T17:58:00Z",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/233#pullrequestreview-5912048627",
+            "commit": {
+              "oid": "26fbc21623570f350556920527c5840b95601083"
+            }
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "26fbc21623570f350556920527c5840b95601083",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": []
+      },
+      "independent_approval_recorded": true,
+      "head_checks_success": true,
+      "merger_is_author": true
+    },
+    {
+      "number": 232,
+      "title": "[#207] Gate production releases and prepare enforced main protection",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/232",
+      "milestone": null,
+      "author": {
+        "login": "lesyhuy2k6-gif"
+      },
+      "mergedBy": {
+        "login": "lesyhuy2k6-gif"
+      },
+      "mergedAt": "2026-11-15T17:09:43Z",
+      "headRefOid": "cb9129665f3656850c04e88f1405ae0a64ed8a13",
+      "reviews": {
+        "nodes": [
+          {
+            "author": {
+              "login": "tlduongducanh281-jpg"
+            },
+            "state": "APPROVED",
+            "submittedAt": "2026-11-15T17:09:31Z",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/232#pullrequestreview-5911865020",
+            "commit": {
+              "oid": "cb9129665f3656850c04e88f1405ae0a64ed8a13"
+            }
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "cb9129665f3656850c04e88f1405ae0a64ed8a13",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 207,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/207",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T17:09:45Z"
+          }
+        ]
+      },
+      "independent_approval_recorded": true,
+      "head_checks_success": true,
+      "merger_is_author": true
+    },
+    {
+      "number": 230,
+      "title": "[#210] Record P0 verification and safe M4 mutation rehearsal",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/230",
+      "milestone": null,
+      "author": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedBy": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedAt": "2026-11-15T17:00:07Z",
+      "headRefOid": "a4f3c40d12691c76cd176d9e27a5f8fdb3d821c5",
+      "reviews": {
+        "nodes": [
+          {
+            "author": {
+              "login": "lesyhuy2k6-gif"
+            },
+            "state": "APPROVED",
+            "submittedAt": "2026-11-15T16:59:49Z",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/230#pullrequestreview-5911829903",
+            "commit": {
+              "oid": "a4f3c40d12691c76cd176d9e27a5f8fdb3d821c5"
+            }
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "a4f3c40d12691c76cd176d9e27a5f8fdb3d821c5",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 210,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/210",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T17:00:08Z"
+          }
+        ]
+      },
+      "independent_approval_recorded": true,
+      "head_checks_success": true,
+      "merger_is_author": true
+    },
+    {
+      "number": 229,
+      "title": "[#204] Prepare safe production SQLite and verified backup recovery",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/229",
+      "milestone": null,
+      "author": {
+        "login": "lesyhuy2k6-gif"
+      },
+      "mergedBy": {
+        "login": "lesyhuy2k6-gif"
+      },
+      "mergedAt": "2026-11-15T16:49:08Z",
+      "headRefOid": "2085dc5fd3a2dbf1992e3adc7269395f952cb73a",
+      "reviews": {
+        "nodes": [
+          {
+            "author": {
+              "login": "tlduongducanh281-jpg"
+            },
+            "state": "APPROVED",
+            "submittedAt": "2026-11-15T16:48:53Z",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/229#pullrequestreview-5911790957",
+            "commit": {
+              "oid": "2085dc5fd3a2dbf1992e3adc7269395f952cb73a"
+            }
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "2085dc5fd3a2dbf1992e3adc7269395f952cb73a",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 204,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/204",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T16:49:10Z"
+          }
+        ]
+      },
+      "independent_approval_recorded": true,
+      "head_checks_success": true,
+      "merger_is_author": true
+    },
+    {
+      "number": 228,
+      "title": "[#206] Add database readiness and sanitized request monitoring",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/228",
+      "milestone": null,
+      "author": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedBy": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedAt": "2026-11-15T16:33:58Z",
+      "headRefOid": "2db8f6cd490eb5e5588d3f39dc635d4b625826d1",
+      "reviews": {
+        "nodes": [
+          {
+            "author": {
+              "login": "lesyhuy2k6-gif"
+            },
+            "state": "APPROVED",
+            "submittedAt": "2026-11-15T16:07:05Z",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/228#pullrequestreview-5911637147",
+            "commit": {
+              "oid": "4d4df851b3be9f1451c8a2a2f769675d230bf32b"
+            }
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "2db8f6cd490eb5e5588d3f39dc635d4b625826d1",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 206,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/206",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T16:34:00Z"
+          }
+        ]
+      },
+      "independent_approval_recorded": true,
+      "head_checks_success": true,
+      "merger_is_author": true
+    },
+    {
+      "number": 226,
+      "title": "[#205] Prepare persistent Render deployment and green-gated releases",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/226",
+      "milestone": null,
+      "author": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedBy": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedAt": "2026-11-15T15:45:05Z",
+      "headRefOid": "c92a17176cd2f25d904eb56ec9b4df0ccfafaaa4",
+      "reviews": {
+        "nodes": [
+          {
+            "author": {
+              "login": "lesyhuy2k6-gif"
+            },
+            "state": "APPROVED",
+            "submittedAt": "2026-11-15T15:40:55Z",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/226#pullrequestreview-5911532224",
+            "commit": {
+              "oid": "c92a17176cd2f25d904eb56ec9b4df0ccfafaaa4"
+            }
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "c92a17176cd2f25d904eb56ec9b4df0ccfafaaa4",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 205,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/205",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T15:45:06Z"
+          }
+        ]
+      },
+      "independent_approval_recorded": true,
+      "head_checks_success": true,
+      "merger_is_author": true
+    },
+    {
+      "number": 225,
+      "title": "[#203] Prepare UI before/after evidence and identify missing M3 sources",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/225",
+      "milestone": null,
+      "author": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedBy": {
+        "login": "tlduongducanh281-jpg"
+      },
+      "mergedAt": "2026-11-15T15:37:19Z",
+      "headRefOid": "c6faca556d235319deb477aceadfe4b3e55544bc",
+      "reviews": {
+        "nodes": [
+          {
+            "author": {
+              "login": "lesyhuy2k6-gif"
+            },
+            "state": "APPROVED",
+            "submittedAt": "2026-11-15T15:36:47Z",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/225#pullrequestreview-5911516759",
+            "commit": {
+              "oid": "c6faca556d235319deb477aceadfe4b3e55544bc"
+            }
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "c6faca556d235319deb477aceadfe4b3e55544bc",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 203,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/203",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T15:37:21Z"
+          }
+        ]
+      },
+      "independent_approval_recorded": true,
+      "head_checks_success": true,
+      "merger_is_author": true
+    },
+    {
+      "number": 223,
+      "title": "[#214] Complete P0 backend contracts and M5 runtime readiness",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/223",
+      "milestone": {
+        "number": 2,
+        "title": "Sprint 5 - M5 Public Release and Operations"
+      },
+      "author": {
+        "login": "khuatnhatminhcfpro-cmyk"
+      },
+      "mergedBy": {
+        "login": "khuatnhatminhcfpro-cmyk"
+      },
+      "mergedAt": "2026-11-15T14:51:04Z",
+      "headRefOid": "f19f6abd8519b8ac55d95d6bdeda466bed623759",
+      "reviews": {
+        "nodes": [
+          {
+            "author": {
+              "login": "lesyhuy2k6-gif"
+            },
+            "state": "APPROVED",
+            "submittedAt": "2026-11-15T14:48:45Z",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/223#pullrequestreview-5911326833",
+            "commit": {
+              "oid": "f19f6abd8519b8ac55d95d6bdeda466bed623759"
+            }
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "f19f6abd8519b8ac55d95d6bdeda466bed623759",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 214,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/214",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T14:51:05Z"
+          },
+          {
+            "number": 215,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/215",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T14:51:08Z"
+          }
+        ]
+      },
+      "independent_approval_recorded": true,
+      "head_checks_success": true,
+      "merger_is_author": true
+    },
+    {
+      "number": 219,
+      "title": "[#202] Complete lecturer feedback navigation and error UX",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/219",
+      "milestone": {
+        "number": 2,
+        "title": "Sprint 5 - M5 Public Release and Operations"
+      },
+      "author": {
+        "login": "khuatnhatminhcfpro-cmyk"
+      },
+      "mergedBy": {
+        "login": "khuatnhatminhcfpro-cmyk"
+      },
+      "mergedAt": "2026-11-15T14:00:40Z",
+      "headRefOid": "82811a81ed7b4767c126d1d7d5e9037eb6a662bb",
+      "reviews": {
+        "nodes": [
+          {
+            "author": {
+              "login": "tlduongducanh281-jpg"
+            },
+            "state": "APPROVED",
+            "submittedAt": "2026-11-15T13:59:43Z",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/219#pullrequestreview-5911087930",
+            "commit": {
+              "oid": "82811a81ed7b4767c126d1d7d5e9037eb6a662bb"
+            }
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "82811a81ed7b4767c126d1d7d5e9037eb6a662bb",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 202,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/202",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T14:00:42Z"
+          }
+        ]
+      },
+      "independent_approval_recorded": true,
+      "head_checks_success": true,
+      "merger_is_author": true
+    },
+    {
+      "number": 218,
+      "title": "[#201] Complete student P0 navigation and sign-out",
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/218",
+      "milestone": {
+        "number": 2,
+        "title": "Sprint 5 - M5 Public Release and Operations"
+      },
+      "author": {
+        "login": "khuatnhatminhcfpro-cmyk"
+      },
+      "mergedBy": {
+        "login": "khuatnhatminhcfpro-cmyk"
+      },
+      "mergedAt": "2026-11-15T13:21:06Z",
+      "headRefOid": "318113ac974de3df0f0cb6a70a07cfc8ebf18ec1",
+      "reviews": {
+        "nodes": [
+          {
+            "author": {
+              "login": "tlduongducanh281-jpg"
+            },
+            "state": "APPROVED",
+            "submittedAt": "2026-11-15T13:11:07Z",
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/pull/218#pullrequestreview-5910888060",
+            "commit": {
+              "oid": "3f69215da3a6887c3f56a071d4ff93627a2ebb8a"
+            }
+          }
+        ]
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "318113ac974de3df0f0cb6a70a07cfc8ebf18ec1",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      },
+      "closingIssuesReferences": {
+        "nodes": [
+          {
+            "number": 201,
+            "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/201",
+            "state": "CLOSED",
+            "closedAt": "2026-11-15T13:21:07Z"
+          }
+        ]
+      },
+      "independent_approval_recorded": true,
+      "head_checks_success": true,
+      "merger_is_author": true
+    }
+  ],
+  "linked_issues": [
+    {
+      "number": 201,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/201",
+      "state": "closed",
+      "closed_at": "2026-11-15T13:21:07Z",
+      "closed_by": "khuatnhatminhcfpro-cmyk"
+    },
+    {
+      "number": 202,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/202",
+      "state": "closed",
+      "closed_at": "2026-11-15T14:00:42Z",
+      "closed_by": "khuatnhatminhcfpro-cmyk"
+    },
+    {
+      "number": 203,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/203",
+      "state": "closed",
+      "closed_at": "2026-11-15T15:37:21Z",
+      "closed_by": "tlduongducanh281-jpg"
+    },
+    {
+      "number": 204,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/204",
+      "state": "closed",
+      "closed_at": "2026-11-15T16:49:10Z",
+      "closed_by": "lesyhuy2k6-gif"
+    },
+    {
+      "number": 205,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/205",
+      "state": "closed",
+      "closed_at": "2026-11-15T15:45:06Z",
+      "closed_by": "tlduongducanh281-jpg"
+    },
+    {
+      "number": 206,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/206",
+      "state": "closed",
+      "closed_at": "2026-11-15T16:34:00Z",
+      "closed_by": "tlduongducanh281-jpg"
+    },
+    {
+      "number": 207,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/207",
+      "state": "closed",
+      "closed_at": "2026-11-15T17:09:45Z",
+      "closed_by": "lesyhuy2k6-gif"
+    },
+    {
+      "number": 210,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/210",
+      "state": "closed",
+      "closed_at": "2026-11-15T17:00:08Z",
+      "closed_by": "tlduongducanh281-jpg"
+    },
+    {
+      "number": 214,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/214",
+      "state": "closed",
+      "closed_at": "2026-11-15T14:51:05Z",
+      "closed_by": "khuatnhatminhcfpro-cmyk"
+    },
+    {
+      "number": 215,
+      "url": "https://github.com/SE-FDA-NEU-AI66B/software-group4-topicB2/issues/215",
+      "state": "closed",
+      "closed_at": "2026-11-15T14:51:08Z",
+      "closed_by": "khuatnhatminhcfpro-cmyk"
+    }
+  ],
+  "members": {
+    "khuatnhatminhcfpro-cmyk": {
+      "authored_merged_prs": [
+        223,
+        219,
+        218
+      ],
+      "merge_actions": [
+        223,
+        219,
+        218
+      ],
+      "reviews_given": [],
+      "closed_issues": [
+        201,
+        202,
+        214,
+        215
+      ],
+      "minimums_observed": false
+    },
+    "tlduongducanh281-jpg": {
+      "authored_merged_prs": [
+        230,
+        228,
+        226,
+        225
+      ],
+      "merge_actions": [
+        230,
+        228,
+        226,
+        225
+      ],
+      "reviews_given": [
+        233,
+        232,
+        229,
+        219,
+        218
+      ],
+      "closed_issues": [
+        203,
+        205,
+        206,
+        210
+      ],
+      "minimums_observed": true
+    },
+    "lesyhuy2k6-gif": {
+      "authored_merged_prs": [
+        233,
+        232,
+        229
+      ],
+      "merge_actions": [
+        233,
+        232,
+        229
+      ],
+      "reviews_given": [
+        230,
+        228,
+        226,
+        225,
+        223
+      ],
+      "closed_issues": [
+        204,
+        207
+      ],
+      "minimums_observed": true
+    }
+  },
+  "reviewed_green_merged_pr_count": 10,
+  "captured_at": "2026-11-16T01:29:32.316629+07:00",
+  "caveat": "Counts are observed actions in the declared merged-M5-PR subset, not course acceptance; open/other eligible work may require separate audit. Authorship equals merger where flagged; no interpretation of who physically operated GitHub or automatic/self-merge policy is inferred."
+}
