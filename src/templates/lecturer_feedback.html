@@ -64,7 +64,7 @@
             <h2>{{ selected_evaluation["title"] }}</h2>
             <p>
                 <strong>Deadline:</strong>
-                {{ selected_evaluation["deadline"] }}
+                <time data-local-date datetime="{{ selected_evaluation['deadline'] }}">{{ selected_evaluation["deadline"] }}</time>
             </p>
             <p>
                 <strong>Status:</strong>
@@ -194,7 +194,7 @@
                                 <strong>{{ item["completed_responses"] }}</strong>
                             </p>
                             <p class="muted">
-                                Deadline: {{ item["deadline"] }}
+                                Deadline: <time data-local-date datetime="{{ item['deadline'] }}">{{ item["deadline"] }}</time>
                             </p>
                         </div>
                         <a class="button"

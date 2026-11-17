@@ -1,4 +1,8 @@
 (() => {
+    document.querySelectorAll('time[data-local-date]').forEach(element => {
+        const date = new Date(element.dateTime);
+        if (!Number.isNaN(date.getTime())) element.textContent = new Intl.DateTimeFormat(undefined, {dateStyle: 'medium', timeStyle: 'short'}).format(date);
+    });
     const toggle = document.querySelector('.app-menu');
     const navigation = document.querySelector('.university-nav');
     if (!toggle || !navigation) return;
