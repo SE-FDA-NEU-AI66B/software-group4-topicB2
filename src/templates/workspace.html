@@ -1,1 +1,79 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Workspace | EduSurvey</title><link rel="stylesheet" href="/static/css/session.css"><link rel="stylesheet" href="/static/css/workspace.css"></head><body><header><a class="brand" href="/dashboard">EduSurvey <small>NEU · Course experience</small></a>{% include 'session_controls.html' %}</header><main><p class="eyebrow">ACADEMIC WORKSPACE / {{ role }}</p><h1 id="welcome">Your semester at a glance</h1><p>Thoughtful feedback. Better learning experiences.</p><nav class="tabs"><a href="/dashboard">Overview</a>{% if role == 'student' %}<a href="/evaluations">My Evaluations</a>{% else %}<a href="#evaluations">Manage evaluations</a>{% if role == 'lecturer' %}<a href="/lecturer/feedback">Feedback & statistics</a>{% else %}<a href="#users">Accounts & roles</a>{% endif %}{% endif %}</nav><p id="status" role="status">Loading your workspace…</p><button id="retry" hidden>Try again</button><section id="metrics" class="metrics" aria-label="Semester overview"></section><section><h2>My courses</h2><label>Search courses<input id="search" type="search" placeholder="Course code or name"></label><div id="courses" class="grid"></div></section>{% if role == 'student' %}<section><h2>My evaluation progress</h2><div id="student-evaluations" class="grid"></div></section>{% endif %}{% if role != 'student' %}<section id="evaluations"><h2>Evaluation management</h2><p>Create a draft, check its questions, then open it for enrolled students.</p><form id="create"><label>Course<select name="course_id" required></select></label><label>Evaluation title<input name="title" maxlength="200" required></label><label>Deadline (your local time)<input name="deadline" type="datetime-local" required></label><fieldset><legend>Questions</legend><div id="questions"></div><button type="button" id="add">Add question</button></fieldset><button type="submit">Save draft</button><p id="form-status" role="status"></p></form><div id="evaluation-list" class="grid"></div></section>{% endif %}{% if role == 'administrator' %}<section id="users"><h2>Course administration</h2><form id="course-form"><label>Course code<input name="course_code" maxlength="200" required></label><label>Course name<input name="course_name" maxlength="200" required></label><button>Create course</button><p role="status"></p></form><form id="membership-form"><h3>Enroll a student or assign a lecturer</h3><label>Account<select name="user_id" required></select></label><label>Course<select name="course_id" required></select></label><button>Save relationship</button><p role="status"></p></form><h2>Account directory</h2><p>Registered accounts and current access roles.</p><div class="table-scroll"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th></tr></thead><tbody id="user-list"></tbody></table></div></section>{% endif %}</main><footer>EduSurvey · National Economics University</footer><script src="/static/js/session.js" defer></script><script src="/static/js/workspace.js" defer></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#102b50">
+    <title>{{ 'Administration' if role == 'administrator' else 'Workspace' }} | EduSurvey</title>
+    <link rel="stylesheet" href="/static/css/session.css">
+    <link rel="stylesheet" href="/static/css/workspace.css">
+    <link rel="stylesheet" href="/static/css/design-system.css">
+</head>
+<body class="portal-page" data-role="{{ role }}">
+{% include 'app_navigation.html' %}
+<header class="workspace-topbar">
+    <div class="workspace-breadcrumb">Workspace <span>/</span> {{ 'Administration' if role == 'administrator' else role|title }}</div>
+    {% include 'session_controls.html' %}
+</header>
+<main id="app-content" class="workspace-content">
+    <div class="workspace-heading">
+        <div><p class="eyebrow">{{ 'ACADEMIC ADMINISTRATION' if role == 'administrator' else role|upper ~ ' WORKSPACE' }}</p>
+        <h1 id="welcome">Your semester at a glance</h1>
+        <p class="page-description">{{ 'Manage university access, courses and evaluation activity.' if role == 'administrator' else 'Thoughtful feedback. Better learning experiences.' }}</p></div>
+        {% if role != 'student' %}<a class="action-link" href="#evaluations">＋ Create evaluation</a>{% else %}<a class="action-link" href="/evaluations">View my evaluations →</a>{% endif %}
+    </div>
+    <div class="workspace-notice"><p id="status" role="status">Loading your workspace…</p><button id="retry" type="button" hidden>Try again</button></div>
+    <section id="metrics" class="metrics" aria-label="Semester overview" aria-busy="true"></section>
+    <nav class="workspace-tabs" aria-label="Workspace sections">
+        {% if role == 'student' %}<a href="#student-progress">My progress</a>{% else %}<a href="#evaluations">Evaluations</a>{% endif %}
+        <a href="#course-section">Courses</a>
+        {% if role == 'lecturer' %}<a href="/lecturer/feedback">Feedback & analytics ↗</a>{% elif role == 'administrator' %}<a href="#users">Accounts</a><a href="#course-admin">Enrollments & assignments</a>{% endif %}
+    </nav>
+    {% if role == 'student' %}
+    <section id="student-progress" class="workspace-section">
+        <div class="section-heading"><div><p class="eyebrow">YOUR NEXT STEP</p><h2>My evaluation progress</h2><p>Complete your open evaluations before their deadlines.</p></div>
+        <label class="compact-label">Evaluation status<select id="evaluation-filter" aria-label="Evaluation status"><option value="all">All statuses</option><option>Active</option><option>Due soon</option><option>Completed</option><option>Closed</option></select></label></div>
+        <div id="completion-summary" class="completion-summary" hidden></div>
+        <div id="student-evaluations" class="grid"></div>
+    </section>
+    {% endif %}
+    {% if role != 'student' %}
+    <section id="evaluations" class="workspace-section">
+        <div class="section-heading"><div><p class="eyebrow">EVALUATION WORKSPACE</p><h2>Evaluation management</h2><p>Prepare questions, preview the survey, then open it for enrolled students.</p></div><label class="compact-label">Evaluation status<select id="evaluation-filter" aria-label="Evaluation status"><option value="all">All statuses</option><option value="open">Open</option><option value="draft">Draft</option><option value="closed">Closed</option></select></label></div>
+        <details class="builder-panel" id="builder-panel" open>
+            <summary>Create a course evaluation <span>Draft → Preview → Open</span></summary>
+            <form id="create">
+                <div class="form-grid"><label>Course<select name="course_id" required></select></label><label>Evaluation title<input name="title" maxlength="200" placeholder="e.g. End-of-semester course feedback" required></label><label>Deadline (your local time)<input name="deadline" type="datetime-local" required></label></div>
+                <fieldset><legend>Survey questions</legend><p class="field-hint">Add as many rating or written questions as your course needs. Choose which answers are required.</p><div id="questions"></div></fieldset>
+                <div class="builder-actions"><button type="button" class="secondary" id="add">＋ Add question</button><button type="button" class="secondary" id="preview">Preview survey</button><button type="submit">Save draft</button></div>
+                <p id="form-status" role="status"></p>
+            </form>
+        </details>
+        <div id="evaluation-list" class="grid"></div>
+    </section>
+    <dialog id="survey-preview" aria-labelledby="preview-heading"><div class="preview-heading"><div><p class="eyebrow">STUDENT VIEW</p><h2 id="preview-heading">Survey preview</h2></div><button type="button" id="close-preview" class="secondary">Close preview</button></div><p class="field-hint">Preview only. Answers entered here are not saved.</p><div id="preview-questions"></div></dialog>
+    {% endif %}
+    <section id="course-section" class="workspace-section">
+        <div class="section-heading"><div><p class="eyebrow">COURSE DIRECTORY</p><h2>{{ 'University courses' if role == 'administrator' else 'My courses' }}</h2><p id="course-count">Your assigned academic courses.</p></div><label class="compact-label">Search courses<input id="search" type="search" placeholder="Course code or name"></label></div>
+        <div id="courses" class="grid course-grid"></div>
+    </section>
+    {% if role == 'administrator' %}
+    <section id="users" class="workspace-section">
+        <div class="section-heading"><div><p class="eyebrow">ACCESS MANAGEMENT</p><h2>Account directory</h2><p>Review access roles. Course relationships and the last administrator are protected.</p></div><label class="compact-label">Search accounts<input id="account-search" type="search" placeholder="Name, email or role"></label></div>
+        <div class="table-scroll"><table><caption class="visually-hidden">Registered accounts and access roles</caption><thead><tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Role</th></tr></thead><tbody id="user-list"></tbody></table></div>
+    </section>
+    <section id="course-admin" class="workspace-section">
+        <div class="section-heading"><div><p class="eyebrow">ACADEMIC STRUCTURE</p><h2>Courses & assignments</h2><p>Add a course, enroll a student or assign a lecturer. Existing relationships are preserved.</p></div></div>
+        <div class="admin-grid">
+            <form id="course-form" class="admin-panel"><h3>Create a course</h3><label>Course code<input name="course_code" maxlength="200" placeholder="e.g. AI301" required></label><label>Course name<input name="course_name" maxlength="200" required></label><button>Create course</button><p role="status"></p></form>
+            <form id="membership-form" class="admin-panel"><h3>Enroll or assign</h3><label>Account<select name="user_id" required></select></label><label>Course<select name="course_id" required></select></label><button>Save relationship</button><p role="status"></p></form>
+        </div>
+    </section>
+    {% endif %}
+    <footer class="workspace-footer"><span>EduSurvey · National Economics University</span><span>Better teaching starts with listening.</span></footer>
+</main>
+<script src="/static/js/session.js" defer></script>
+<script src="/static/js/app_navigation.js" defer></script>
+<script src="/static/js/workspace.js" defer></script>
+</body>
+</html>
