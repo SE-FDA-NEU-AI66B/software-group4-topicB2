@@ -22,6 +22,12 @@ def capture(output):
     from werkzeug.serving import make_server
 
     with tempfile.TemporaryDirectory(prefix='edusurvey-ui-evidence-') as temporary:
+        # Runtime gives DATABASE_URL precedence over the SQLite path. Replace
+        # inherited database/hosting configuration before importing the app.
+        os.environ['DATABASE_URL'] = ''
+        os.environ['EDUSURVEY_DATABASE_BACKEND'] = 'sqlite'
+        os.environ['RENDER'] = 'false'
+        os.environ['EDUSURVEY_SECRET_KEY'] = secrets.token_urlsafe(32)
         os.environ['EDUSURVEY_ENV'] = 'development'
         os.environ['EDUSURVEY_DATABASE'] = str(Path(temporary) / 'evidence.db')
         # Import after isolating runtime configuration.

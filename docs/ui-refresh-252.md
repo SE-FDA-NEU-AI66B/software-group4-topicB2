@@ -72,7 +72,7 @@ python tools/capture_role_ui.py --output /tmp/edusurvey-ui-evidence
 ```
 
 Optionally set `PLAYWRIGHT_CHROMIUM_EXECUTABLE` to an existing Chrome executable.
-The helper creates a fresh temporary database, generates a random demo credential,
+The helper clears inherited database/hosting configuration, creates a fresh temporary database, generates a random demo credential,
 captures the screens and removes the temporary database. It never reads production
 credentials or data. [Evidence manifest](evidence/ui-252/manifest.json) records 27
 role/viewport checks; the directory includes 30 screenshots (three additional
@@ -97,6 +97,8 @@ synthetic accounts. CI/test results are recorded on the PR and issue #252.
 - Full local regression: **380 passed, 0 skipped**, including unchanged P0 tests,
   SQLite, dedicated PostgreSQL UTF-8 and Chromium.
 - Ruff and `git diff --check`: passed.
+- Capture isolation proof: all 27 scenarios also pass with an intentionally
+  unusable inherited DATABASE_URL; the helper replaces it before app import.
 - All 27 capture scenarios: HTTP 200, no JavaScript exceptions, no page overflow,
   no visible controls missing labels. Thirty screenshots are included above.
 - Existing test functions/assertions remain intact. New tests add mixed-type
