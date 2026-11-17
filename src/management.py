@@ -124,7 +124,7 @@ def register_management(app, get_db, login_required, api_error):
             if user is None:
                 return api_error(404, 'NOT_FOUND', 'Account not found.', 'Refresh the directory.')
             if user['role'] != role:
-                if user['role'] == 'administrator' and active_admins(db) <= 1:
+                if user['role'] == 'administrator' and access(db, user_id)['state'] == 'active' and active_admins(db) <= 1:
                     return api_error(409, 'LAST_ADMIN', 'Keep at least one administrator.', 'Assign another administrator first.')
                 enrollment = db.execute('SELECT 1 FROM course_enrollments WHERE student_id=?', (user_id,)).fetchone()
                 assignment = db.execute('SELECT 1 FROM course_lecturers WHERE lecturer_id=?', (user_id,)).fetchone()

@@ -125,6 +125,7 @@ def test_last_active_admin_protected_everywhere(accounts):
     with sqlite3.connect(app_module.DATABASE) as db:
         db.execute("INSERT INTO users(id,email,full_name,role,password_hash) VALUES(4,'second@example.edu','Second Admin','administrator','h')")
     assert accounts.patch('/api/admin/accounts/4/state', json={'state': 'disabled'}).status_code == 200
+    assert accounts.patch('/api/admin/users/4/role', json={'role': 'student'}).status_code == 200
     assert accounts.patch('/api/admin/users/3/role', json={'role': 'student'}).status_code == 409
 
 
