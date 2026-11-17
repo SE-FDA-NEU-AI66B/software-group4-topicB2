@@ -425,3 +425,75 @@ def test_rich_demo_pack_preserves_existing_surveys_postgres(pg_client, pg_url):
         assert db.execute('SELECT title FROM evaluations WHERE id=1').fetchone()['title'] == 'Test Evaluation'
         assert db.execute('SELECT COUNT(*) AS n FROM questions WHERE evaluation_id>1').fetchone()['n'] == 6 * len(RICH_QUESTIONS)
         assert db.execute('SELECT COUNT(*) AS n FROM response_answers').fetchone()['n'] == 66 * len(RICH_QUESTIONS)
+
+
+def test_account_provisioning_postgres(pg_client, pg_url):
+    import hashlib
+    from urllib.parse import parse_qs, urlsplit
+
+    from src.account_store import migrate_accounts
+    migrate_accounts(pg_url)
+    migrate_accounts(pg_url)
+    migrate(pg_url)  # Base schema verification remains compatible with additive tables.
+    login(pg_client, 'administrator')
+    created = pg_client.post('/api/admin/accounts', json={'name': 'PG Student', 'email': 'pg@example.edu', 'role': 'student'})
+    assert created.status_code == 201
+    user_id = created.json['account']['id']
+    secret = parse_qs(urlsplit(created.json['account']['setup_path']).fragment)['token'][0]
+    with connect(pg_url) as db:
+        assert db.execute('SELECT digest FROM account_tokens').fetchone()['digest'] == hashlib.sha256(secret.encode()).hexdigest()
+        assert db.execute('SELECT title FROM evaluations WHERE id=1').fetchone()['title'] == 'Test Evaluation'
+    def redeem_token(_index):
+        with app_module.app.test_client() as client:
+            return client.post('/api/auth/set-password', json={'token': secret, 'password': 'Postgres-unique-passphrase'}).status_code
+    with ThreadPoolExecutor(max_workers=2) as workers:
+        outcomes = list(workers.map(redeem_token, range(2)))
+    assert sorted(outcomes) == [200, 400]
+    assert pg_client.post('/api/auth/login', json={'email': 'pg@example.edu', 'password': 'Postgres-unique-passphrase'}).status_code == 200
+    old_cookie = pg_client.get_cookie('session').value
+    pg_client.post('/api/auth/logout')
+    login(pg_client, 'administrator')
+    assert pg_client.patch(f'/api/admin/accounts/{user_id}/state', json={'state': 'disabled'}).status_code == 200
+    assert pg_client.patch(f'/api/admin/accounts/{user_id}/state', json={'state': 'active'}).status_code == 200
+    pg_client.set_cookie('session', old_cookie)
+    assert pg_client.get('/api/auth/me').status_code == 401
+    login(pg_client, 'administrator')
+    source = 'name,email,role\nImported,pgimport@example.edu,lecturer'
+    preview = pg_client.post('/api/admin/accounts/import-preview', json={'csv': source}).json
+    assert preview['valid']
+    assert pg_client.post('/api/admin/accounts/import-confirm', json={'csv': source, 'confirmation': preview['confirmation']}).status_code == 201
+    assert pg_client.patch('/api/admin/accounts/3/state', json={'state': 'disabled'}).status_code == 409
+    assert pg_client.patch('/api/admin/users/3/role', json={'role': 'student'}).status_code == 409
+
+
+def test_concurrent_account_creation_and_membership_safety_postgres(pg_client, pg_url):
+    from src.account_store import migrate_accounts
+    migrate_accounts(pg_url)
+    def create(_index):
+        with app_module.app.test_client() as client:
+            login(client, 'administrator')
+            return client.post('/api/admin/accounts', json={'name': 'Concurrent', 'email': 'same@example.edu', 'role': 'lecturer'}).status_code
+    with ThreadPoolExecutor(max_workers=2) as workers:
+        assert sorted(workers.map(create, range(2))) == [201, 409]
+    login(pg_client, 'administrator')
+    with connect(pg_url) as db:
+        target = db.execute("SELECT id FROM users WHERE email='same@example.edu'").fetchone()['id']
+    assert pg_client.post('/api/admin/memberships', json={'action': 'transfer', 'user_id': 2, 'course_id': 1, 'target_id': target}).status_code == 200
+    with connect(pg_url) as db:
+        assert db.execute('SELECT lecturer_id FROM course_lecturers').fetchone()['lecturer_id'] == target
+        assert db.execute('SELECT title FROM evaluations').fetchone()['title'] == 'Test Evaluation'
+
+
+def test_account_import_transaction_rollback_postgres(pg_client, pg_url):
+    from src.account_store import migrate_accounts
+    migrate_accounts(pg_url)
+    login(pg_client, 'administrator')
+    with connect(pg_url) as db:
+        db.execute("ALTER TABLE users ADD CONSTRAINT reject_import CHECK(email <> 'blocked@example.edu')")
+    source = 'name,email,role\nGood,good@example.edu,student\nBlocked,blocked@example.edu,student'
+    ticket = pg_client.post('/api/admin/accounts/import-preview', json={'csv': source}).json['confirmation']
+    assert pg_client.post('/api/admin/accounts/import-confirm', json={'csv': source, 'confirmation': ticket}).status_code == 503
+    with connect(pg_url) as db:
+        assert db.execute('SELECT COUNT(*) AS n FROM users').fetchone()['n'] == 3
+        assert db.execute('SELECT COUNT(*) AS n FROM account_tokens').fetchone()['n'] == 0
+        assert db.execute('SELECT COUNT(*) AS n FROM account_imports').fetchone()['n'] == 0

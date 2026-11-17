@@ -776,3 +776,51 @@ def test_student_workspace_filter_and_admin_directory(browser_app):
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
     finally:
         context.close()
+
+
+def test_admin_provisioning_password_setup_and_mobile_disable(browser_app):
+    from src.account_store import migrate_accounts
+    browser, url, database = browser_app
+    migrate_accounts(database)
+    context = browser.new_context(viewport={'width': 390, 'height': 844})
+    page = context.new_page()
+    try:
+        sign_in(page, url, 'admin@test.com')
+        expect(page).to_have_url(url + '/account')
+        page.goto(url + '/admin/accounts')
+        expect(page.locator('#account-status')).to_have_text('Account directory updated.')
+        page.get_by_label('Full name', exact=True).fill('Invited Student')
+        page.get_by_label('Email address', exact=True).fill('invited@example.edu')
+        page.get_by_label('Account role', exact=True).select_option('student')
+        page.get_by_role('button', name='Create account & invitation', exact=True).click()
+        expect(page.locator('#new-account [role=status]')).to_contain_text('Account created')
+        setup_url = page.locator('#handoff-links input').input_value()
+        assert '#token=' in setup_url
+        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+        invited = browser.new_context(viewport={'width': 390, 'height': 844})
+        student = invited.new_page()
+        student.goto(setup_url)
+        assert student.url == url + '/activate'
+        student.get_by_label('New password', exact=True).fill('Browser-unique-passphrase')
+        student.get_by_label('Confirm new password', exact=True).fill('Browser-unique-passphrase')
+        student.get_by_role('button', name='Set password', exact=True).click()
+        expect(student.locator('#setup-status')).to_contain_text('Your password has been set')
+        assert student.evaluate('document.documentElement.scrollWidth <= innerWidth')
+        student.get_by_role('link', name='Return to sign in').click()
+        student.get_by_label('Email', exact=False).fill('invited@example.edu')
+        student.locator('#password').fill('Browser-unique-passphrase')
+        student.get_by_role('button', name='Sign in', exact=True).click()
+        expect(student).to_have_url(url + '/evaluations')
+        page.get_by_role('button', name='Refresh directory', exact=True).click()
+        expect(page.locator('#account-status')).to_have_text('Account directory updated.')
+        page.get_by_label('Search accounts', exact=True).fill('invited@example.edu')
+        expect(page.locator('#directory-rows tr')).to_have_count(1)
+        page.once('dialog', lambda dialog: dialog.accept())
+        page.get_by_role('button', name='Disable invited@example.edu', exact=True).click()
+        expect(page.locator('#directory-rows')).to_contain_text('Disabled')
+        student.goto(url + '/dashboard')
+        expect(student).to_have_url(url + '/login')
+        assert context.request.get(url + '/api/admin/accounts').headers['cache-control'] == 'no-store'
+        invited.close()
+    finally:
+        context.close()

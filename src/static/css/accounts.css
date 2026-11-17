@@ -1,0 +1,15 @@
+.account-filters { display:grid; grid-template-columns:2fr 1fr 1fr; gap:16px; }
+.lifecycle-table td:last-child { flex-wrap:wrap; min-width:210px; }
+.lifecycle-table small { display:block; color:#52657d; overflow-wrap:anywhere; }
+.lifecycle-table .status-badge { text-transform:none; }
+.account-filters label { margin:0; }
+#account-status { padding:12px 0; }
+#handoff { border:1px solid #bbcee8; background:#f3f7fd; border-radius:10px; padding:16px; margin-top:20px; }
+#handoff-links input { font-size:12px; }
+#csv-source { width:100%; padding:12px; border:1px solid #becde0; border-radius:8px; font:13px/1.6 ui-monospace,monospace; }
+.lifecycle-table td { vertical-align:middle; }
+.setup-page { min-height:100vh; margin:0; display:grid; place-items:center; background:#f3f6fb; padding:24px; }
+.setup-card { max-width:530px; background:white; border:1px solid #dce4ef; border-radius:16px; padding:36px; }
+.setup-card h1 { font-size:30px; }
+.setup-card p { color:#52657d; }
+@media(max-width:650px) { .account-filters { grid-template-columns:1fr; } .setup-card { padding:24px; } .lifecycle-table td:last-child { min-width:0; } }

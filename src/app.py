@@ -45,6 +45,11 @@ else:
         register_runtime,
     )
 
+if __package__:
+    from .account_store import access as account_access
+else:
+    from account_store import access as account_access
+
 app = Flask(__name__)
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATABASE = configure_runtime(app, BASE_DIR / "data" / "edusurvey.db")
@@ -61,6 +66,14 @@ def api_error(status, code, message, action):
     }), status
 
 
+def feedback_unavailable_response():
+    log_runtime_error(app, "feedback_database_unavailable")
+    return make_response(render_template(
+        "lecturer_feedback.html", error_message="Feedback is temporarily unavailable.",
+        error_kind="unavailable",
+    ), 503)
+
+
 @app.errorhandler(PostgresError)
 @app.errorhandler(sqlite3.Error)
 def database_unavailable(error):
@@ -70,6 +83,27 @@ def database_unavailable(error):
 
 def get_db_connection():
     return connect(DATABASE)
+
+
+@app.before_request
+def enforce_account_lifecycle():
+    # Covers legacy endpoints that perform their own role checks as well as decorators.
+    if 'user_id' not in session or request.path.startswith('/static/') or request.path == '/health':
+        return None
+    try:
+        with get_db_connection() as connection:
+            state = account_access(connection, session['user_id'])
+    except DATABASE_ERRORS:
+        if request.path.startswith('/lecturer/feedback') and 'text/html' in request.headers.get('Accept', '') and request.accept_mimetypes.best_match(['text/html', 'application/json']) == 'text/html':
+            return feedback_unavailable_response()
+        raise
+    if state['state'] != 'active' or state['version'] != session.get('account_version', 0):
+        session.clear()
+        if request.path.startswith('/api/') and request.path not in {'/api/auth/logout', '/api/auth/login', '/api/auth/set-password'}:
+            return api_error(401, 'UNAUTHORIZED', 'Your session has ended. Sign in again or contact your administrator.', 'Sign in again.')
+        if request.path not in {'/', '/login', '/activate', '/api/auth/logout'} and not request.path.startswith('/static/'):
+            return redirect('/login')
+    return None
 
 
 VALID_ROLES = {"student", "lecturer", "administrator"}
@@ -263,8 +297,11 @@ def login():
             (email,),
         ).fetchone()
 
+    with get_db_connection() as connection:
+        state = account_access(connection, user['id']) if user else {'state': 'disabled', 'version': 0}
     if (
         user is None
+        or state['state'] != 'active'
         or user["role"] not in VALID_ROLES
         or not check_password_hash(user["password_hash"], password)
     ):
@@ -278,6 +315,8 @@ def login():
     session.clear()
     session["user_id"] = user["id"]
     session["role"] = user["role"]
+    if state["version"]:
+        session["account_version"] = state["version"]
 
     return jsonify({
         "authenticated": True,
@@ -542,12 +581,7 @@ def lecturer_page_response(view):
         except DATABASE_ERRORS:
             if not wants_html:
                 raise
-            log_runtime_error(app, "feedback_database_unavailable")
-            response = make_response(render_template(
-                "lecturer_feedback.html",
-                error_message="Feedback is temporarily unavailable.",
-                error_kind="unavailable",
-            ), 503)
+            response = feedback_unavailable_response()
         if wants_html and response.is_json and response.status_code in (401, 403):
             error = response.get_json()["error"]
             response.set_data(render_template(
@@ -1946,6 +1980,11 @@ if __package__:
 else:
     from management import register_management
 register_management(app, get_db_connection, login_required, api_error)
+if __package__:
+    from .provisioning import register_provisioning
+else:
+    from provisioning import register_provisioning
+register_provisioning(app, get_db_connection, login_required, api_error)
 
 if __name__ == "__main__":
     app.run()
