@@ -118,6 +118,8 @@ def reserve_submission(connection, evaluation_id, student_id):
     if isinstance(connection, PostgresConnection):
         # Transaction-scoped lock also covers the absent-response case. READ
         # COMMITTED sees the winning tab's commit after the lock is acquired.
+        connection.execute('SELECT pg_advisory_xact_lock_shared(hashtextextended(?, 0))',
+                           (f'edusurvey/evaluation/{evaluation_id}',))
         connection.execute('SELECT pg_advisory_xact_lock(hashtextextended(?, 0))',
                            (f'edusurvey/submission/{evaluation_id}/{student_id}',))
     else:

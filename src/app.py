@@ -124,6 +124,7 @@ def login_required(roles=None):
                     "Log in with an account that has the required role.",
                 )
 
+            session["role"] = account["role"]
             return view(*args, **kwargs)
 
         return wrapped
@@ -1551,7 +1552,7 @@ def create_evaluation():
         return api_error(
             400,
             "MISSING_DEADLINE",
-            "Evaluation deadline is required.",
+            "A deadline is required.",
             "Provide a deadline in ISO format.",
         )
 
@@ -1564,6 +1565,12 @@ def create_evaluation():
             "The deadline format is invalid.",
             "Use ISO format, for example 2099-01-01T00:00:00.",
         )
+
+    normalized_deadline = (parsed_deadline.replace(tzinfo=UTC) if parsed_deadline.tzinfo is None
+                           else parsed_deadline.astimezone(UTC))
+    if normalized_deadline <= datetime.now(UTC):
+        return api_error(400, "INVALID_DEADLINE", "Deadline must be in the future.",
+                         "Choose a future deadline.")
 
     # Validate questions.
     if not isinstance(questions, list) or not questions:
@@ -1637,7 +1644,7 @@ def create_evaluation():
                 "Log in again with a valid account.",
             )
 
-        if user["role"] != "lecturer":
+        if user["role"] not in {"lecturer", "administrator"}:
             return api_error(
                 403,
                 "FORBIDDEN",
@@ -1667,11 +1674,11 @@ def create_evaluation():
             (user_id, course_id),
         ).fetchone()
 
-        if assignment is None:
+        if assignment is None and user["role"] != "administrator":
             return api_error(
                 403,
                 "COURSE_ACCESS_DENIED",
-                "You are not assigned to this course.",
+                "You do not have permission to create an evaluation for this course.",
                 "Select a course assigned to your lecturer account.",
             )
 
@@ -1933,6 +1940,12 @@ def send_deadline_reminders(now=None):
                 })
 
     return reminders
+
+if __package__:
+    from .management import register_management
+else:
+    from management import register_management
+register_management(app, get_db_connection, login_required, api_error)
 
 if __name__ == "__main__":
     app.run()
