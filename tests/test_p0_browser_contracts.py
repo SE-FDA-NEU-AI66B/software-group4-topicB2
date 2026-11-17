@@ -662,3 +662,42 @@ def test_login_empty_and_invalid_inputs_are_actionable(browser_app):
     page.get_by_role("button", name="Sign in", exact=True).click()
     expect(page).to_have_url(url + "/evaluations")
     page.close()
+
+
+@pytest.mark.parametrize('viewport', [{'width': 1440, 'height': 900}, {'width': 390, 'height': 844}], ids=['laptop', 'phone'])
+def test_workspace_creation_and_draft_roundtrip(browser_app, viewport):
+    browser, url, database = browser_app
+    context = browser.new_context(viewport=viewport)
+    page = context.new_page()
+    try:
+        sign_in(page, url, 'lecturer@test.com')
+        expect(page).to_have_url(url + '/lecturer/feedback')
+        page.goto(url + '/lecturer/evaluations')
+        expect(page.get_by_role('heading', name='Welcome, Test Lecturer')).to_be_visible()
+        page.get_by_label('Evaluation title', exact=True).fill('Live course feedback')
+        page.get_by_label('Deadline (your local time)', exact=True).fill('2099-12-01T12:00')
+        page.get_by_label('Question text', exact=True).fill('Was the course clear?')
+        page.get_by_role('button', name='Save draft', exact=True).click()
+        expect(page.locator('#form-status')).to_contain_text('Draft saved')
+        card = page.locator('#evaluation-list article').filter(has_text='Live course feedback')
+        card.get_by_role('button', name='Open evaluation', exact=True).click()
+        expect(card).to_contain_text('open')
+        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+        page.get_by_role('button', name='Sign out', exact=True).click()
+        expect(page).to_have_url(url + '/login')
+        sign_in(page, url)
+        expect(page).to_have_url(url + '/evaluations')
+        with sqlite3.connect(database) as db:
+            identifier = db.execute("SELECT id FROM evaluations WHERE title='Live course feedback'").fetchone()[0]
+        page.goto(f'{url}/evaluations/{identifier}/complete')
+        rating = page.locator('input[type=radio][value="4"]')
+        expect(rating).to_have_count(1)
+        rating.focus()
+        page.keyboard.press("Space")
+        expect(rating).to_be_checked()
+        page.get_by_role('button', name='Save draft', exact=True).click()
+        expect(page.locator('#draftStatus')).to_contain_text('Draft saved')
+        page.reload()
+        expect(page.locator('input[type=radio][value="4"]')).to_be_checked()
+    finally:
+        context.close()

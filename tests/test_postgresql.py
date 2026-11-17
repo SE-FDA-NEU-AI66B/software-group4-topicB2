@@ -387,3 +387,20 @@ def test_snapshot_preserves_deleted_id_high_watermark(api_client, pg_url):
     with connect(pg_url) as db:
         identifier = db.insert_id('INSERT INTO courses (course_code,course_name) VALUES (?,?)', ('NEXT', 'Next'))
         assert identifier == 101
+
+
+def test_workspace_lifecycle_draft_postgres(pg_client, pg_url):
+    login(pg_client, 'lecturer')
+    result = pg_client.post('/api/evaluations', json={
+        'course_id': 1, 'title': 'PG workspace', 'deadline': '2099-01-01T00:00:00Z',
+        'questions': [{'question_text': 'Rate the course', 'question_type': 'rating'}]})
+    assert result.status_code == 201
+    identifier = result.json['evaluation_id']
+    assert pg_client.patch(f'/api/evaluations/{identifier}/status', json={'status': 'open'}).status_code == 200
+    login(pg_client)
+    question = pg_client.get(f'/api/evaluations/{identifier}/questions').json['questions'][0]['id']
+    path = f'/api/evaluations/{identifier}/draft'
+    assert pg_client.put(path, json={'answers': {str(question): {'rating_value': 5}}}).status_code == 200
+    assert pg_client.get(path).json['answers'] == {str(question): 5}
+    assert pg_client.post('/api/submissions', json={'evaluation_id': identifier, 'answers': {str(question): {'rating_value': 5}}}).status_code == 201
+    assert pg_client.put(path, json={'answers': {}}).status_code == 409

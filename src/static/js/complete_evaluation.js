@@ -425,6 +425,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function completeSubmission(alreadyCompleted = false) {
         state.submitted = true;
+        $("#saveDraft").hidden = true;
+        $("#draftStatus").hidden = true;
         if (alreadyCompleted) {
             elements.title.textContent = "Completed evaluation";
             elements.courseMeta.textContent = "Your response is already saved.";
@@ -541,6 +543,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
             }
 
+            const draftResponse = await fetch(`/api/evaluations/${evaluationId}/draft`, {credentials: "same-origin"});
+            if (draftResponse.ok) {
+                const draft = await draftResponse.json();
+                state.answers = draft.answers || {};
+            }
             renderQuestions();
 
         } catch (error) {
@@ -628,6 +635,20 @@ document.addEventListener("DOMContentLoaded", () => {
             updateProgress();
         }
     }
+
+    $("#saveDraft").addEventListener("click", async () => {
+        const button = $("#saveDraft"); button.disabled = true;
+        try {
+            const response = await fetch(`/api/evaluations/${evaluationId}/draft`, {
+                method: "PUT", credentials: "same-origin", headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({answers: buildSubmissionPayload().answers})
+            });
+            const data = await readResponse(response);
+            if (!response.ok) throw new Error(apiError(response, data));
+            $("#draftStatus").textContent = data.message;
+        } catch (error) { $("#draftStatus").textContent = requestErrorMessage(error); }
+        finally { button.disabled = false; }
+    });
 
     // Event listeners
 
