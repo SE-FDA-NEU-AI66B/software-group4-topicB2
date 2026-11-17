@@ -217,6 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
         card.querySelectorAll("input[type=radio]").forEach(input => {
             input.addEventListener("change", () => {
                 state.answers[question.id] = Number(input.value);
+                draftChanged();
 
                 clearQuestionError(question.id);
 
@@ -293,6 +294,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         textarea.addEventListener("input", () => {
             state.answers[question.id] = textarea.value;
+            draftChanged();
 
             $(`#count-${question.id}`).textContent =
                 `${textarea.value.length}/2000`;
@@ -308,7 +310,18 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderQuestions() {
         elements.questionsList.innerHTML = "";
 
+        let previousGroup = null;
+        const groups = ['Teaching quality', 'Course content', 'Learning materials', 'Assessment', 'Overall satisfaction'];
         state.questions.forEach((question, index) => {
+            const prefix = question.question_text.split(':')[0];
+            const group = groups.includes(prefix) ? prefix : null;
+            if (group && group !== previousGroup) {
+                const heading = document.createElement('h3');
+                heading.className = 'question-group-heading';
+                heading.textContent = group;
+                elements.questionsList.appendChild(heading);
+            }
+            previousGroup = group;
             let card;
 
             if (question.question_type === "rating") {
@@ -547,6 +560,10 @@ document.addEventListener("DOMContentLoaded", () => {
             if (draftResponse.ok) {
                 const draft = await draftResponse.json();
                 state.answers = draft.answers || {};
+                if (Object.keys(state.answers).length) {
+                    $("#draftStatus").dataset.state = "saved";
+                    $("#draftStatus").textContent = "Your saved draft has been restored. Continue where you left off.";
+                }
             }
             renderQuestions();
 
@@ -636,8 +653,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    function draftChanged() {
+        $("#draftStatus").dataset.state = "dirty";
+        $("#draftStatus").textContent = "Unsaved changes. Save your draft before leaving this page.";
+    }
+
     $("#saveDraft").addEventListener("click", async () => {
         const button = $("#saveDraft"); button.disabled = true;
+        $("#draftStatus").textContent = "Saving your draft…";
         try {
             const response = await fetch(`/api/evaluations/${evaluationId}/draft`, {
                 method: "PUT", credentials: "same-origin", headers: {"Content-Type": "application/json"},
@@ -645,8 +668,9 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             const data = await readResponse(response);
             if (!response.ok) throw new Error(apiError(response, data));
+            $("#draftStatus").dataset.state = "saved";
             $("#draftStatus").textContent = data.message;
-        } catch (error) { $("#draftStatus").textContent = requestErrorMessage(error); }
+        } catch (error) { $("#draftStatus").dataset.state = "error"; $("#draftStatus").textContent = requestErrorMessage(error); }
         finally { button.disabled = false; }
     });
 

@@ -8,18 +8,15 @@
 
     <title>Complete Evaluation | EduSurvey</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
-          rel="stylesheet">
-
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/complete_evaluation.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/session.css') }}">
+<link rel="stylesheet" href="/static/css/design-system.css">
 </head>
 
-<body data-evaluation-id="{{ evaluation_id }}">
+<body class="portal-page" data-evaluation-id="{{ evaluation_id }}">
+{% include "app_navigation.html" %}
+
 
 <header class="topbar">
     <a class="brand" href="/evaluations">
@@ -33,7 +30,7 @@
     {% include "session_controls.html" %}
 </header>
 
-<main class="layout">
+<main id="app-content" class="layout">
 
     <section class="intro">
         <p class="eyebrow">STUDENT WORKSPACE / COURSE FEEDBACK</p>
@@ -210,5 +207,6 @@
         defer></script>
 
 <script src="{{ url_for('static', filename='js/session.js') }}" defer></script>
+<script src="/static/js/app_navigation.js" defer></script>
 </body>
 </html>

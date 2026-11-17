@@ -1,0 +1,22 @@
+{% set nav_role = session.get('role', role|default('student')) %}
+<a class="app-skip" href="#app-content">Skip to main content</a>
+<button class="app-menu" type="button" aria-controls="app-navigation" aria-expanded="false">Menu</button>
+<aside class="university-nav" id="app-navigation" aria-label="Workspace navigation">
+    <a class="university-brand" href="/dashboard"><span aria-hidden="true">E</span><strong>EduSurvey<small>National Economics University</small></strong></a>
+    <p class="nav-caption">{{ nav_role|replace('administrator', 'Administration')|title }} workspace</p>
+    <nav aria-label="Main navigation">
+        <a href="/dashboard" {% if request.path == '/dashboard' %}aria-current="page"{% endif %}><span aria-hidden="true">◫</span> Overview</a>
+        {% if nav_role == 'student' %}
+        <a href="/evaluations" {% if request.path.startswith('/evaluations') %}aria-current="page"{% endif %}><span aria-hidden="true">▤</span> My Evaluations</a>
+        {% elif nav_role == 'lecturer' %}
+        <a href="/lecturer/evaluations" {% if request.path == '/lecturer/evaluations' %}aria-current="page"{% endif %}><span aria-hidden="true">▤</span> Manage evaluations</a>
+        <a href="/lecturer/feedback" {% if request.path.startswith('/lecturer/feedback') %}aria-current="page"{% endif %}><span aria-hidden="true">▥</span> Feedback & analytics</a>
+        {% else %}
+        <a href="/admin/evaluations" {% if request.path == '/admin/evaluations' %}aria-current="page"{% endif %}><span aria-hidden="true">▤</span> Evaluations</a>
+        <a href="/admin/users" {% if request.path == '/admin/users' %}aria-current="page"{% endif %}><span aria-hidden="true">♙</span> Accounts & courses</a>
+        {% endif %}
+        <a href="/account" {% if request.path == '/account' %}aria-current="page"{% endif %}><span aria-hidden="true">◎</span> Account</a>
+    </nav>
+    <div class="nav-support"><strong>Every response matters.</strong><p>Help shape a better learning experience.</p><small>Support is available through your faculty office.</small></div>
+    <div class="nav-university"><span aria-hidden="true">●</span> University evaluation platform</div>
+</aside>

@@ -8,65 +8,25 @@
 
     <title>My Evaluations | EduSurvey</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/evaluations.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/session.css') }}">
+<link rel="stylesheet" href="/static/css/design-system.css">
 </head>
 
-<body>
+<body class="portal-page">
+{% include "app_navigation.html" %}
+
     <div class="app-shell">
 
         <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-            <a class="brand" href="/evaluations">
-                <span class="brand-icon">E</span>
-                <span class="brand-name">EduSurvey</span>
-            </a>
 
-            <div class="sidebar-section">
-                <p class="sidebar-label">WORKSPACE</p>
-
-                <a href="/evaluations" class="nav-link active">
-                    <span class="nav-icon">▦</span>
-                    <span>My Evaluations</span>
-                </a>
-            </div>
-
-            <div class="sidebar-bottom">
-                <div class="help-card">
-                    <div class="help-icon">?</div>
-                    <div>
-                        <strong>Need assistance?</strong>
-                        <p>Contact your university administrator.</p>
-                    </div>
-                </div>
-
-                <div class="sidebar-footer">
-                    <span class="footer-dot"></span>
-                    EduSurvey Student Portal
-                </div>
-            </div>
-        </aside>
 
         <!-- Main content -->
-        <main class="main-content">
+        <main id="app-content" class="main-content">
 
             <header class="topbar">
-                <button
-                    class="mobile-menu-button"
-                    id="mobileMenuButton"
-                    type="button"
-                    aria-label="Open navigation"
-                    aria-expanded="false"
-                >
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
+
 
                 <div class="breadcrumb">
                     <span>Workspace</span>
@@ -251,12 +211,13 @@
         </main>
     </div>
 
-    <div class="mobile-overlay" id="mobileOverlay"></div>
+
 
     <script
         src="{{ url_for('static', filename='js/evaluations.js') }}"
         defer
     ></script>
 <script src="{{ url_for('static', filename='js/session.js') }}" defer></script>
+<script src="/static/js/app_navigation.js" defer></script>
 </body>
 </html>

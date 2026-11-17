@@ -23,11 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         refresh: document.getElementById("refreshButton"),
         retry: document.getElementById("retryButton"),
-        clearFilters: document.getElementById("clearFiltersButton"),
-
-        sidebar: document.getElementById("sidebar"),
-        menuButton: document.getElementById("mobileMenuButton"),
-        overlay: document.getElementById("mobileOverlay")
+        clearFilters: document.getElementById("clearFiltersButton")
     };
 
     let evaluations = [];
@@ -428,57 +424,12 @@ function createEvaluationCard(item) {
     elements.refresh.addEventListener("click", loadEvaluations);
     elements.retry.addEventListener("click", loadEvaluations);
 
-    // ---------------------------------
-    // MOBILE SIDEBAR
-    // ---------------------------------
-
-    function openSidebar() {
-        elements.sidebar.classList.add("open");
-        elements.overlay.classList.add("show");
-
-        elements.menuButton.setAttribute(
-            "aria-expanded",
-            "true"
-        );
-    }
-
-    function closeSidebar() {
-        elements.sidebar.classList.remove("open");
-        elements.overlay.classList.remove("show");
-
-        elements.menuButton.setAttribute(
-            "aria-expanded",
-            "false"
-        );
-    }
-
-    elements.menuButton.addEventListener("click", () => {
-        if (elements.sidebar.classList.contains("open")) {
-            closeSidebar();
-        } else {
-            openSidebar();
-        }
-    });
-
-    elements.overlay.addEventListener("click", closeSidebar);
-
-    document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-            closeSidebar();
-        }
-
-        if (
-            (event.metaKey || event.ctrlKey) &&
-            event.key.toLowerCase() === "k"
-        ) {
+    // Navigation is shared with the other role workspaces.
+    document.addEventListener("keydown", event => {
+        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
             event.preventDefault();
             elements.search.focus();
         }
-    });
-
-    // Close mobile sidebar when navigating.
-    elements.sidebar.querySelectorAll(".nav-link").forEach((link) => {
-        link.addEventListener("click", closeSidebar);
     });
 
     // ---------------------------------

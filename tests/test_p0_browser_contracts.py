@@ -701,3 +701,78 @@ def test_workspace_creation_and_draft_roundtrip(browser_app, viewport):
         expect(page.locator('input[type=radio][value="4"]')).to_be_checked()
     finally:
         context.close()
+
+
+@pytest.mark.parametrize('viewport', [{'width': 1440, 'height': 900}, {'width': 820, 'height': 1180}, {'width': 390, 'height': 844}], ids=['desktop', 'tablet', 'phone'])
+def test_coherent_workspace_builder_preview_and_navigation(browser_app, viewport):
+    browser, url, _database = browser_app
+    context = browser.new_context(viewport=viewport)
+    page = context.new_page()
+    errors = []
+    page.on('pageerror', lambda error: errors.append(str(error)))
+    try:
+        sign_in(page, url, 'lecturer@test.com')
+        expect(page).to_have_url(url + '/lecturer/feedback')
+        page.goto(url + '/lecturer/evaluations')
+        expect(page.locator('#status')).to_have_text('Workspace updated.')
+        expect(page.locator('.university-nav')).to_have_count(1)
+        page.get_by_label('Question text', exact=True).fill('Teaching quality: Clear explanations')
+        page.get_by_role('button', name='＋ Add question', exact=True).click()
+        page.get_by_label('Question text', exact=True).nth(1).fill('What could be improved?')
+        page.get_by_label('Answer type', exact=True).nth(1).select_option('text')
+        page.get_by_label('Required', exact=True).nth(1).uncheck()
+        page.get_by_role('button', name='Preview survey', exact=True).click()
+        expect(page.get_by_role('dialog')).to_be_visible()
+        expect(page.locator('#preview-questions input[type=radio]')).to_have_count(5)
+        expect(page.locator('#preview-questions textarea')).to_have_count(1)
+        expect(page.locator('#preview-questions')).to_contain_text('(Optional)')
+        page.keyboard.press('Escape')
+        expect(page.get_by_role('dialog')).not_to_be_visible()
+        expect(page.get_by_role('button', name='Preview survey', exact=True)).to_be_focused()
+        page.get_by_label('Evaluation title', exact=True).fill('Flexible UI survey')
+        page.get_by_label('Deadline (your local time)', exact=True).fill('2099-12-01T12:00')
+        page.get_by_role('button', name='Save draft', exact=True).click()
+        expect(page.locator('#form-status')).to_contain_text('Draft saved')
+        page.get_by_label('Evaluation status', exact=True).select_option('draft')
+        expect(page.locator('#evaluation-list .card')).to_have_count(1)
+        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+        if viewport['width'] < 801:
+            menu = page.get_by_role('button', name='Menu', exact=True)
+            menu.click()
+            expect(menu).to_have_attribute('aria-expanded', 'true')
+            page.keyboard.press('Escape')
+            expect(menu).to_have_attribute('aria-expanded', 'false')
+            expect(menu).to_be_focused()
+        assert not errors
+    finally:
+        context.close()
+
+
+def test_student_workspace_filter_and_admin_directory(browser_app):
+    browser, url, _database = browser_app
+    context = browser.new_context(viewport={'width': 390, 'height': 844})
+    page = context.new_page()
+    try:
+        sign_in(page, url)
+        expect(page).to_have_url(url + '/evaluations')
+        page.goto(url + '/dashboard')
+        expect(page.locator('#status')).to_have_text('Workspace updated.')
+        expect(page.get_by_role('progressbar', name='Evaluation completion')).to_have_attribute('value', '0')
+        page.get_by_label('Evaluation status').select_option('Completed')
+        expect(page.locator('#student-evaluations')).to_contain_text('No evaluations match this status')
+        page.get_by_label('Search courses').fill('missing')
+        expect(page.locator('#courses')).to_contain_text('No matching courses')
+        page.get_by_role('button', name='Sign out', exact=True).click()
+        expect(page).to_have_url(url + '/login')
+        sign_in(page, url, 'admin@test.com')
+        expect(page).to_have_url(url + '/account')
+        page.goto(url + '/admin/users')
+        expect(page.locator('#status')).to_have_text('Workspace updated.')
+        page.get_by_label('Search accounts').fill('lecturer')
+        expect(page.locator('#user-list tr')).to_have_count(1)
+        page.get_by_label('Role for Test Lecturer', exact=True).select_option('student')
+        page.get_by_role('button', name='Save role for Test Lecturer').click()
+        expect(page.locator('#status')).to_contain_text('course relationships')
+        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+    finally:
+        context.close()

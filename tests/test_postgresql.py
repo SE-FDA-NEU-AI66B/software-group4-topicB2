@@ -414,3 +414,14 @@ def test_additive_demo_enrichment_postgres(pg_client, pg_url):
     with connect(pg_url) as db:
         assert db.execute('SELECT title FROM evaluations WHERE id=1').fetchone()['title'] == 'Test Evaluation'
         assert db.execute('SELECT COUNT(*) AS n FROM response_answers').fetchone()['n'] == 1320
+
+
+def test_rich_demo_pack_preserves_existing_surveys_postgres(pg_client, pg_url):
+    from tools.enrich_demo import RICH_QUESTIONS, enrich
+    counts = enrich(pg_url, 'Synthetic-rich-postgres', rich=True)
+    assert counts['courses'] == 6 and counts['responses'] == 66
+    assert enrich(pg_url, 'Synthetic-rich-postgres', rich=True) == dict.fromkeys(counts, 0)
+    with connect(pg_url) as db:
+        assert db.execute('SELECT title FROM evaluations WHERE id=1').fetchone()['title'] == 'Test Evaluation'
+        assert db.execute('SELECT COUNT(*) AS n FROM questions WHERE evaluation_id>1').fetchone()['n'] == 6 * len(RICH_QUESTIONS)
+        assert db.execute('SELECT COUNT(*) AS n FROM response_answers').fetchone()['n'] == 66 * len(RICH_QUESTIONS)

@@ -7,15 +7,18 @@
     <title>EduSurvey - Lecturer Feedback</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/lecturer_feedback.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/session.css') }}">
+<link rel="stylesheet" href="/static/css/design-system.css">
 </head>
-<body>
-    <a class="skip-link" href="#main-content">Skip to feedback</a>
+<body class="portal-page">
+{% include "app_navigation.html" %}
+
+    <a class="skip-link" href="#app-content">Skip to feedback</a>
     <header class="workspace-header">
         <a class="brand" href="/lecturer/feedback" aria-label="EduSurvey lecturer home"><span aria-hidden="true">E</span> EduSurvey</a>
         {% if session.get('user_id') %}{% include "session_controls.html" %}
         {% else %}<a class="button" href="/login">Sign in</a>{% endif %}
     </header>
-    <main id="main-content" tabindex="-1">
+    <main id="app-content" tabindex="-1">
     <div class="page-intro">
         <p class="muted">EDUSURVEY / LECTURER</p>
         <h1>Student Feedback Review</h1>
@@ -61,7 +64,7 @@
             <h2>{{ selected_evaluation["title"] }}</h2>
             <p>
                 <strong>Deadline:</strong>
-                {{ selected_evaluation["deadline"] }}
+                <time data-local-date datetime="{{ selected_evaluation['deadline'] }}">{{ selected_evaluation["deadline"] }}</time>
             </p>
             <p>
                 <strong>Status:</strong>
@@ -191,7 +194,7 @@
                                 <strong>{{ item["completed_responses"] }}</strong>
                             </p>
                             <p class="muted">
-                                Deadline: {{ item["deadline"] }}
+                                Deadline: <time data-local-date datetime="{{ item['deadline'] }}">{{ item["deadline"] }}</time>
                             </p>
                         </div>
                         <a class="button"
@@ -217,5 +220,6 @@
 <script src="{{ url_for('static', filename='js/grouped_feedback.js') }}" defer></script>
 {% endif %}
 <script src="{{ url_for('static', filename='js/session.js') }}" defer></script>
+<script src="/static/js/app_navigation.js" defer></script>
 </body>
 </html>
