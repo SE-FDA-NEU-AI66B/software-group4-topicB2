@@ -404,3 +404,13 @@ def test_workspace_lifecycle_draft_postgres(pg_client, pg_url):
     assert pg_client.get(path).json['answers'] == {str(question): 5}
     assert pg_client.post('/api/submissions', json={'evaluation_id': identifier, 'answers': {str(question): {'rating_value': 5}}}).status_code == 201
     assert pg_client.put(path, json={'answers': {}}).status_code == 409
+
+
+def test_additive_demo_enrichment_postgres(pg_client, pg_url):
+    from tools.enrich_demo import enrich
+    counts = enrich(pg_url, 'Synthetic-postgres-credential')
+    assert counts == {'users': 37, 'courses': 24, 'evaluations': 24, 'responses': 264}
+    assert enrich(pg_url, 'Synthetic-postgres-credential') == dict.fromkeys(counts, 0)
+    with connect(pg_url) as db:
+        assert db.execute('SELECT title FROM evaluations WHERE id=1').fetchone()['title'] == 'Test Evaluation'
+        assert db.execute('SELECT COUNT(*) AS n FROM response_answers').fetchone()['n'] == 1320
