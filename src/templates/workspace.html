@@ -59,7 +59,7 @@
     </section>
     {% if role == 'administrator' %}
     <section id="users" class="workspace-section">
-        <div class="section-heading"><div><p class="eyebrow">ACCESS MANAGEMENT</p><h2>Account directory</h2><p>Review access roles. Course relationships and the last administrator are protected.</p></div><label class="compact-label">Search accounts<input id="account-search" type="search" placeholder="Name, email or role"></label></div>
+        <div class="section-heading"><div><p class="eyebrow">ACCESS MANAGEMENT</p><h2>Account directory</h2><p><a href="/admin/accounts">Create, invite, disable or import accounts →</a></p><p>Review access roles. Course relationships and the last administrator are protected.</p></div><label class="compact-label">Search accounts<input id="account-search" type="search" placeholder="Name, email or role"></label></div>
         <div class="table-scroll"><table><caption class="visually-hidden">Registered accounts and access roles</caption><thead><tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Role</th></tr></thead><tbody id="user-list"></tbody></table></div>
     </section>
     <section id="course-admin" class="workspace-section">

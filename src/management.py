@@ -4,8 +4,10 @@ from datetime import UTC, datetime
 from flask import jsonify, render_template, request, session
 
 if __package__:
+    from .account_store import access, active_admins
     from .database import insert_id, reserve_submission
 else:
+    from account_store import access, active_admins
     from database import insert_id, reserve_submission
 
 
@@ -115,11 +117,14 @@ def register_management(app, get_db, login_required, api_error):
                 db.execute("SELECT pg_advisory_xact_lock(hashtextextended('edusurvey/admin-roles', 0))")
             else:
                 db.execute('BEGIN IMMEDIATE')
+            actor = db.execute('SELECT role FROM users WHERE id=?', (session['user_id'],)).fetchone()
+            if actor is None or actor['role'] != 'administrator' or access(db, session['user_id'])['state'] != 'active':
+                return api_error(403, 'FORBIDDEN', 'Administrator access is required.', 'Sign in again.')
             user = db.execute('SELECT role FROM users WHERE id=?', (user_id,)).fetchone()
             if user is None:
                 return api_error(404, 'NOT_FOUND', 'Account not found.', 'Refresh the directory.')
             if user['role'] != role:
-                if user['role'] == 'administrator' and db.execute("SELECT COUNT(*) AS n FROM users WHERE role='administrator'").fetchone()['n'] <= 1:
+                if user['role'] == 'administrator' and access(db, user_id)['state'] == 'active' and active_admins(db) <= 1:
                     return api_error(409, 'LAST_ADMIN', 'Keep at least one administrator.', 'Assign another administrator first.')
                 enrollment = db.execute('SELECT 1 FROM course_enrollments WHERE student_id=?', (user_id,)).fetchone()
                 assignment = db.execute('SELECT 1 FROM course_lecturers WHERE lecturer_id=?', (user_id,)).fetchone()
@@ -152,7 +157,7 @@ def register_management(app, get_db, login_required, api_error):
                 db.execute('BEGIN IMMEDIATE')
             user = db.execute('SELECT role FROM users WHERE id=?' + suffix, (data['user_id'],)).fetchone()
             course = db.execute('SELECT id FROM courses WHERE id=?', (data['course_id'],)).fetchone()
-            if user is None or course is None or user['role'] not in {'student', 'lecturer'}:
+            if user is None or course is None or user['role'] not in {'student', 'lecturer'} or access(db, data['user_id'])['state'] == 'disabled':
                 return api_error(400, 'INVALID_MEMBERSHIP', 'Select a student or lecturer and an existing course.', 'Review your selection.')
             table, column = ('course_enrollments', 'student_id') if user['role'] == 'student' else ('course_lecturers', 'lecturer_id')
             # Table/column are fixed constants; only values are user controlled.

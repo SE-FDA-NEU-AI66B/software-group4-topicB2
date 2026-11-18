@@ -13,6 +13,7 @@
         <a href="/lecturer/feedback" {% if request.path.startswith('/lecturer/feedback') %}aria-current="page"{% endif %}><span aria-hidden="true">▥</span> Feedback & analytics</a>
         {% else %}
         <a href="/admin/evaluations" {% if request.path == '/admin/evaluations' %}aria-current="page"{% endif %}><span aria-hidden="true">▤</span> Evaluations</a>
+        <a href="/admin/accounts" {% if request.path == "/admin/accounts" %}aria-current="page"{% endif %}><span aria-hidden="true">♙</span> Account provisioning</a>
         <a href="/admin/users" {% if request.path == '/admin/users' %}aria-current="page"{% endif %}><span aria-hidden="true">♙</span> Accounts & courses</a>
         {% endif %}
         <a href="/account" {% if request.path == '/account' %}aria-current="page"{% endif %}><span aria-hidden="true">◎</span> Account</a>

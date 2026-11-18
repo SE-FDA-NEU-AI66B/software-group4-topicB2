@@ -8,6 +8,7 @@ import hashlib
 import os
 from pathlib import Path
 
+from src.account_store import TABLE_NAMES
 from src.database import TABLES
 from src.pg_driver import PostgresError, psycopg
 
@@ -25,7 +26,7 @@ def migrate(url):
             "SELECT tablename FROM pg_tables WHERE schemaname = current_schema()"
         )}
         if tables:
-            if tables != set(TABLES) | {'edusurvey_migrations'}:
+            if tables - TABLE_NAMES != set(TABLES) | {'edusurvey_migrations'}:
                 raise RuntimeError('Refusing migration of a nonempty or unknown schema.')
             if db.execute('SELECT version, checksum FROM edusurvey_migrations').fetchall() != [(1, checksum)]:
                 raise RuntimeError('Schema version/checksum mismatch; manual review required.')
