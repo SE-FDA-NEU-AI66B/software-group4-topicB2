@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function load() {
         if (pending) return;
+        EduNetwork.clear();
         pending = true;
         root.setAttribute("aria-busy", "true");
         retry.disabled = true;
@@ -65,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
         total.textContent = "";
         groups.replaceChildren();
         try {
-            const response = await fetch(`/api/evaluations/${encodeURIComponent(root.dataset.evaluationId)}/feedback/topics`, {
+            const response = await EduNetwork.fetch(`/api/evaluations/${encodeURIComponent(root.dataset.evaluationId)}/feedback/topics`, {
                 credentials: "same-origin", cache: "no-store", headers: {Accept: "application/json"}
             });
             if (response.status === 401) {
@@ -84,6 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             render(data.topics);
         } catch (failure) {
+            EduNetwork.report(failure, load);
             message.textContent = failure instanceof TypeError || failure instanceof SyntaxError
                 ? "Unable to retrieve grouped feedback. The connection or service response failed. Check your connection and try again."
                 : failure.message;

@@ -79,6 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (isLoading) return;
 
         isLoading = true;
+        EduNetwork.clear();
         showLoading();
 
         if (elements.refresh) {
@@ -86,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            const response = await fetch(API_URL, {
+            const response = await EduNetwork.fetch(API_URL, {
                 method: "GET",
                 credentials: "same-origin",
                 headers: {
@@ -146,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
         } catch (error) {
-            console.error("EduSurvey API error:", error);
+            EduNetwork.report(error, loadEvaluations);
 
             showError(
                 error instanceof TypeError

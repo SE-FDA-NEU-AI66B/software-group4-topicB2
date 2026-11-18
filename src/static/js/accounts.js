@@ -4,7 +4,7 @@
     let confirmation = null;
     function node(tag, text, parent) { const element = document.createElement(tag); element.textContent = text; parent?.append(element); return element; }
     async function api(url, method = 'GET', data) {
-        const response = await fetch(url, {method, credentials: 'same-origin', headers: {'Content-Type': 'application/json'}, ...(data ? {body: JSON.stringify(data)} : {})});
+        const response = await EduNetwork.fetch(url, {method, credentials: 'same-origin', headers: {'Content-Type': 'application/json'}, ...(data ? {body: JSON.stringify(data)} : {})});
         if (response.status === 401) { location.assign('/login'); throw Error('Sign in again.'); }
         let result; try { result = await response.json(); } catch { throw Error('The service returned an unreadable response. Try again.'); }
         if (!response.ok) throw Error(result.error?.message || 'Unable to complete this action.');
@@ -28,16 +28,18 @@
             const actions = node('td', '', row); const feedback = node('span', '', actions); feedback.setAttribute('role', 'status');
             const state = node('button', user.state === 'disabled' ? 'Reactivate' : 'Disable', actions); state.className = 'secondary'; state.setAttribute('aria-label', `${state.textContent} ${user.email}`);
             state.onclick = async () => {
+                EduNetwork.clear();
                 if (!confirm(`${state.textContent} access for ${user.email}? Existing feedback will be preserved.`)) return;
                 state.disabled = true;
                 try { await api(`/api/admin/accounts/${user.id}/state`, 'PATCH', {state: user.state === 'disabled' ? 'active' : 'disabled'}); await load(); }
-                catch (error) { $('#account-status').textContent = error.message; feedback.textContent = error.message; state.disabled = false; }
+                catch (error) { EduNetwork.report(error, load, {write: true}); $('#account-status').textContent = error.message; feedback.textContent = error.message; state.disabled = false; }
             };
             const invite = node('button', user.state === 'invited' ? 'Reissue invitation' : 'Reset password', actions); invite.className = 'secondary'; invite.disabled = user.state === 'disabled'; invite.setAttribute('aria-label', `${invite.textContent} for ${user.email}`);
             invite.onclick = async () => {
+                EduNetwork.clear();
                 invite.disabled = true;
                 try { const result = await api(`/api/admin/accounts/${user.id}/invitation`, 'POST', {}); handoff([{email: user.email, ...result}]); await load(); $('#account-status').textContent = 'New setup link ready for private handoff. Earlier links are invalid. No email has been sent.'; }
-                catch (error) { $('#account-status').textContent = error.message; feedback.textContent = error.message; }
+                catch (error) { EduNetwork.report(error, load, {write: true}); $('#account-status').textContent = error.message; feedback.textContent = error.message; }
                 finally { invite.disabled = user.state === 'disabled'; }
             };
         });
@@ -49,6 +51,7 @@
         $('#membership-target').disabled = $('#membership-action').value !== 'transfer';
     }
     async function load() {
+        EduNetwork.clear();
         $('#account-status').textContent = 'Loading account directory…';
         document.querySelectorAll('#new-account button,#preview-import,#membership-change button').forEach(button => { button.disabled = true; });
         try {
@@ -60,12 +63,13 @@
             $('#new-account button').disabled = false; $('#preview-import').disabled = false;
             $('#membership-change button').disabled = !directory.memberships.length;
             $('#account-status').textContent = 'Account directory updated.';
-        } catch (error) { $('#account-status').textContent = error.message; }
+        } catch (error) { EduNetwork.report(error, load); $('#account-status').textContent = error.message; }
     }
     $('#new-account').onsubmit = async event => {
+        EduNetwork.clear();
         event.preventDefault(); const form = event.currentTarget; const button = form.querySelector('button'); button.disabled = true;
         try { const result = await api('/api/admin/accounts', 'POST', Object.fromEntries(new FormData(form))); handoff([result.account]); form.reset(); await load(); form.querySelector('[role=status]').textContent = 'Account created. Setup link ready for private handoff; no email has been sent.'; }
-        catch (error) { form.querySelector('[role=status]').textContent = error.message; }
+        catch (error) { EduNetwork.report(error, load, {write: true}); form.querySelector('[role=status]').textContent = error.message; }
         finally { button.disabled = false; }
     };
     function invalidatePreview() { confirmation = null; $('#confirm-import').disabled = true; $('#csv-preview').replaceChildren(); $('#import-status').textContent = 'Preview this CSV before confirming.'; }
@@ -76,25 +80,28 @@
         $('#csv-source').value = await file.text();
     };
     $('#preview-import').onclick = async () => {
+        EduNetwork.clear();
         invalidatePreview(); $('#preview-import').disabled = true;
         try { const result = await api('/api/admin/accounts/import-preview', 'POST', {csv: $('#csv-source').value});
             result.rows.forEach(row => { const tr = node('tr', '', $('#csv-preview')); [row.line, row.name, row.email, row.role, row.error || 'Valid'].forEach(value => node('td', value, tr)); });
             confirmation = result.confirmation; $('#confirm-import').disabled = !result.valid; $('#import-status').textContent = result.valid ? 'Preview valid. Confirm within 15 minutes to create these accounts.' : 'Fix validation errors and preview again. No accounts were created.';
-        } catch (error) { $('#import-status').textContent = error.message; }
+        } catch (error) { EduNetwork.report(error, () => $('#preview-import').click()); $('#import-status').textContent = error.message; }
         finally { $('#preview-import').disabled = false; }
     };
     $('#confirm-import').onclick = async () => {
+        EduNetwork.clear();
         if (!confirmation) return; $('#confirm-import').disabled = true;
         try { const result = await api('/api/admin/accounts/import-confirm', 'POST', {csv: $('#csv-source').value, confirmation}); handoff(result.accounts); confirmation = null; await load(); $('#import-status').textContent = result.message; }
-        catch (error) { $('#import-status').textContent = error.message + ' Preview again before retrying.'; confirmation = null; }
+        catch (error) { EduNetwork.report(error, load, {write: true}); $('#import-status').textContent = error.message + ' Preview again before retrying.'; confirmation = null; }
     };
     $('#membership-change').onsubmit = async event => {
+        EduNetwork.clear();
         event.preventDefault(); const membership = directory.memberships[Number($('#existing-membership').value)]; if (!membership) return;
         const button = event.currentTarget.querySelector('button'); const status = event.currentTarget.querySelector('[role=status]');
         if (!confirm('Apply this course access change? Responses remain with their original authors.')) return;
         button.disabled = true;
         try { const result = await api('/api/admin/memberships', 'POST', {...membership, action: $('#membership-action').value, target_id: Number($('#membership-target').value)}); await load(); status.textContent = result.message; }
-        catch (error) { status.textContent = error.message; }
+        catch (error) { EduNetwork.report(error, load, {write: true}); status.textContent = error.message; }
         finally { button.disabled = false; }
     };
     for (const selector of ['#directory-search', '#role-filter', '#state-filter']) $(selector).addEventListener('input', render);

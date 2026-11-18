@@ -18,7 +18,7 @@ function notice(element, message, error = false) {
     element.dataset.error = String(error);
 }
 async function api(url, options = {}) {
-    const response = await fetch(url, {credentials: 'same-origin', ...options});
+    const response = await EduNetwork.fetch(url, {credentials: 'same-origin', ...options});
     if (response.status === 401) { location.assign('/login'); throw Error('Please sign in again.'); }
     let data;
     try { data = await response.json(); }
@@ -77,9 +77,10 @@ function renderEvaluations() {
             if (workspace.user.role === 'lecturer') { const link = node('a', 'View feedback & statistics →', card); link.href = `/lecturer/feedback/${evaluation.id}`; }
             const button = node('button', evaluation.status === 'open' ? 'Close evaluation' : 'Open evaluation', card, 'secondary');
             button.onclick = async () => {
+                EduNetwork.clear();
                 button.disabled = true;
                 try { await write(`/api/evaluations/${evaluation.id}/status`, 'PATCH', {status: evaluation.status === 'open' ? 'closed' : 'open'}); await load(); }
-                catch (error) { notice($('#status'), error.message, true); button.disabled = false; }
+                catch (error) { EduNetwork.report(error, load, {write: true}); notice($('#status'), error.message, true); button.disabled = false; }
             };
         }
     });
@@ -96,9 +97,10 @@ function renderUsers() {
         const save = node('button', 'Save role', cell, 'secondary');
         save.setAttribute('aria-label', `Save role for ${user.full_name}`);
         save.onclick = async () => {
+            EduNetwork.clear();
             save.disabled = true;
             try { await write(`/api/admin/users/${user.id}/role`, 'PATCH', {role: select.value}); await load(); notice($('#status'), `Role saved for ${user.full_name}.`); }
-            catch (error) { notice($('#status'), error.message, true); save.disabled = false; }
+            catch (error) { EduNetwork.report(error, load, {write: true}); notice($('#status'), error.message, true); save.disabled = false; }
         };
     });
     if (!matches.length) { const cell = node('td', 'No matching accounts.', node('tr', '', list)); cell.colSpan = 3; }
@@ -138,6 +140,7 @@ function preview() {
     $('#survey-preview').showModal();
 }
 async function load() {
+    EduNetwork.clear();
     $('#retry').hidden = true; notice($('#status'), 'Loading your workspace…'); $('#metrics').setAttribute('aria-busy', 'true');
     try {
         workspace = await api('/api/workspace');
@@ -166,7 +169,7 @@ async function load() {
             populateSelect($('#membership-form select[name=course_id]'), workspace.courses, c => `${c.course_code} · ${c.course_name}`);
         }
         notice($('#status'), 'Workspace updated.');
-    } catch (error) { notice($('#status'), error.message, true); $('#retry').hidden = false; }
+    } catch (error) { EduNetwork.report(error, load); notice($('#status'), error.message, true); $('#retry').hidden = false; }
     finally { $('#metrics').setAttribute('aria-busy', 'false'); }
 }
 $('#search').addEventListener('input', () => workspace && renderCourses());
@@ -177,6 +180,7 @@ if ($('#create')) {
     addQuestion(); $('#add').onclick = addQuestion; $('#preview').onclick = preview;
     $('#close-preview').onclick = () => $('#survey-preview').close();
     $('#create').onsubmit = async event => {
+        EduNetwork.clear();
         event.preventDefault(); const form = event.currentTarget; const submit = form.querySelector('[type=submit]'); submit.disabled = true;
         notice($('#form-status'), 'Saving evaluation draft…');
         try {
@@ -186,18 +190,19 @@ if ($('#create')) {
             if (!questions.length) throw Error('At least one question is required.');
             await write('/api/evaluations', 'POST', {course_id: Number(form.elements.course_id.value), title: form.elements.title.value, deadline: deadline.toISOString(), questions});
             notice($('#form-status'), 'Draft saved. Review its questions below, then open it when ready.'); await load();
-        } catch (error) { notice($('#form-status'), error.message, true); }
+        } catch (error) { EduNetwork.report(error, load, {write: true}); notice($('#form-status'), error.message, true); }
         finally { submit.disabled = false; }
     };
 }
 for (const [selector, endpoint] of [['#course-form', '/api/admin/courses'], ['#membership-form', '/api/admin/course-memberships']]) {
     const form = $(selector);
     if (form) form.onsubmit = async event => {
+        EduNetwork.clear();
         event.preventDefault(); const button = form.querySelector('button'); button.disabled = true;
         const data = Object.fromEntries(new FormData(form));
         if (data.user_id) { data.user_id = Number(data.user_id); data.course_id = Number(data.course_id); }
         try { const result = await write(endpoint, 'POST', data); notice(form.querySelector('[role=status]'), result.message); await load(); }
-        catch (error) { notice(form.querySelector('[role=status]'), error.message, true); }
+        catch (error) { EduNetwork.report(error, load, {write: true}); notice(form.querySelector('[role=status]'), error.message, true); }
         finally { button.disabled = false; }
     };
 }

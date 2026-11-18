@@ -87,6 +87,7 @@ togglePassword.addEventListener("click", function () {
 
 // Submit credentials to the backend.
 form.addEventListener("submit", async function (event) {
+    EduNetwork.clear();
     event.preventDefault();
 
     if (!validateForm()) {
@@ -99,7 +100,7 @@ form.addEventListener("submit", async function (event) {
 
     try {
         // Expected API contract for backend issue #16.
-        const response = await fetch("/api/auth/login", {
+        const response = await EduNetwork.fetch("/api/auth/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -150,6 +151,7 @@ form.addEventListener("submit", async function (event) {
         window.location.assign(destination);
 
     } catch (error) {
+        EduNetwork.report(error, () => form.requestSubmit());
         showFormError(
             "Unable to connect to the server. Check your connection and try again."
         );
