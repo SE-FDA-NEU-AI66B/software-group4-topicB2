@@ -88,7 +88,7 @@ def get_db_connection():
 @app.before_request
 def enforce_account_lifecycle():
     # Covers legacy endpoints that perform their own role checks as well as decorators.
-    if 'user_id' not in session or request.path.startswith('/static/') or request.path == '/health':
+    if 'user_id' not in session or request.path.startswith('/static/') or request.path in {'/health', '/health/dashboard'}:
         return None
     try:
         with get_db_connection() as connection:
@@ -398,6 +398,14 @@ def prevent_private_page_caching(response):
     """Avoid storing authenticated pages or authentication responses in caches."""
     if session.get("user_id") or request.path.startswith("/api/auth/"):
         response.headers["Cache-Control"] = "no-store"
+    return response
+
+
+@app.get("/health/dashboard")
+def health_dashboard():
+    # The HTML shell must remain available during DB outages, including with a cookie.
+    response = make_response(render_template("health_dashboard.html"))
+    response.headers["Cache-Control"] = "no-store"
     return response
 
 
