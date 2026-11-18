@@ -9,6 +9,7 @@
         form.hidden = true; return;
     }
     form.onsubmit = async event => {
+    EduNetwork.clear();
         event.preventDefault();
         const credential = document.querySelector('#new-password');
         const confirmation = document.querySelector('#confirm-password');
@@ -17,10 +18,10 @@
         }
         confirmation.removeAttribute('aria-invalid'); button.disabled = true; status.textContent = 'Setting your password…';
         try {
-            const response = await fetch('/api/auth/set-password', {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({token, password: credential.value})});
+            const response = await EduNetwork.fetch('/api/auth/set-password', {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({token, password: credential.value})});
             const data = await response.json();
             if (!response.ok) throw Error(data.error?.message || 'Unable to set your password. Try again.');
             form.reset(); form.hidden = true; status.textContent = data.message;
-        } catch (error) { status.textContent = error.message; button.disabled = false; }
+        } catch (error) { EduNetwork.report(error, () => form.requestSubmit(), {write: true}); status.textContent = error.message; button.disabled = false; }
     };
 })();

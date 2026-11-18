@@ -1,0 +1,9 @@
+.network-state { visibility:visible; position:sticky; top:84px; z-index:30; display:flex; align-items:center; gap:16px; padding:20px; margin:0 0 24px; border:1px solid #d7c6a3; border-radius:12px; background:#fff9ee; color:#604215; box-shadow:0 5px 18px #102b5009; text-align:left; }
+.network-state[hidden] { display:none !important; }
+.network-state svg { width:32px; height:32px; flex-shrink:0; }
+.network-state strong { display:block; color:#192d4b; font-size:17px; line-height:1.4; }
+.network-state p { margin:6px 0 0; font-size:12px; line-height:1.6; color:#604215; }
+.network-state button { flex-shrink:0; margin:0 0 0 auto; min-height:44px; padding:10px 16px; border:1px solid #2457a7; border-radius:8px; background:#2457a7; color:white; font:600 13px/1.5 system-ui,sans-serif; cursor:pointer; white-space:nowrap; }
+.network-state button:hover { background:#173e7b; }
+.review-dialog .network-state { position:static; }
+@media(max-width:650px) { .network-state { top:64px; flex-wrap:wrap; gap:12px; padding:18px; } .network-state > div { flex:1; min-width:160px; } .network-state button { margin-left:44px; } }

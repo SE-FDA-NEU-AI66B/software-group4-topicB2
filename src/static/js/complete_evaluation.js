@@ -437,6 +437,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function completeSubmission(alreadyCompleted = false) {
+        EduNetwork.clear();
         state.submitted = true;
         $("#saveDraft").hidden = true;
         $("#draftStatus").hidden = true;
@@ -496,13 +497,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function loadEvaluation() {
+        EduNetwork.clear();
+        elements.error.classList.add("hidden");
+        elements.loading.classList.remove("hidden");
         if (!evaluationId || !/^\d+$/.test(evaluationId)) {
             showError("Invalid evaluation ID.");
             return;
         }
 
         try {
-            const response = await fetch(
+            const response = await EduNetwork.fetch(
                 `/api/evaluations/${encodeURIComponent(evaluationId)}/questions`,
                 {
                     method: "GET",
@@ -556,18 +560,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
             }
 
-            const draftResponse = await fetch(`/api/evaluations/${evaluationId}/draft`, {credentials: "same-origin"});
+            const draftResponse = await EduNetwork.fetch(`/api/evaluations/${evaluationId}/draft`, {credentials: "same-origin"});
             if (draftResponse.ok) {
                 const draft = await draftResponse.json();
-                state.answers = draft.answers || {};
+                state.answers = {...(draft.answers || {}), ...state.answers};
                 if (Object.keys(state.answers).length) {
                     $("#draftStatus").dataset.state = "saved";
                     $("#draftStatus").textContent = "Your saved draft has been restored. Continue where you left off.";
                 }
+            } else {
+                throw new Error(apiError(draftResponse, await readResponse(draftResponse)));
             }
             renderQuestions();
 
         } catch (error) {
+            EduNetwork.report(error, loadEvaluation);
             showError(requestErrorMessage(error));
         }
     }
@@ -595,6 +602,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function submitEvaluation() {
+        EduNetwork.clear();
         if (state.submitting || state.submitted) {
             return;
         }
@@ -614,7 +622,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateProgress();
 
         try {
-            const response = await fetch("/api/submissions", {
+            const response = await EduNetwork.fetch("/api/submissions", {
                 method: "POST",
                 credentials: "same-origin",
                 headers: {
@@ -639,6 +647,7 @@ document.addEventListener("DOMContentLoaded", () => {
             completeSubmission();
 
         } catch (error) {
+            EduNetwork.report(error, recoverSubmission, {write: true, host: elements.reviewDialog});
             elements.submitFeedback.textContent = `${requestErrorMessage(error)} If the connection failed, refresh My Evaluations to check whether your response was saved before retrying.`;
 
         } finally {
@@ -653,16 +662,33 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    async function recoverSubmission() {
+        EduNetwork.clear();
+        try {
+            const response = await EduNetwork.fetch('/api/evaluations', {credentials: 'same-origin', cache: 'no-store'});
+            const data = await readResponse(response);
+            if (!response.ok) throw new Error(apiError(response, data));
+            if (!Array.isArray(data.evaluations)) throw new Error('The service returned an unreadable response. Try again.');
+            const current = data.evaluations.find(item => item.id === Number(evaluationId));
+            if (current?.survey_status === 'Completed') completeSubmission(true);
+            else await submitEvaluation();
+        } catch (error) {
+            elements.submitFeedback.textContent = requestErrorMessage(error);
+            EduNetwork.report(error, recoverSubmission, {write: true, host: elements.reviewDialog});
+        }
+    }
+
     function draftChanged() {
         $("#draftStatus").dataset.state = "dirty";
         $("#draftStatus").textContent = "Unsaved changes. Save your draft before leaving this page.";
     }
 
-    $("#saveDraft").addEventListener("click", async () => {
+    async function saveDraft() {
+        EduNetwork.clear();
         const button = $("#saveDraft"); button.disabled = true;
         $("#draftStatus").textContent = "Saving your draft…";
         try {
-            const response = await fetch(`/api/evaluations/${evaluationId}/draft`, {
+            const response = await EduNetwork.fetch(`/api/evaluations/${evaluationId}/draft`, {
                 method: "PUT", credentials: "same-origin", headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({answers: buildSubmissionPayload().answers})
             });
@@ -670,9 +696,10 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!response.ok) throw new Error(apiError(response, data));
             $("#draftStatus").dataset.state = "saved";
             $("#draftStatus").textContent = data.message;
-        } catch (error) { $("#draftStatus").dataset.state = "error"; $("#draftStatus").textContent = requestErrorMessage(error); }
+        } catch (error) { EduNetwork.report(error, saveDraft, {write: true}); $("#draftStatus").dataset.state = "error"; $("#draftStatus").textContent = requestErrorMessage(error); }
         finally { button.disabled = false; }
-    });
+    }
+    $("#saveDraft").addEventListener("click", saveDraft);
 
     // Event listeners
 
