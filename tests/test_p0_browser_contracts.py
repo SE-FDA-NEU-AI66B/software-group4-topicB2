@@ -824,3 +824,157 @@ def test_admin_provisioning_password_setup_and_mobile_disable(browser_app):
         invited.close()
     finally:
         context.close()
+
+
+@pytest.mark.parametrize('viewport', [{'width': 1440, 'height': 900}, {'width': 390, 'height': 844}], ids=['desktop', 'phone'])
+@pytest.mark.parametrize('flow', ['student', 'lecturer', 'admin', 'accounts'])
+def test_shared_network_state_recovers_real_role_data(browser_app, viewport, flow):
+    browser, url, database = browser_app
+    if flow == 'accounts':
+        from src.account_store import migrate_accounts
+        migrate_accounts(database)
+    role = {'student': 'student', 'lecturer': 'lecturer', 'admin': 'admin', 'accounts': 'admin'}[flow]
+    route = {'student': '/evaluations', 'lecturer': '/lecturer/feedback/1', 'admin': '/dashboard', 'accounts': '/admin/accounts'}[flow]
+    endpoint = {'student': '/api/evaluations', 'lecturer': '/api/evaluations/1/feedback/topics', 'admin': '/api/workspace', 'accounts': '/api/admin/accounts'}[flow]
+    context = browser.new_context(viewport=viewport)
+    page = context.new_page()
+    try:
+        sign_in(page, url, f'{role}@test.com')
+        expect(page).to_have_url(url + {'student': '/evaluations', 'lecturer': '/lecturer/feedback', 'admin': '/account'}[role])
+        page.route('**' + endpoint, lambda request: request.abort())
+        page.goto(url + route)
+        panel = page.get_by_role('alert', name='Network error', exact=True)
+        expect(panel).to_be_visible()
+        expect(panel).to_contain_text('No internet connection')
+        expect(panel.locator('svg')).to_have_count(1)
+        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+        if evidence_dir := os.environ.get('NETWORK_SCREENSHOT_DIR'):
+            destination = Path(evidence_dir)
+            destination.mkdir(parents=True, exist_ok=True)
+            page.screenshot(path=str(destination / f'{flow}-{viewport["width"]}.png'), full_page=True)
+        page.unroute('**' + endpoint)
+        with page.expect_response(lambda response: response.url == url + endpoint) as recovered:
+            panel.get_by_role('button', name='Try Again', exact=True).click()
+        assert recovered.value.status == 200
+        expect(panel).not_to_be_visible()
+        if flow == 'student':
+            expect(page.get_by_role('link', name='Start evaluation: Test Evaluation', exact=True)).to_have_count(1)
+        elif flow == 'lecturer':
+            expect(page.locator('#topic-analysis')).to_have_attribute('aria-busy', 'false')
+            expect(page.locator('#topic-empty')).to_be_visible()
+        elif flow == 'admin':
+            expect(page.locator('#welcome')).to_have_text('Welcome, Test Administrator')
+        else:
+            expect(page.locator('#directory-rows tr')).to_have_count(3)
+    finally:
+        context.close()
+
+
+@pytest.mark.parametrize('status', [401, 403, 404, 409])
+def test_http_errors_are_not_mislabelled_as_offline(browser_app, status):
+    browser, url, _database = browser_app
+    page = browser.new_page()
+    try:
+        sign_in(page, url)
+        expect(page).to_have_url(url + '/evaluations')
+        page.route('**/api/workspace', lambda route: route.fulfill(status=status, content_type='application/json', body='{"error":{"message":"Distinct server rejection"}}'))
+        page.goto(url + '/dashboard')
+        if status == 401:
+            expect(page).to_have_url(url + '/login')
+        else:
+            expect(page.locator('#status')).to_have_text('Distinct server rejection')
+        expect(page.get_by_role('alert', name='Network error')).to_have_count(0)
+    finally:
+        page.close()
+
+
+def test_failed_draft_retry_preserves_answers_and_persists_real_data(browser_app):
+    browser, url, database = browser_app
+    context = browser.new_context(viewport={'width': 390, 'height': 844})
+    page = context.new_page()
+    try:
+        sign_in(page, url)
+        expect(page).to_have_url(url + '/evaluations')
+        page.get_by_role('link', name='Start evaluation').click()
+        rating = page.locator('input[type=radio][value="5"]')
+        rating.focus(); page.keyboard.press('Space')
+        page.locator('textarea').fill('Keep this unsaved feedback through network recovery.')
+        page.route('**/api/evaluations/1/draft', lambda route: route.abort() if route.request.method == 'PUT' else route.continue_())
+        page.get_by_role('button', name='Save draft', exact=True).click()
+        panel = page.get_by_role('alert', name='Network error')
+        expect(panel).to_be_visible()
+        expect(rating).to_be_checked()
+        expect(page.locator('textarea')).to_have_value('Keep this unsaved feedback through network recovery.')
+        page.unroute('**/api/evaluations/1/draft')
+        panel.get_by_role('button', name='Try Again', exact=True).click()
+        expect(page.locator('#draftStatus')).to_contain_text('Draft saved')
+        page.reload()
+        expect(rating).to_be_checked()
+        expect(page.locator('textarea')).to_have_value('Keep this unsaved feedback through network recovery.')
+        with sqlite3.connect(database) as db:
+            assert db.execute('SELECT status FROM responses').fetchone()[0] == 'draft'
+            assert db.execute('SELECT COUNT(*) FROM response_answers').fetchone()[0] == 2
+    finally:
+        context.close()
+
+
+@pytest.mark.parametrize('committed', [False, True], ids=['request-aborted', 'response-lost-after-commit'])
+def test_submission_retry_reconciles_server_state_without_fake_success(browser_app, committed):
+    browser, url, database = browser_app
+    context = browser.new_context(viewport={'width': 390, 'height': 844})
+    page = context.new_page()
+    submissions = []
+    page.on('request', lambda request: submissions.append(request) if request.url.endswith('/api/submissions') else None)
+    try:
+        sign_in(page, url)
+        expect(page).to_have_url(url + '/evaluations')
+        page.get_by_role('link', name='Start evaluation').click()
+        rating = page.locator('input[type=radio][value="5"]')
+        rating.focus(); page.keyboard.press('Space')
+        page.locator('textarea').fill('Preserve my answer, never submit twice.')
+        page.locator('#reviewButtonMobile').click()
+        def lose_response(route):
+            if committed:
+                assert route.fetch().status == 201
+            route.abort()
+        page.route('**/api/submissions', lose_response)
+        page.get_by_role('button', name='Submit evaluation', exact=True).click()
+        panel = page.get_by_role('alert', name='Network error')
+        expect(panel).to_be_visible()
+        expect(page.locator('#submissionSuccess')).not_to_be_visible()
+        with sqlite3.connect(database) as db:
+            assert db.execute("SELECT COUNT(*) FROM responses WHERE status='submitted'").fetchone()[0] == int(committed)
+        page.unroute('**/api/submissions')
+        panel.get_by_role('button', name='Try Again', exact=True).click()
+        expect(page.locator('#submissionSuccess')).to_be_visible()
+        assert len(submissions) == (1 if committed else 2)
+        with sqlite3.connect(database) as db:
+            assert db.execute("SELECT COUNT(*) FROM responses WHERE status='submitted'").fetchone()[0] == 1
+            assert db.execute('SELECT text_value FROM response_answers WHERE text_value IS NOT NULL').fetchone()[0] == 'Preserve my answer, never submit twice.'
+    finally:
+        context.close()
+
+
+def test_network_revalidation_preserves_unsaved_answers(browser_app):
+    browser, url, _database = browser_app
+    context = browser.new_context(viewport={'width': 390, 'height': 844})
+    page = context.new_page()
+    try:
+        sign_in(page, url)
+        expect(page).to_have_url(url + '/evaluations')
+        page.get_by_role('link', name='Start evaluation').click()
+        rating = page.locator('input[type=radio][value="5"]')
+        rating.focus(); page.keyboard.press('Space')
+        page.locator('textarea').fill('Do not reload away this unsaved answer.')
+        page.route('**/api/auth/me', lambda route: route.abort())
+        page.evaluate("window.dispatchEvent(new PageTransitionEvent('pageshow', {persisted: true}))")
+        panel = page.get_by_role('alert', name='Network error')
+        expect(panel).to_be_visible()
+        expect(page.locator('textarea')).not_to_be_visible()
+        page.unroute('**/api/auth/me')
+        panel.get_by_role('button', name='Try Again', exact=True).click()
+        expect(page.locator('textarea')).to_be_visible()
+        expect(page.locator('textarea')).to_have_value('Do not reload away this unsaved answer.')
+        expect(rating).to_be_checked()
+    finally:
+        context.close()
