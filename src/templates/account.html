@@ -1,9 +1,19 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My account | EduSurvey</title>
-<link rel="stylesheet" href="/static/css/session.css"><link rel="stylesheet" href="/static/css/workspace.css"><link rel="stylesheet" href="/static/css/design-system.css"></head>
-<body class="portal-page">{% include 'app_navigation.html' %}
+<link rel="stylesheet" href="/static/css/session.css"><link rel="stylesheet" href="/static/css/workspace.css"><link rel="stylesheet" href="/static/css/design-system.css"><link rel="stylesheet" href="/static/css/account.css"></head>
+<body class="portal-page" data-role="{{ role }}">{% include 'app_navigation.html' %}
 <header class="workspace-topbar"><div class="workspace-breadcrumb">Workspace / My account</div>{% include 'session_controls.html' %}</header>
-<main id="app-content"><p class="eyebrow">UNIVERSITY ACCOUNT</p><h1>My account</h1><p class="page-description">Your access is managed by your university administrator.</p>
-<section class="card workspace-section"><span class="status-badge">{{ role|title }}</span><h2>Your academic workspace</h2><p>Signed in as {{ role }}. Open your workspace to view the courses and tools available to your role.</p><a class="action-link" href="/dashboard">Open my workspace dashboard →</a></section>
-{% if role == 'student' %}<p><a href="/evaluations">My Evaluations</a></p>{% elif role == 'lecturer' %}<p><a href="/lecturer/feedback">Review student feedback</a></p>{% endif %}
-</main><script src="/static/js/session.js" defer></script><script src="/static/js/app_navigation.js" defer></script></body></html>
+<main id="app-content">
+<div class="workspace-heading"><div><p class="eyebrow">UNIVERSITY ACCOUNT</p><h1>My account</h1><p class="page-description">Your profile, courses and activity in one place.</p></div><a class="action-link" href="/dashboard">Open dashboard &rarr;</a></div>
+<div class="workspace-notice"><p id="account-status" role="status">Loading your account…</p><button id="account-retry" class="secondary" type="button" hidden>Try again</button></div>
+<div id="account-details" class="account-layout" hidden>
+<section class="card account-profile" aria-labelledby="profile-title"><div id="profile-initials" class="profile-avatar" aria-hidden="true"></div><span class="status-badge">{{ role|title }}</span><h2 id="profile-title"></h2><p>Your university profile</p><dl class="profile-fields"><dt>Email address</dt><dd id="profile-email"></dd><dt>Role</dt><dd>{{ role|title }}</dd><dt>Account status</dt><dd><span class="account-active">Active</span></dd></dl><p class="profile-note">Your profile and course access are managed by your university administrator.</p></section>
+<div class="account-activity">
+<section class="card account-summary" aria-labelledby="activity-title"><p class="eyebrow">{% if role == 'student' %}YOUR PROGRESS{% else %}YOUR WORKSPACE{% endif %}</p><h2 id="activity-title">{% if role == 'student' %}Evaluation progress{% else %}Activity overview{% endif %}</h2><div id="account-metrics" class="account-metrics"></div>
+{% if role == 'student' %}<p id="progress-description"></p><progress id="account-progress" max="1" value="0" aria-label="Completed evaluations"></progress>{% endif %}
+<div class="account-actions">{% if role == 'student' %}<a class="action-link" href="/evaluations">View my evaluations &rarr;</a>{% elif role == 'lecturer' %}<a class="action-link" href="/lecturer/feedback">Review student feedback &rarr;</a><a href="/lecturer/evaluations">Manage evaluations</a>{% else %}<a class="action-link" href="/admin/accounts">Manage accounts &rarr;</a><a href="/admin/evaluations">Manage evaluations</a>{% endif %}</div></section>
+<section class="card account-courses" aria-labelledby="courses-title"><div class="account-section-heading"><h2 id="courses-title">{% if role == 'administrator' %}University courses{% else %}My courses{% endif %}</h2><span id="account-course-count" class="status-badge"></span></div><ul id="account-courses" class="account-course-list"></ul></section>
+</div></div>
+<section class="account-help" aria-labelledby="help-title"><h2 id="help-title">Need help with your account?</h2><p>Contact your faculty office or university administrator if your profile is incorrect, a course is missing, or you need help resetting your password.</p></section>
+<noscript><p>Enable JavaScript to load your profile and activity. You can still <a href="/dashboard">open your dashboard</a>.</p></noscript>
+</main><script src="/static/js/session.js" defer></script><script src="/static/js/app_navigation.js" defer></script><script src="/static/js/account.js" defer></script></body></html>
