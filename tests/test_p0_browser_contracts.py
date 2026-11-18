@@ -824,3 +824,60 @@ def test_admin_provisioning_password_setup_and_mobile_disable(browser_app):
         invited.close()
     finally:
         context.close()
+
+
+@pytest.mark.parametrize('viewport', [{'width': 1440, 'height': 1000}, {'width': 390, 'height': 844}], ids=['desktop', 'phone'])
+@pytest.mark.parametrize('available', [True, False], ids=['200', '503'])
+def test_health_dashboard_real_http_and_components(browser_app, monkeypatch, tmp_path, viewport, available):
+    browser, url, _database = browser_app
+    if not available:
+        monkeypatch.setattr(app_module, 'DATABASE', tmp_path / 'missing-health.db')
+    context = browser.new_context(viewport=viewport)
+    page = context.new_page()
+    errors = []
+    page.on('pageerror', lambda error: errors.append(str(error)))
+    try:
+        with page.expect_response(lambda response: response.url == url + '/health') as readiness:
+            shell = page.goto(url + '/health/dashboard')
+        assert shell.status == 200
+        assert readiness.value.status == (200 if available else 503)
+        expect(page.locator('#health-overview')).to_have_attribute('aria-busy', 'false')
+        expect(page.locator('#http-status')).to_have_text('200 OK' if available else '503 Service Unavailable')
+        expect(page.locator('#application-status')).to_have_text('Operational' if available else 'Unavailable')
+        expect(page.locator('#database-status')).to_have_text('Operational' if available else 'Unavailable')
+        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+        expect(page.get_by_role('button', name='Refresh status', exact=True)).to_be_enabled()
+        if evidence_dir := os.environ.get('HEALTH_SCREENSHOT_DIR'):
+            destination = Path(evidence_dir)
+            destination.mkdir(parents=True, exist_ok=True)
+            page.screenshot(path=str(destination / f"health-{200 if available else 503}-{viewport['width']}.png"), full_page=True)
+        assert not errors
+    finally:
+        context.close()
+
+
+@pytest.mark.parametrize('failure', ['network', 'malformed-json'])
+def test_health_dashboard_unknown_and_refresh_recovery(browser_app, failure):
+    browser, url, _database = browser_app
+    context = browser.new_context(viewport={'width': 390, 'height': 844})
+    page = context.new_page()
+    try:
+        def fail(route):
+            if failure == 'network':
+                route.abort()
+            else:
+                route.fulfill(status=200, content_type='text/html', body='PRIVATE_UPSTREAM_DETAIL')
+        page.route('**/health', fail)
+        page.goto(url + '/health/dashboard')
+        expect(page.locator('#health-overview')).to_have_attribute('aria-busy', 'false')
+        expect(page.locator('#health-overview')).to_have_attribute('data-state', 'unknown')
+        expect(page.locator('#http-status')).to_have_text('No HTTP response' if failure == 'network' else '200 OK')
+        expect(page.locator('#database-status')).to_have_text('Unknown')
+        assert 'PRIVATE_UPSTREAM_DETAIL' not in page.content()
+        page.unroute('**/health')
+        page.get_by_role('button', name='Refresh status', exact=True).click()
+        expect(page.locator('#health-overview')).to_have_attribute('data-state', 'healthy')
+        expect(page.locator('#http-status')).to_have_text('200 OK')
+        expect(page.locator('#database-status')).to_have_text('Operational')
+    finally:
+        context.close()
